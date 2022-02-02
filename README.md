@@ -2,19 +2,6 @@
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into an epub and make it avalaible for download
 
 
-<style>
-#help {max-width:1200px;margin:auto;}
-#intro {max-width:800px;margin:auto;}
-#help h2	{ font-size: 2.0em; margin: .75em 0; color: #013162 ;text-align:center;margin-bottom:0} 
-#help h3	{ font-size: 1.8em; margin: .83em 0; color: #13518C;text-align:center; }
-#help h4	{ font-size: 1.6em; margin: 1.12em 0 0.15rem;background: #f0f0f0;padding:0.15rem;border-radius:5px;text-indent:8ch; color: #2D7CC1 }
-#help h5	{ font-size: 1.4em; font-style: italic; margin: 1.5em 0; color: #A4A4A4 } 
-#help p	{ font-size: 1.0em;text-indent:1em;margin:0; }
-#help  h2:first-of-type + p {border-bottom:solid 1px;}
-#help a {text-decoration:underline}
-#help code,#help li::marker{color:hotpink;background:#f5f5f5;padding:0.15rem;border-radius:5px;}
-#help li{margin-top:0.5em;}
-</style>
 <div id="help">
 <h2>Aide</h2>
 <p><small>Fichier d'aide du plugin <b>PLX_EBook</b></small></p>
