@@ -1,0 +1,73 @@
+*{margin:0;box-sizing:border-box;}
+/* reset retro compatibilité */
+article, aside, details, figure, figcaption, footer, header, nav, section {
+	display: block;
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	line-height: inherit;
+}
+
+/* fin retro */
+/* harmonie typo */
+body {
+	font-size: 100%; 
+	line-height: 1.5;
+}
+
+h1 {
+	font-size: 1.5em;
+	line-height: 1;
+	margin-top: 0; /* = 0 × line-height */
+	margin-bottom: 3em; /* = 3 × line-height */
+}
+h2 {
+	font-size: 1.3125em;
+	line-height: 1.1429;
+	margin-top: 2.2858em; /* = 2 × line-height */
+	margin-bottom: 1.1429em; /* = 1 × line-height */
+}
+h3 {
+	font-size: 1.125em;
+	line-height: 1.3333;
+	margin-top: 1.3333em; /* = 1 × line-height */
+	margin-bottom: 0; /* = 0 × line-height */
+}
+p {
+	font-size: 1em;
+	line-height: 1.5;
+	margin: 0; /* = 0 × line-height */
+}
+.legende {
+	font-size: 0.875em;
+	line-height: 1.7143;
+	margin: 0; /* = 0 × line-height */
+}
+blockquote {
+	font-size: 1em;
+	line-height: 1.5;
+	margin-top: 1.5em; /* = 1 × line-height */
+	margin-bottom: 1.5em; /* = 1 × line-height */
+	margin-left: 5%; /* = 5\% de la largeur de l\'élément parent */
+	margin-right: 5%; /* = 5\% de la largeur de l\'élément parent */
+}
+/* fin harmonie typo */
+/* cesure */
+body {
+	adobe-hyphenate-limit-lines: 3;
+	-moz-hyphenate-limit-lines: 3;
+	-epub-hyphenate-limit-lines: 3;
+	-ms-hyphenate-limit-lines: 3;
+	-webkit-hyphenate-limit-lines: 3;
+	hyphenate-limit-lines: 3;
+}
+h1, h2, h3, h4, h5, h6,
+.centre, .droite {
+	adobe-hyphenate: none;
+	-ms-hyphens: none; /* Trident (Windows) */
+	-moz-hyphens: none; /* Gecko (Firefox) */
+	-webkit-hyphens: none; /* Webkit */
+	-epub-hyphens: none; /* EPUB 3 */
+	hyphens: none; /* Futur standard */
+}
+/* fin cesure */

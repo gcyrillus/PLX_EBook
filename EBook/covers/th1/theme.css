@@ -1,0 +1,31 @@
+body {
+  font-family: 'FreeSerif';
+}
+
+ h1, section> h2:first-child, th, li.main , li.mother{ 
+  color:hotpink;
+  font-family: 'FreeSansBold';
+}
+h2,
+h4,
+h3,
+h5,
+h6 {
+  color:#6AA6CE;
+  font-family: 'FreeSansBold';
+}
+blockquote:before {
+  color:#6AA6CE;
+}
+blockquote {
+  border-left:solid 0.75rem hotpink;
+  background:#efefef;
+}
+
+th, td {
+  border:solid 1px silver; 
+  color:#6AA6CE; 
+}
+th {
+  background:#efefef ; 
+  }
