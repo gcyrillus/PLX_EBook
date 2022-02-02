@@ -1,5 +1,5 @@
 # PLX_EBook  <sub><sup>(runs with PluXml >= 5.8.7. | compatible plx_gc_categorie & vip_zone)</sup><sub>
-Turns PluXml into an epub editor , allows you to save entirely or partially your site into an epub and make it avalaible for download
+Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
 
 
 <div id="help">
