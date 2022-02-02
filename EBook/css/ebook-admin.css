@@ -1,0 +1,641 @@
+/* feuille de style spécifique */
+*{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+form {
+  margin:1em auto;
+  max-height:80vh;
+  overflow:auto;
+  padding-inline-end:2rem;
+}
+form .form {
+  margin:auto;
+  width:max-content;
+  display:grid;
+  gap:1.2em;
+  grid-template-columns:1fr 1fr;
+}
+
+p{
+	margin:0;
+}
+fieldset {
+  display:grid;
+  margin:1em;
+  background:#fafafa;
+  border:solid 1px;
+  border-radius:0.5em;
+  gap:0.5em;
+  padding-bottom:0.5em;
+  margin:0 auto;
+  width:510px;
+  align-items:center;
+}
+.fullWidth {
+	grid-column:1/-1;
+	width:90%;
+}
+fieldset > div {
+  display:grid;
+  gap:0.5em;
+}
+.pageAnnexes {
+	max-width:40vw;
+}
+fieldset.fullWidth > div {
+	grid-template-columns:repeat(2,1fr);
+}
+legend {
+  margin-left:2em;
+  background: #E5CB9B;
+  padding:0 0.5em;
+  border-radius:0.25em;
+}
+label {
+  font-weight:bold;
+  text-indent:1em;
+  flex-basis:35%;
+  min-width:35%;
+  text-align:right;
+  margin:auto 0;
+	}
+label:after {
+  content:':';
+  vertical-align:top;
+  padding:0 0.25rem;
+}
+label + input,
+label + textarea{
+  flex-grow:1;
+  min-width:50%; 
+  margin:0;
+  resize:vertical;
+}
+input[type="checkbox"] {
+  margin:auto auto auto 1em;
+  flex-grow:0;
+  min-width:auto;
+}
+select {
+  margin:0.2rem;
+  flex-shrink:0;
+  vertical-align:middle;
+}
+p {
+  font-size:0.75em;
+  color:#555;
+  padding:0 1em;
+  display:flex;
+  /*flex-wrap:wrap;*/
+  gap: 0.5em 0;
+  align-items:center;
+}
+input[type="submit"] {
+  margin:1em auto;
+}
+input[type="submit"] {
+  position: sticky;
+  top: 1rem;
+  margin-right: auto;
+  margin-left: 1rem;
+  background:tomato;
+  box-shadow:0 0 5px gray;
+}
+textarea {
+	margin:0.5em;
+	flex-grow:1;
+	max-width:calc(100% - 1em);
+}
+form .form > p {
+	margin:auto;
+	font-size:clamp(1em,3vw,20px);
+}
+#bookcovers  {
+  grid-column:1/-1;
+}
+ 
+fieldset section {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(500px,1fr));
+  gap:1em;
+  padding-top:1em;
+}
+fieldset section label:after {display:none;}
+fieldset section label > img,
+fieldset section > div {
+  aspect-ratio:1/1.5454;
+  width:500px;
+  border:solid 1px;
+  display:block;
+}
+#bookcovers  div.show {
+	margin-top:24px ;
+	position:relative;
+	overflow:visible;
+}
+div.show:before {
+content:'Aperçu 'attr(id);
+	position:absolute;
+	bottom:100%;
+	right:92%;
+	white-space:nowrap;
+	font-family: 'Ubuntu Mono Bold';
+}
+#options {
+  margin: auto;
+  width: auto;
+}
+input {
+}
+#options p label + * {
+  flex: 0 1 auto;
+  min-width: auto;
+  margin: auto;
+}
+#options label {
+  min-width: 50%;
+  flex-grow: 1;
+}
+#help {
+  padding: 1rem;
+}
+#help p {
+  display: block;
+  margin: 0;
+}
+#help h2 {
+  margin-bottom: 0;
+}
+#help ol {
+	list-style-position:inside;
+	font-size:1rem;
+}
+.strike {
+  text-decoration: line-through;
+}
+select[multiple] {
+  min-height: 15em;
+  font-size: 1.1em;
+  overflow: auto;
+  text-align:center;
+  padding:0;
+  margin:auto;
+}
+select[multiple] option:nth-child(even){
+  background:#efffff
+  
+}
+.bigger {
+  font-size:1.1em;
+}
+.bigger label {
+  flex-basis:50%;
+}
+input[name="doMake"] {
+  position: static;
+  margin: auto auto auto 1rem;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: auto;
+  background: #555;
+}
+.on {
+  font-weight: bold;
+  color: tomato;
+  z-index: 1;
+  position: relative;
+}
+.mb-1 {
+    margin-bottom: 0.75rem;
+}
+#formEpub #mode div.fullWidth.hide,
+.hide{
+	display:none;
+}
+
+#formEpub {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  align-items:start;
+    font-family:courier;
+}
+#formEpub > h3 {
+  grid-row:1;
+  position:sticky;
+  margin:0;
+  text-align:center;
+  display:grid;
+  height: 100%;
+  top:0;
+  z-index:15;
+  background:white;
+  min-height:2.6em;
+}
+
+#formEpub >h3 label {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:inset 0 1px  2px gray;	
+  transition:0.25s;
+}
+
+#formEpub >h3 label:after {
+  display:none;
+}
+#formEpub #A label {
+  min-width: max-content;
+}
+#annexe-table tr  label[for="art-coms"] {
+  width: auto;
+  display: flex;
+  align-items:end;
+}
+@media (max-width: 800px) {
+  #formEpub > h3 label {
+    writing-mode: vertical-rl;
+    max-height: 15ch;
+  }
+  #formEpub > h3 span {
+    transform: rotate(205deg); 
+  }
+}
+  #formEpub > h3 label:hover {
+	background:#E5CB9B; 
+	box-shadow: 0 0;
+    text-indent:0;
+  }
+#formEpub hr {
+  grid-column:1/-1;
+}
+#formEpub fieldset {
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(300px,650px));
+  justify-content:center;
+  grid-row:  2;
+  grid-column:1 /span 7;
+  background:white;
+  border:solid;
+  margin:1rem 2rem 0 ;
+  box-shadow:0 0 0 2rem white;
+  visibility:hidden;
+  max-height:50vh;
+  width:auto; 
+}
+#formEpub fieldset small{
+ width:10rem;
+  padding-left:1rem;
+}
+#formEpub select {
+  /*min-width:7.5em;*/
+}
+#mode dl  {
+    box-shadow:0 0 0 1px ;
+}
+#mode dl dd {
+  background:lightgray;
+}
+#mode dt {
+  font-weight:bolder;
+  background:ivory;
+  box-shadow:0 -1px ;
+  padding:0 3px;
+}
+#mode dd {
+  padding-inline-start: 2em;
+  text-indent:1em;
+  line-height:1.1;
+  border-bottom:solid 1px;
+  padding-bottom:0.5em;
+}
+#mode div:first-of-type {
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-self:start
+}
+#mode h3 {
+  margin:0  auto 1em 0.4em;
+  background:#00bfff;
+  border-radius:5px;
+  font-weight: bolder;
+  color:ivory;
+  padding:0.5em;
+  
+}
+
+#mode dt:nth-child(4n-1){
+  background:#bee;
+}
+.sticky-top {
+  position: sticky;
+  z-index:2;
+  top: 0;
+  display: grid;
+  grid-template-columns: repeat(4,auto);
+  background: silver;
+  grid-column:1/-1;
+  margin:0.2em 0.5em;
+  border-radius: 5px;
+  box-shadow:0 0 3px 3px white;
+}
+#parametres_plugin #formEpub h3 + fieldset[id] {
+  max-height: calc(100vh - 23rem);
+  overflow: auto;
+}
+
+label[for^=f] {
+  border:solid #efefef 1px;
+  border-bottom:solid 1px currentcolor;
+  font-size:1.2rem;
+  text-align: center;
+  padding:0.25rem 0;
+  border-radius:0.5em 0.5em 0 0;
+}
+#fA:checked ~ h3 [for="fA"],
+#formEpub #fB:checked ~ h3 [for="fB"],
+#fC:checked ~ h3 [for="fC"],
+#fD:checked ~ h3 [for="fD"],
+#fE:checked ~ h3 [for="fE"],
+#fF:checked ~ h3 [for="fF"] ,
+#fmode:checked ~ h3 [for="fmode"] {
+  background:#bee;
+  border:solid 1px;
+  box-shadow: 0 0;
+  text-indent:0;
+}
+[name="nav"] {grid-row:-1;grid-column:-1;position:absolute;right:100vw;}
+#fA:checked ~ #A,
+#fB:checked ~ #B,
+#fC:checked ~ #C,
+#fD:checked ~ #D,
+#fE:checked ~ #E,
+#fF:checked ~ #F,
+#fmode:checked ~ #mode {
+  visibility:visible;
+  position:relative;
+
+  max-height:max-content;
+}
+
+p.sep {
+  grid-column:1/-1;
+  border-top:solid 1px;
+  border-bottom:solid 1px;
+  background:#bee;
+  box-shadow:0 0 0 1px silver
+}
+#formEpub #F {
+  grid-template-columns: minmax(60vh,95vh);
+}
+#coverslider{  
+  grid-column:1/-1;
+  z-index:0;
+  position:relative;
+}
+#coverslider div[id^="coverth"] {
+  display:grid;
+  grid-template-columns:4em minmax(200px,350px) minmax(200px,500px)4em;
+  justify-content:center;
+}
+
+#coverslider figure {
+  grid-column:2;
+  max-width:100%;
+  display:block;
+  border:solid;
+  order:0
+}
+
+#coverslider object {
+  order:0
+}
+#formEpub #coverslider >div> h3 {
+  background:linear-gradient(to right,transparent 5% ,silver,transparent 95%);
+  order:2;
+  grid-row:2;
+  grid-column:1/-1;
+  text-align: center;
+  margin:0;
+  padding:0.25rem;
+  text-transform:uppercase;
+  font-weight:bold;
+  font-size:2rem;
+  color:tomato; 
+}
+#coverslider label {
+  text-align:center
+}
+#coverslider object {
+  grid-column:3;
+  width:100%;
+  height:100%;
+}
+#coverslider img {
+  display:block;
+}
+
+a.previous ,
+a.next {
+  font-size:3rem;
+  margin:auto;
+  width:1.5em;
+  height:1.5em;
+  line-height:1.3;
+  text-align:center;
+  border:solid;
+  border-radius:1em;
+  text-decoration:none;
+  background:lightyellow;
+  order:0
+}
+.previous {
+  grid-column:1; 
+}
+.next {
+  grid-column:4; 
+}
+.bigger, .bigger ~* {
+  background: MintCream;
+  box-shadow: 0px 3px 3px -3px #5554 , 3px 3px 3px #5554;
+}
+.fs08{
+  font-size:0.8em;
+  color:gray;
+}
+/* slide */
+#coverslider {
+  display:grid;
+  grid-column: 1/-1;
+}
+#coverslider >div{
+  grid-row:1;
+  grid-column:1;
+  background:white;
+}
+
+#coverslider div:not(:first-of-type),
+#fF:not(:checked) ~ #F div:target { 
+  visibility:hidden;  
+}
+
+#coverslider  div:target {
+  visibility:visible; 
+  position:relative;
+}
+
+#formEpub fieldset table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+  grid-column: 1/-1;
+  background:lightyellow;
+  box-shadow:0 0 1px;
+  border-radius:5px;
+  overflow:hidden
+}
+#formEpub fieldset small {
+  width: auto;
+  padding-left: 0;
+  display: block;
+  white-space: pre-wrap; 
+  overflow:hidden;
+}
+#formEpub tr small a {
+  float:right;
+}
+
+#parametres_plugin #formEpub h3 + fieldset[id]:after {
+  content:'';
+  padding:0.1em;
+}
+#annexe-table tr label,
+#annexe-table2 tr label {
+  float:left;
+  clear:left;
+  margin-bottom:0.25rem;
+  min-width: 25ch;  
+  text-align: right;
+}
+
+#annexe-table select,
+#annexe-table2 select {
+  float:left;
+  margin:0.15rem 1rem
+}
+#annexe-table select ~select,
+#annexe-table2 select ~select{
+  float:right;
+  max-width:40%;
+  text-overflow:ellipsis
+}
+#annexe-table .gridInTd select ~ select, 
+#annexe-table2 .gridInTd select ~ select  {
+  max-width:95%;
+  text-overflow:ellipsis
+}
+#formEpub table  tr:nth-child(even) {
+  background:#fafafa;
+}
+#formEpub table  tr:nth-child(even):hover {
+  background:#bee;
+}
+
+#parametres_plugin #formEpub h3 + fieldset[id] {
+  max-height: calc(100vh - 240px);
+  overflow: auto;
+  padding-bottom:1em;
+}
+
+.fullWidth .fullWidth label ,
+.fullWidth .fullWidth span {
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  margin:auto 0;
+}
+.fullWidth .fullWidth span {
+  background:#efefef;
+  display:flex;
+}
+.fullWidth .fullWidth span input{
+	flex-grow:1;
+}
+#mode #comics {
+  display: grid;
+  gap: 0.5em;
+  grid-template-columns: auto 1fr;
+  background: whitesmoke;
+}
+#mode #comics p {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  margin:auto;
+}
+#formEpub #mode .fullWidth.block,
+#mode #comics p label{
+  display:block;
+  padding:0;
+}
+a.fullWidth{
+  margin:auto;
+  width: max-content;
+}
+#epubMode ~.fullWidth {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  border-bottom:double lightgray;
+  width:auto
+}
+#epubMode ~ .fullWidth h4 { 
+  grid-column:1/-1;
+  width:max-content;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00BFFF;
+   padding:0.15rem 5vw;
+  margin:0.25em 0 0.25em auto;
+  background:ivory;
+  box-shadow:0 0 1px; 
+  text-align:center;
+  border-radius:5px;  
+}
+input[name="doComics"] {
+  margin: 0.5em 0.5em 0.5em auto;
+  grid-column: 1/-1;
+  background:#777;
+  color:#E5CB9B
+}
+.fullWidth p {
+  flex-wrap:wrap;
+}
+.gridInTd {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+}
+.gridInTd.regStatic {
+  grid-template-columns: minmax(20ch,50%) auto 1fr;
+}
+.gridInTd.regStatic label{
+  min-width:100%;
+}
+.gridInTd:after {
+  content: '';
+  grid-row: 1/10;
+  grid-column: 3;
+}
+.gridInTd.regStatic:after{
+  display:none;
+}
+.gridInTd label {
+  width: 12ch;
+  white-space: pre-wrap;
+}
+@media (max-width:900px) {
+	#parametres_plugin #formEpub h3 + fieldset[id]{
+	max-height:calc(55vh);	
+	}
+}
