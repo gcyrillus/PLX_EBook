@@ -1,0 +1,35 @@
+body {
+  color:#5C3535;
+  font-family: 'Ubuntu Mono Bold';
+}
+
+th, td {
+  border:solid 1px silver; 
+  color:#6AA6CE; 
+}
+
+ h1, section> h2:first-child, th, li.main , li.mother{ 
+  color:#18425A; 
+font-family:'FreeSansBold';
+  font-weight:bold;
+}
+h2,
+h4,
+h3,
+h5,
+h6 {
+  color:#54a2e4;
+  font-family: 'Ubuntu Mono Bold';
+  font-weight:normal
+}
+blockquote:before {
+  color:#6AA6CE;
+}
+blockquote {
+  border-left:solid 0.75rem :#54a2e4;
+  background:#efefef;
+}
+th {
+  background:#efefef ;
+}
+
