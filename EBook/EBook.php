@@ -43,7 +43,6 @@ class EBook extends plxPlugin {
 				$this->addHook('plxShowConstruct', 'plxShowConstruct');
 				$this->addHook('plxShowStaticListEnd', 'plxShowStaticListEnd');
 				$this->addHook('plxShowPageTitle', 'plxShowPageTitle');
-				$this->addHook('SitemapStatics', 'SitemapStatics');
 			 
 		}
 	}
@@ -53,38 +52,7 @@ class EBook extends plxPlugin {
 				mkdir(PLX_ROOT.'EPUBS', 0777, true);
 			}
 		}	
-		
-	/**
-	 * Méthode qui charge le code css nécessaire à la gestion de onglet dans l'écran de configuration du plugin
-	 *
-	 * @return	stdio
-	 * @author	Stephane F
-	 **/
-	public function AdminTopEndHead() {
-		if(basename($_SERVER['SCRIPT_NAME'])=='parametres_plugin.php') {
-			//echo '<link href="'.PLX_PLUGINS.$this->plug['name'].'/tabs/style.css" rel="stylesheet" type="text/css" />'."\n";
-		}
-	}
-
-	/**
-	 * Méthode qui affiche un message si l'adresse email du contact n'est pas renseignée
-	 *
-	 * @return	stdio
-	 * @author	Stephane F
-	 **/
-	public function AdminTopBottom() {
-
-
-
-		echo '<?php
-		$file = PLX_PLUGINS."EBook/lang/".$plxAdmin->aConf["default_lang"].".php";
-		if(!file_exists($file)) {
-			echo "<p class=\"warning\">Plugin EBook<br />".sprintf("'.$this->getLang('L_LANG_UNAVAILABLE').'", $file)."</p>";
-			plxMsg::Display();
-		}
-		?>';
-
-	}
+	
 
 	/**
 	 * Méthode de traitement du hook plxShowConstruct
@@ -165,22 +133,7 @@ class EBook extends plxPlugin {
 		?>';
 	}
 
-	/**
-	 * Méthode qui référence la page de contact dans le sitemap
-	 *
-	 * @return	stdio
-	 * @author	Stephane F
-	 **/
-	public function SitemapStatics() {
-		echo '<?php
-		echo "\n";
-		echo "\t<url>\n";
-		echo "\t\t<loc>".$plxMotor->urlRewrite("?'.$this->lang.$this->url.'")."</loc>\n";
-		echo "\t\t<changefreq>monthly</changefreq>\n";
-		echo "\t\t<priority>0.8</priority>\n";
-		echo "\t</url>\n";
-		?>';
-	}
+
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	/**
