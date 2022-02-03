@@ -14,7 +14,7 @@ class EBook extends plxPlugin {
 	 *
 	 * @param	default_lang	langue par défaut
 	 * @return	stdio
-	 * @author	Stephane F
+	 * @author	G.Cyrillus
 	 **/
 	public function __construct($default_lang) {
 
