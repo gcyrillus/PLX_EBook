@@ -26,6 +26,7 @@ Turns PluXml into an epub editor , allows you to save entirely or partially your
 <li><p><b>Template </b> Choix du template d'affichage de cette page qui se comporte comme une page statique</p></li>
 <li><p><b>Contenu personnalisé sous le titre</b> Ajoute de contenus avant la liste des epubs disponibles. format HTML possible.</p></li>
 <li><p><b>Contenu personnalisé fin de liste.</b> ajout d'un element de liste avec un texte ou HTML de votre choix</p></li>
+<li><p><b>Option de debogage</b> affiche les eventuelles messages d'erreur à l'enregistrement d'un onglet ou à la création d'un epub pour débusquer d'eventuels bugs ou erreurs. Un lien s'affiche pour retourner sur l'onglet de configuration en cours.</p></li>
 </ol>
 
 <h4>Mode de publication</h4>
