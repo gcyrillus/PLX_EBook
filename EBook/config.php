@@ -9,31 +9,34 @@ require('varEbook.php');
 		$backToTab='';
 
 			
-		if(isset($_POST['submitmode'])) { //comicsmedia
-		$plxPlugin->setParam('epubMode', 			$_POST['epubMode'			], 'string');	
-		$plxPlugin->setParam('comicsmedia', 		$_POST['comicsmedia'		], 'string');
-		$plxPlugin->setParam('titreComics', 		$_POST['titreComics'		], 'string');
-		$plxPlugin->setParam('descComics', 			$_POST['descComics'			], 'string');
-		$plxPlugin->setParam('auteurComics', 		$_POST['auteurComics'		], 'string');
-		$plxPlugin->setParam('illustrateurComics', 	$_POST['illustrateurComics'	], 'string');
-		$plxPlugin->setParam('ISSNComics', 			$_POST['ISSNComics'			], 'string');
-		$plxPlugin->setParam('ISBNComics',			$_POST['ISBNComics'			], 'string');
-		//valeurs mois 
-		 $plxPlugin->setParam('magMM', $_POST['magMM'], 'numeric'); 
-		 $plxPlugin->setParam('magTM', $_POST['magTM'], 'numeric');  
-		 $plxPlugin->setParam('magSM', $_POST['magSM'], 'numeric');  
-		//valeurs Années
-		 $plxPlugin->setParam('magMY', $_POST['magMY'], 'numeric');  
-		 $plxPlugin->setParam('magTY', $_POST['magTY'], 'numeric');   
-		 $plxPlugin->setParam('magSY', $_POST['magSY'], 'numeric');   
-		 $plxPlugin->setParam('magAY', $_POST['magAY'], 'numeric'); 
-		 
-		$plxPlugin->setParam('triAuthors',$_POST['triAuthors'] , 'string');		 
-
-		
-		$plxPlugin->saveParams();
-		$backToTab='&tab=fmode';		
-				 //echo 'A debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';   exit;  	
+		if(isset($_POST['submitmode'])) { //publish mode
+			$plxPlugin->setParam('epubMode', 			$_POST['epubMode'			], 'string');	
+			$plxPlugin->setParam('comicsmedia', 		$_POST['comicsmedia'		], 'string');
+			$plxPlugin->setParam('titreComics', 		$_POST['titreComics'		], 'string');
+			$plxPlugin->setParam('descComics', 			$_POST['descComics'			], 'string');
+			$plxPlugin->setParam('auteurComics', 		$_POST['auteurComics'		], 'string');
+			$plxPlugin->setParam('illustrateurComics', 	$_POST['illustrateurComics'	], 'string');
+			$plxPlugin->setParam('ISSNComics', 			$_POST['ISSNComics'			], 'string');
+			$plxPlugin->setParam('ISBNComics',			$_POST['ISBNComics'			], 'string');
+			//valeurs mois 
+			 $plxPlugin->setParam('magMM', $_POST['magMM'], 'numeric'); 
+			 $plxPlugin->setParam('magTM', $_POST['magTM'], 'numeric');  
+			 $plxPlugin->setParam('magSM', $_POST['magSM'], 'numeric');  
+			//valeurs Années
+			 $plxPlugin->setParam('magMY', $_POST['magMY'], 'numeric');  
+			 $plxPlugin->setParam('magTY', $_POST['magTY'], 'numeric');   
+			 $plxPlugin->setParam('magSY', $_POST['magSY'], 'numeric');   
+			 $plxPlugin->setParam('magAY', $_POST['magAY'], 'numeric'); 
+			 
+			$plxPlugin->setParam('triAuthors',$_POST['triAuthors'] , 'string');		
+			
+			$plxPlugin->saveParams();
+			
+			$backToTab='&tab=fmode';
+			if( $var['debugme'] == 1) {		
+				echo ' Mode Publication:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}				 
 		}
 				
 		if (isset($_POST['submitA'])) {// option affichage
@@ -42,6 +45,8 @@ require('varEbook.php');
 		$plxPlugin->setParam('template', 				$_POST['template'], 'string');
 		$plxPlugin->setParam('url', plxUtils::title2url($_POST['url']), 'string');
 		$plxPlugin->setParam('epubRepertory',	   trim($_POST['epubRepertory']), 'string');
+		$plxPlugin->setParam('debugme', 				$_POST['debugme'], 'numeric');
+		$var['debugme'] = $_POST['debugme'];
 			foreach($aLangs as $lang) {
 				$plxPlugin->setParam('mnuName_'.$lang, 	$_POST['mnuName_'.$lang], 'string');
 			    //$plxPlugin->setParam('mnuText_'.$lang, 	$_POST['mnuText_'.$lang], 'string');
@@ -49,14 +54,22 @@ require('varEbook.php');
 		$plxPlugin->setParam('custom-start', $_POST['custom-start'], 'cdata');
 		$plxPlugin->setParam('custom-end', $_POST['custom-end'], 'cdata');
 		$plxPlugin->saveParams();
-		$backToTab='&tab=fA';	
-				 //echo 'A debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';   exit;  
+		
+		$backToTab='&tab=fA';
+		if($var['debugme'] == 1) {		
+			echo 'Options Affichages:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+			exit;
+				}		
 		} 	
 		
 		if (isset($_POST['submitB'])) {// vide
 		$plxPlugin->saveParams();
 		
 		$backToTab='&tab=fB';
+			if($var['debugme'] == 1) {		
+				echo 'vide:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}				 
 		} 	
 		
 		if (isset($_POST['submitC'])) {// choix categorie/annexe
@@ -73,8 +86,8 @@ require('varEbook.php');
 		
 		// pages supplementaire à inclure
 		$plxPlugin->setParam('pageIndex', $_POST['pageIndex'], 'numeric');
-		$plxPlugin->setParam('pageCopy', $_POST['pageCopy'], 'numeric');
-			if($_POST['pageCopy'] =='1' && $plxPlugin->checkMultiArray(@$plxAdmin->aStats,'pagecopy') ===false ) { 
+		if(isset($_POST['pageCopy'])) $plxPlugin->setParam('pageCopy', $_POST['pageCopy'], 'numeric');
+			if(isset($_POST['pageCopy']) && $_POST['pageCopy'] =='1' && $plxPlugin->checkMultiArray(@$plxAdmin->aStats,'pagecopy') ===false ) { 
 			$plxPlugin->createAnnexeStatique('pagecopy','Ebook Copyrights');
             $plxPlugin->setParam('pageCopyId',$plxPlugin->AnnexeId, 'numeric');
 			}
@@ -124,7 +137,10 @@ require('varEbook.php');
         $plxPlugin->saveParams();
 		
 		$backToTab='&tab=fC';
-		// echo 'C debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';   exit;  		
+			if($var['debugme'] == 1) {		
+				echo 'Selection annexe et catégories:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}
 		} 	
 		
 		if (isset($_POST['submitD'])) {//fiche epub
@@ -160,27 +176,40 @@ require('varEbook.php');
         $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
 		$plxPlugin->saveParams();
 		$backToTab='&tab=fD';
+		
+		if($var['debugme'] == 1) {		
+			echo 'fiche epub:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+			exit;
+		}				 
 		} 	
 		
-		if (isset($_POST['submitE'])) {
-		$plxPlugin->setParam('ctxt', $_POST['ctxt'], 'string');
-        $plxPlugin->setParam('cread', $_POST['cread'], 'string');
-        $plxPlugin->setParam('cimg', $_POST['cimg'], 'cdata');
-        $plxPlugin->setParam('ctrslt', $_POST['ctrslt'], 'string');
-		
-        $plxPlugin->setParam('cbiblio', $_POST['cbiblio'], 'string');
-        $plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
-        $plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
+		if (isset($_POST['submitE'])) {// fiche crédits
+			$plxPlugin->setParam('ctxt', $_POST['ctxt'], 'string');
+			$plxPlugin->setParam('cread', $_POST['cread'], 'string');
+			$plxPlugin->setParam('cimg', $_POST['cimg'], 'cdata');
+			$plxPlugin->setParam('ctrslt', $_POST['ctrslt'], 'string');
+			
+			$plxPlugin->setParam('cbiblio', $_POST['cbiblio'], 'string');
+			$plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
+			$plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
 
-        $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
-		
-		$plxPlugin->saveParams();
-		$backToTab='&tab=fE';
+			$plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
+			
+			$plxPlugin->saveParams();
+			$backToTab='&tab=fE';
+			if($var['debugme'] == 1) {		
+				echo 'fiche crédits:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}				 
 		} 	
 		
 		if (isset($_POST['submitF'])) {// ajout theme perso : à voir / à faire
 		$plxPlugin->saveParams();
 		$backToTab='&tab=fE';
+			if($var['debugme'] == 1) {		
+				echo 'theme :  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}				 
 		}
 
 		if(isset($_POST['doComics'])) { // créations epub à partir d'images		$dcId=$plxPlugin->getParam('titreComics');
@@ -613,11 +642,7 @@ require('varEbook.php');
 
 					
 				}
-				
-				
-				
-				
-				
+								
 				// recuperation images pour insertion dans doc xhtml $xhtml
 				$comicDir= PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia');
 				$filesC = array_unique(array_merge(glob($comicDir.'/*.[jJ][pP][gG]'),glob($comicDir.'/*.[jJ][pP][eE][gG]'),glob($comicDir.'/*.[gG][iI][fF]'), glob($comicDir.'/*.[jJ][pP][gG]')));
@@ -625,173 +650,163 @@ require('varEbook.php');
 				$Pagecomics=0;
 				$play=0;
 				foreach ($filesC as $comicsFile ) {
-					 if(basename($comicsFile)!='cover.jpg'){					
+					if(basename($comicsFile)!='cover.jpg'){					
 						$Pagecomics++;
 						$play++;
-						{
+						{			 
+							$Pagecmx =$opf->createElement('item');
+							$Pagecmx_attr_1= $opf->createAttribute('id'); 
+							$Pagecmx_attr_1->value="page-".$Pagecomics;
 							
-			 
-												$Pagecmx =$opf->createElement('item');
-												$Pagecmx_attr_1= $opf->createAttribute('id'); 
-												$Pagecmx_attr_1->value="page-".$Pagecomics;
+							$Pagecmx->appendChild($Pagecmx_attr_1);
+							$Pagecmx_attr_2= $opf->createAttribute('href'); 
+							$Pagecmx_attr_2->value="page-".$Pagecomics.".xhtml";
+							$Pagecmx->appendChild($Pagecmx_attr_2);
+							$Pagecmx_attr_3= $opf->createAttribute('media-type'); 
+							$Pagecmx_attr_3->value="application/xhtml+xml";
+							$Pagecmx->appendChild($Pagecmx_attr_3);
+							
+							//insertion dans le tag manifest
+						$manifest->appendChild($Pagecmx);
+							
+							// ajout dans toc.ncx
 												
-												$Pagecmx->appendChild($Pagecmx_attr_1);
-												$Pagecmx_attr_2= $opf->createAttribute('href'); 
-												$Pagecmx_attr_2->value="page-".$Pagecomics.".xhtml";
-												$Pagecmx->appendChild($Pagecmx_attr_2);
-												$Pagecmx_attr_3= $opf->createAttribute('media-type'); 
-												$Pagecmx_attr_3->value="application/xhtml+xml";
-												$Pagecmx->appendChild($Pagecmx_attr_3);
-												
-												//insertion dans le tag manifest
-											$manifest->appendChild($Pagecmx);
-												
-												// ajout dans toc.ncx
-												
-												{// creation du point de navigation vers la page annexe
-												$nP=$toc->createElement('navPoint');
-												$nP_attr=$toc->createAttribute('id');
-												$nP_attr->value='num-'.$play;
-												$nP->appendChild($nP_attr);
-												$nP_attr_1=$toc->createAttribute('playOrder');
-												$nP_attr_1->value=$play;
-												$nP->appendChild($nP_attr_1);
-												
-												$nl=$toc->createElement('navLabel');
-												$txt=$toc->createElement('text',  $plxPlugin->getParam('titreComics').' - Page '.$Pagecomics);
-												$nl->appendChild($txt);
-												$nP->appendChild($nl);
+							{// creation du point de navigation vers la page annexe
+							$nP=$toc->createElement('navPoint');
+							$nP_attr=$toc->createAttribute('id');
+							$nP_attr->value='num-'.$play;
+							$nP->appendChild($nP_attr);
+							$nP_attr_1=$toc->createAttribute('playOrder');
+							$nP_attr_1->value=$play;
+							$nP->appendChild($nP_attr_1);
+							
+							$nl=$toc->createElement('navLabel');
+							$txt=$toc->createElement('text',  $plxPlugin->getParam('titreComics').' - Page '.$Pagecomics);
+							$nl->appendChild($txt);
+							$nP->appendChild($nl);
 
-												$ct=$toc->createElement('content' );
-												$nP->appendChild($ct);
-												$ct_attr=$toc->createAttribute('src');
-												$ct_attr->value=$Pagecmx_attr_2->value;
-												$ct->appendChild($ct_attr);		
-												$nP->appendChild($ct);
-											// fin premier point de navigation
-											
-											// ajout à navPoint
-												$toc->appendChild($nP);
-											
-											// ajout navPoint dans navMap
-												$navMap->appendChild($nP);
-												}
+							$ct=$toc->createElement('content' );
+							$nP->appendChild($ct);
+							$ct_attr=$toc->createAttribute('src');
+							$ct_attr->value=$Pagecmx_attr_2->value;
+							$ct->appendChild($ct_attr);		
+							$nP->appendChild($ct);
+						// fin premier point de navigation
+						
+						// ajout à navPoint
+							$toc->appendChild($nP);
+						
+						// ajout navPoint dans navMap
+							$navMap->appendChild($nP);
+							}
 												
-												{//CREATION PAGE et injection TITRE ET DESCRIPTION CATEGORIES
-												$pageXHTML = new DOMDocument('1.0', 'utf-8'); 
-												$pageXHTML->loadHTML($xhtmlcomics);
-												$title = $pageXHTML->createElement('title', $plxPlugin->getParam('titreComics').' - page '.$Pagecomics );
-												// ajout du titre 
-												$xpath = new DOMXPath($pageXHTML);    
-												$results = $xpath->query('/html/head');   
-												$head = $results->item(0);
-												$head->appendChild($title);
-												
-													
-												//ajout contenu	   
-												$results = $xpath->query('/html/body');
-												$body=$results->item(0); 
-												$img= $pageXHTML->createElement('img');
-												$img_attr=$pageXHTML->createAttribute('src');
-												$img_attr->value='IMG/'.basename($comicsFile);
-												$img->appendChild($img_attr);
-												
-												$body->appendChild($img);
+							{//CREATION PAGE et injection TITRE ET DESCRIPTION CATEGORIES
+							$pageXHTML = new DOMDocument('1.0', 'utf-8'); 
+							$pageXHTML->loadHTML($xhtmlcomics);
+							$title = $pageXHTML->createElement('title', $plxPlugin->getParam('titreComics').' - page '.$Pagecomics );
+							// ajout du titre 
+							$xpath = new DOMXPath($pageXHTML);    
+							$results = $xpath->query('/html/head');   
+							$head = $results->item(0);
+							$head->appendChild($title);							
+								
+							//ajout contenu	   
+							$results = $xpath->query('/html/body');
+							$body=$results->item(0); 
+							$img= $pageXHTML->createElement('img');
+							$img_attr=$pageXHTML->createAttribute('src');
+							$img_attr->value='IMG/'.basename($comicsFile);
+							$img->appendChild($img_attr);
+							
+							$body->appendChild($img);
 
-													$pageXHTML->preserveWhiteSpace = false; 
-													$pageXHTML->formatOutput = true;		
-													$pageXHTML->xmlStandalone = false;
-												$pageCMX= $pageXHTML->saveXML();
-												
-												
-						
-												// sauvegarde fichier.
-												$plxPlugin->addFiletxt('EPUB/'.$Pagecmx_attr_2->value, $pageCMX, $ebook);
-												$plxPlugin->addFiles(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile),'EPUB/IMG/'.basename($comicsFile),$ebook);
-						
-												//ajout au manifest
-												$mtype=  mime_content_type(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile));
-												$books =$opf->createElement('item');
-												$book_attr_1= $opf->createAttribute('id'); 
-												$book_attr_1->value="img-".$Pagecomics;	
-												$books->appendChild($book_attr_1);
-												$book_attr_2= $opf->createAttribute('href'); 
-												$book_attr_2->value="IMG/".basename($comicsFile);
-												$books->appendChild($book_attr_2);
-												$book_attr_3= $opf->createAttribute('media-type'); 
-												$book_attr_3->value=$mtype;
-												$books->appendChild($book_attr_3);
-											$manifest->appendChild($books);
-												
-												//insertion dans le tag  spine
-												$spineItem=$opf->createElement('itemref');
-												$spineItem_attr= $opf->createAttribute('idref'); 
-												$spineItem_attr->value=$Pagecmx_attr_1->value;
-												$spineItem->appendChild($spineItem_attr);
-											$spine->appendChild($spineItem);
-												
-												
-												// Creation reference dans guide
-												$ref = $opf->createElement('reference');
-												$ref_attr = $opf->createAttribute('href');
-												$ref_attr->value=$Pagecmx_attr_2->value;
-												$ref->appendChild($ref_attr);
-												$ref_attr_1 = $opf->createAttribute('title');
-												$ref_attr_1->value=$plxPlugin->getParam('titreComics').' - Page '. $Pagecomics;
-												$ref->appendChild($ref_attr_1);
-												$ref_attr_2 = $opf->createAttribute('type');
-												$ref_attr_2->value="text";
-												$ref->appendChild($ref_attr_2);
-											$guide->appendChild($ref);
-												}											
-							}					
-					
+								$pageXHTML->preserveWhiteSpace = false; 
+								$pageXHTML->formatOutput = true;		
+								$pageXHTML->xmlStandalone = false;
+							$pageCMX= $pageXHTML->saveXML();							
+	
+							// sauvegarde fichier.
+							$plxPlugin->addFiletxt('EPUB/'.$Pagecmx_attr_2->value, $pageCMX, $ebook);
+							$plxPlugin->addFiles(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile),'EPUB/IMG/'.basename($comicsFile),$ebook);
+	
+							//ajout au manifest
+							$mtype=  mime_content_type(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile));
+							$books =$opf->createElement('item');
+							$book_attr_1= $opf->createAttribute('id'); 
+							$book_attr_1->value="img-".$Pagecomics;	
+							$books->appendChild($book_attr_1);
+							$book_attr_2= $opf->createAttribute('href'); 
+							$book_attr_2->value="IMG/".basename($comicsFile);
+							$books->appendChild($book_attr_2);
+							$book_attr_3= $opf->createAttribute('media-type'); 
+							$book_attr_3->value=$mtype;
+							$books->appendChild($book_attr_3);
+						$manifest->appendChild($books);
+							
+							//insertion dans le tag  spine
+							$spineItem=$opf->createElement('itemref');
+							$spineItem_attr= $opf->createAttribute('idref'); 
+							$spineItem_attr->value=$Pagecmx_attr_1->value;
+							$spineItem->appendChild($spineItem_attr);
+						$spine->appendChild($spineItem);							
+							
+							// Creation reference dans guide
+							$ref = $opf->createElement('reference');
+							$ref_attr = $opf->createAttribute('href');
+							$ref_attr->value=$Pagecmx_attr_2->value;
+							$ref->appendChild($ref_attr);
+							$ref_attr_1 = $opf->createAttribute('title');
+							$ref_attr_1->value=$plxPlugin->getParam('titreComics').' - Page '. $Pagecomics;
+							$ref->appendChild($ref_attr_1);
+							$ref_attr_2 = $opf->createAttribute('type');
+							$ref_attr_2->value="text";
+							$ref->appendChild($ref_attr_2);
+						$guide->appendChild($ref);
+							}											
+						}					
 					}
 				}
 				$books =$opf->createElement('item');
-								$book_attr_1= $opf->createAttribute('id'); 
-								$book_attr_1->value="ncx";	
-								$books->appendChild($book_attr_1);
-								
-								$book_attr_2= $opf->createAttribute('href'); 
-								$book_attr_2->value="toc.ncx";
-								$books->appendChild($book_attr_2);
-								
-								$book_attr_3= $opf->createAttribute('media-type'); 
-								$book_attr_3->value="application/x-dtbncx+xml";
-								$books->appendChild($book_attr_3);	
-								
-								$manifest->appendChild($books);	
-								
-								
-								
-								
-								$package->appendChild($manifest);
-								$package->appendChild($spine);
-								$package->appendChild($guide);
-								// fin package 
-								$opf->appendChild($package);
+					$book_attr_1= $opf->createAttribute('id'); 
+					$book_attr_1->value="ncx";	
+					$books->appendChild($book_attr_1);
 					
-	
-	
-								// enregistrement du fichier dans l'archive.
-								$plxPlugin->addFiletxt('EPUB/package.opf', $opf->saveXML(), $ebook);
+					$book_attr_2= $opf->createAttribute('href'); 
+					$book_attr_2->value="toc.ncx";
+					$books->appendChild($book_attr_2);
+					
+					$book_attr_3= $opf->createAttribute('media-type'); 
+					$book_attr_3->value="application/x-dtbncx+xml";
+					$books->appendChild($book_attr_3);	
+					
+				$manifest->appendChild($books);		
+									
+					$package->appendChild($manifest);
+					$package->appendChild($spine);
+					$package->appendChild($guide);
+					// fin package 
+				$opf->appendChild($package);	
 
-				
-								// enregistrement toc.ncx			
-								//nettoyage et indentation
-								$toc->preserveWhiteSpace = false;	
-								$toc->formatOutput = true;	 
-								$tdm = $toc->saveXML();
-								$tdm = str_replace('<?xml version="1.0"?>','<?xml version="1.0" encoding="utf-8"?>',$tdm);
-								// sauvegarde fichier.
-								$plxPlugin->addFiletxt('EPUB/toc.ncx',$tdm, $ebook);
+					// enregistrement du fichier dans l'archive.
+					$plxPlugin->addFiletxt('EPUB/package.opf', $opf->saveXML(), $ebook);
+	
+					// enregistrement toc.ncx			
+					//nettoyage et re-indentation
+					$toc->preserveWhiteSpace = false;	
+					$toc->formatOutput = true;	 
+					$tdm = $toc->saveXML();
+					$tdm = str_replace('<?xml version="1.0"?>','<?xml version="1.0" encoding="utf-8"?>',$tdm);
+					// sauvegarde fichier.
+					$plxPlugin->addFiletxt('EPUB/toc.ncx',$tdm, $ebook);
 							
-				$backToTab='&tab=fmode';	
-				//echo 'COMICS : debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';   exit; 
+				$backToTab='&tab=fmode';
+				if($var['debugme'] == 1) {				
+					echo 'COMICS : debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+					exit; 
+				}
 		}
 		
-		if (isset($_POST['doMake'])) { // voir à passer les variables par défaut dans un fichier satelite.
+		if (isset($_POST['doMake'])) { 
 			$ebook="";
 			//recup categories
 			$MyCats=$plxAdmin->aCats;
@@ -1038,7 +1053,7 @@ require('varEbook.php');
 				$autId=1;
 				$UsersDesc=array();//reset
 						foreach($plxAdmin->aUsers as $_userid => $_user)	{
-							if($_user['profil'] >=0 && $_user['profil'] <= 5  && $_user['active'] == 1 ) {
+							if($_user['profil'] >=0 && $_user['profil'] <= 4  && $_user['active'] == 1 ) {
 								$AllUsers[]= $_user['name'];
 								if($_user['infos'] !=''){ $UsersDesc[$_user['name']]= $_user['infos'];}// pour traitement ultérieur
 								
@@ -1854,6 +1869,7 @@ require('varEbook.php');
 													$page++;
 														$art = $plxAdmin->parseArticle(PLX_ROOT . $plxAdmin->aConf['racine_articles'] . $v);
 														if(!empty($art)) {
+														 $art["title"] = str_replace(' & ', ' &amp; ', $art["title"]);
 														$okay=true;
 														// preparation page index
 															$artTag[mb_substr($v,0,4)] = mb_substr($v,0,4);// on garde le numero d'article uniquement 
@@ -1909,7 +1925,9 @@ require('varEbook.php');
 																$pageXHTML->loadHTML($xhtml);
 																
 																// ajout du titre 
-																$title = $pageXHTML->createElement('title', $art["title"] );
+																$title = $pageXHTML->createElement('title');
+																$title_data = $pageXHTML->createCDATASection( $art["title"] );
+																$title->appendChild($title_data);
 																$xpath = new DOMXPath($pageXHTML);    
 																$results = $xpath->query('/html/head');   
 																$head = $results->item(0);
@@ -1941,7 +1959,9 @@ require('varEbook.php');
 																$tdm->appendChild($tdm_attr_2);
 																$section->appendChild($tdm);
 																
-																$h2=$pageXHTML->createElement('h2',$art["title"] );
+																$h2=$pageXHTML->createElement('h2');	
+																$h2_data=$pageXHTML->createCDATASection($art["title"]);
+																$h2->appendChild($h2_data);
 																$section->appendChild($h2);
 																
 																if($art['thumbnail'] !='') {
@@ -1980,7 +2000,7 @@ require('varEbook.php');
 																
 																$section->appendChild($div);
 
-																$img=$pageXHTML->createElement('img');
+																/*$img=$pageXHTML->createElement('img');
 																$img_attr=$pageXHTML->createAttribute('src');
 																$img_attr->value='data/medias/grass.png';			
 																$img->appendChild($img_attr);
@@ -1988,7 +2008,7 @@ require('varEbook.php');
 																$img_attr_2=$pageXHTML->createAttribute('id');
 																$img_attr_2->value='r7';			
 																$img->appendChild($img_attr_2);
-																$section->appendChild($img);
+																$section->appendChild($img);*/
 
 															
 															// on verifie si l'on à déja vu cette page dans une autre catégorie, si oui, on l'exclu du tableaux des mots clé pour ne pas avoir de doublon
@@ -2071,7 +2091,9 @@ require('varEbook.php');
 														// alimentation nav toc sous niveau li et liens 
 															$lili = $pagenav->createElement('li');
 															$olol->appendChild($lili);			
-																$lia=$pagenav->createElement('a',$art["title"]);
+																$lia=$pagenav->createElement('a');
+																$lia_data=$pagenav->createCDATASection($art["title"]);
+																$lia->appendChild($lia_data);
 																$lia_attr=$pagenav->createAttribute('href');
 																$lia_attr->value=$book_attr_2->value;
 																$lia->appendChild($lia_attr);
@@ -3060,11 +3082,12 @@ require('varEbook.php');
 			}//fin loop foreach des epubs a faire
 
 		$backToTab='&tab=fC';
-		// echo '1 debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';   exit;  
-
-		////// fin sauvegarde fichiers epub 	
-
-		}		
+		
+			if($var['debugme'] == 1) {		
+				echo 'Sauvegarde epubs:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+				exit;
+			}		
+		}// fin sauvegarde fichiers epub 	
 
 		if (isset($_POST['submit'])){
 		// MAJ metas du bouquin
@@ -3094,8 +3117,7 @@ require('varEbook.php');
         $plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
         $plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
 
-        $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
-		
+        $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');			
 
 		// options affichage
 		$plxPlugin->setParam('mnuDisplay', $_POST['mnuDisplay'], 'numeric');
@@ -3127,8 +3149,12 @@ require('varEbook.php');
 		
 		}
 		
-        $plxPlugin->saveParams();		
-		 //echo '2 debug affiche les messages et erreurs sans redirection <a href="parametres_plugin.php?p='.$plugin.$backToTab'">retour page '.$plugin.'</a>';  exit;  
+        $plxPlugin->saveParams();
+
+			if($var['debugme'] == 1) {		
+				echo 'Submit:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.'">retour page '.$plugin.'</a>';   
+				exit;
+			}				 		
 		}
 		header('Location: parametres_plugin.php?p='.$plugin.$backToTab);
 	}
@@ -3162,7 +3188,7 @@ $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 1
 <?php echo plxToken::getTokenPostMethod() ;
 echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebook-admin.css" media="screen">';
 ?>
-  <input type="radio" name="nav" id="fA"    <?php if(!isset($_GET['tab'])) {echo ' checked="checked"' ;}?>>
+  <input type="radio" name="nav" id="fA"    <?php if(!isset($_GET['tab']) || ( isset($_GET['tab']) && $_GET['tab']=='fA')) {echo ' checked="checked"' ;}?>>
   <input type="radio" name="nav" id="fB"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fB') 	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fC"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fC') 	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fD"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fD')	{echo ' checked="checked"';}?>>
@@ -3178,7 +3204,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
     <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
     <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><input name="epubRepertory" value="<?php echo $var['epubRepertory']; ?> "></p>
     <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
-	<!-- TODO option de debugage --><!-- <p><label for="id_debugme"><?php //$plxPlugin->lang('L_DEBUGME') ?>&nbsp;</label><?php //plxUtils::printSelect('debugme', $aTemplates, $var['debugme']) ?></p>-->
+	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
     <div>  
 	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
       <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
@@ -3253,7 +3279,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
      <dt><?php echo $plxPlugin->getLang('L_MAG_MODE') ?></dt>
      <dd><?php echo $plxPlugin->getLang('L_ALIKE') ?> <?php echo $plxPlugin->getLang('L_BLOG_ARCHIVE') .','. $plxPlugin->getLang('L_SORT_RECENT_TO_OLDEST'). $plxPlugin->getLang('L_PERIODICITY_CHOSEN'). $plxPlugin->getLang('L_MANUALLY_MADE') ?> </dd>
      <dt><?php echo $plxPlugin->getLang('L_COMICS_MODE') ?></dt>
-     <dd><?php echo $plxPlugin->getLang('L_SIMPLIFIED_MODE') ?>: <?php echo $plxPlugin->getLang('L_LIST_REPERTORY_IMG_COVER') ?> <code>cover.jpg</code>..</dd>
+     <dd><?php echo $plxPlugin->getLang('L_SIMPLIFIED_MODE') ?>: <?php echo $plxPlugin->getLang('L_LIST_REPERTORY_IMG_COVER') ?> <code>cover.jpg</code>.</dd>
      <dt class="strike">FixedLayout</dt>
      <dd class="">NOT AVALAIBLE</dd>
    </dl>
@@ -3281,24 +3307,24 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 					<td>
 					<label for="pageDedicace"><?php echo $plxPlugin->getLang('L_DEDICATION_PAGE') ?></label>
 					<?php plxUtils::printSelect('pageDedicace',array('1'=>L_YES,'0'=>L_NO),$var['pageDedicace']); ?>
-					<small <?php if($plxPlugin->getParam('pageDedicace') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_DEDICATION_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>  
-					<?php if($plxPlugin->getParam('pagededicaceId') > 0) {echo '<a href=" statique.php?p='. str_pad($plxPlugin->getParam('pagededicaceId'), 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
+					<small <?php if($var['pageDedicace'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_DEDICATION_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>  
+					<?php if($var['pagededicaceId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pagededicaceId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
 				</td>
 			</tr>
 			<tr>
 					<td>
 					<label for="pagePreface"><?php echo $plxPlugin->getLang('L_PREFACE_PAGE') ?></label>
 					<?php plxUtils::printSelect('pagePreface',array('1'=>L_YES,'0'=>L_NO),$var['pagePreface']); ?>
-					<small <?php if($plxPlugin->getParam('pagePreface') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_PREFACE_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>  
-					<?php if($plxPlugin->getParam('pageprefaceId') > 0) {echo '<a href=" statique.php?p='. str_pad($plxPlugin->getParam('pageprefaceId'), 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
+					<small <?php if($var['pagePreface'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_PREFACE_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>  
+					<?php if($var['pageprefaceId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pageprefaceId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<label for="pageForeword"><?php echo $plxPlugin->getLang('L_FOREWORD_PAGE') ?></label>
 					<?php plxUtils::printSelect('pageForeword',array('1'=>L_YES,'0'=>L_NO),$var['pageForeword']); ?>
-					<small <?php if($plxPlugin->getParam('pageForeword') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_FOREWORD_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>
-					<?php if($plxPlugin->getParam('pageforewordId') > 0) {echo '<a href=" statique.php?p='. str_pad($plxPlugin->getParam('pageforewordId'), 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?> </small> 
+					<small <?php if($var['pageForeword'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_FOREWORD_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?>
+					<?php if($var['pageforewordId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pageforewordId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?> </small> 
 				</td>
 			</tr>
 		</table>		
@@ -3309,7 +3335,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 			<tr style="border-bottom:solid;filter: hue-rotate(240deg);">
 				<th class="bigger"><label for="all"><?php echo $plxPlugin->getLang('L_ALL_CATEGORIES') ?> (<?php echo $plxAdmin->nbArticles('published', $var['publishedUser'], '') ?>)</label></th>
 				<td><?php plxUtils::printSelect('all',array('1'=>L_YES,'0'=>L_NO),$var['all']); ?></td>
-				<td><small <?php if($plxPlugin->getParam('all') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_FULL_SITE') ?></small></td>
+				<td><small <?php if($var['all'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_FULL_SITE') ?></small></td>
 				
 					<?php		echo '<th class="bigger mb-1"><label for="id_all-th">Selection theme</label></th>'. PHP_EOL .'<td><select id="id_all-th" name="all-th">';
 						  
@@ -3317,7 +3343,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 							foreach($themesList as $themes => $sel) {
 								$i++;
 								$thi = 'th'.$i;
-								 if($plxPlugin->getParam('all-th') == $thi) {$state='selected="selected" ';} else {$state="" ;} 
+								 if($var['all-th'] == $thi) {$state='selected="selected" ';} else {$state="" ;} 
 								echo '<option value="th'.$i.'" '.$state.'> Theme '.$i.'</option>';
 							}
 						  echo '</select >';			
@@ -3385,22 +3411,22 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 				<tr>
 					<td>
 						<label for="pageAuteur"><?php echo $plxPlugin->getLang('L_AUTHOR_PAGE') ?></label><?php plxUtils::printSelect('pageAuteur',array('1'=>L_YES,'0'=>L_NO),$var['pageAuteur']); ?>
-						<small <?php if($plxPlugin->getParam('pageAuteur') =="1") {echo'class="on"';} ?>> <?php echo $plxPlugin->getLang('L_EXTRACT_AUTHOR_INFO') ?></small>
+						<small <?php if($var['pageAuteur'] =="1") {echo'class="on"';} ?>> <?php echo $plxPlugin->getLang('L_EXTRACT_AUTHOR_INFO') ?></small>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label for="pagePostface"><?php echo $plxPlugin->getLang('L_POSTFACE_PAGE') ?></label>
 						<?php plxUtils::printSelect('pagePostface',array('1'=>L_YES,'0'=>L_NO),$var['pagePostface']); ?>
-						<small <?php if($plxPlugin->getParam('pagePostface') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_POSTFACE_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?> 
-						<?php if($plxPlugin->getParam('pagepostfaceId') > 0) {echo '<a href=" statique.php?p='. str_pad($plxPlugin->getParam('pagepostfaceId'), 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
+						<small <?php if($var['pagePostface'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ONE') . $plxPlugin->getLang('L_POSTFACE_PAGE') . $plxPlugin->getLang('L_FROM_STATIC') ?> 
+						<?php if($var['pagepostfaceId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pagepostfaceId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
 					</td>
 				</tr>
 				<tr>
 					<td><label for="pagerRemerciement"><?php echo $plxPlugin->getLang('L_AKNOWLEDGE_PAGE') ?></label>
 						<?php plxUtils::printSelect('pagerRemerciement',array('1'=>L_YES,'0'=>L_NO),$var['pagerRemerciement']); ?>
-						<small <?php if($plxPlugin->getParam('pagerRemerciement') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_THANKS_TO_ALL_HELPER') ?>
-						<?php if($plxPlugin->getParam('pageremerciementId') > 0) {echo '<a href=" statique.php?p='. str_pad($plxPlugin->getParam('pageremerciementId'), 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
+						<small <?php if($var['pagerRemerciement'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_THANKS_TO_ALL_HELPER') ?>
+						<?php if($var['pageremerciementId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pageremerciementId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
 					</td>
 				<?php
 				if ($PagesCommentees !='') {
@@ -3420,7 +3446,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 								<option value=""><?php echo $plxPlugin->getLang('L_CHOICE') ?></option>
 							<?php
 							foreach($PagesCommentees as $key => $title) {
-								echo '<option value="'.$key.'"'; if($plxPlugin->getParam('art-coms') == $key) {echo 'selected=selected"';} echo'>'.$title.'</option>';			
+								echo '<option value="'.$key.'"'; if($var['art-coms'] == $key) {echo 'selected=selected"';} echo'>'.$title.'</option>';			
 							}
 							?>		
 							</select>
@@ -3431,14 +3457,14 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 				<tr>
 					<td>
 						<label for="pageCopy"><?php echo $plxPlugin->getLang('L_COPYRIGHTS_PAGE') ?></label><?php plxUtils::printSelect('pageCopy',array('1'=>L_YES,'0'=>L_NO),$var['pageCopy']); ?> 
-						<small <?php if($plxPlugin->getParam('pageCopy') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ID_CREDITS') ?></small>
+						<small <?php if($var['pageCopy'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_INCLUDE_ID_CREDITS') ?></small>
 					</td>
 				</tr>-->
 				<tr>
 					<td>
 						<label for="pageIndex"><?php echo $plxPlugin->getLang('L_KEYWORDS_INDEX') ?></label>
 						<?php plxUtils::printSelect('pageIndex',array('1'=>L_YES,'0'=>L_NO),$var['pageIndex']); ?> 
-						<small <?php if($plxPlugin->getParam('pageIndex') =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_KEYWORDS_INDEX_FROM_ARTICLE') ?></small>
+						<small <?php if($var['pageIndex'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_KEYWORDS_INDEX_FROM_ARTICLE') ?></small>
 					</td>
 				</tr>
 				<?php
@@ -3452,9 +3478,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
   <fieldset id="D">
     <legend><?php echo $plxPlugin->getLang('L_BOOK_ID_CARD') ?></legend>
     <div>
-      <p><label for="uid"><?php echo $plxPlugin->getLang('L_UID') ?><small class="fs08"><?php echo $plxPlugin->getLang('L_IF_NO_ISSN_ISBN') ?></small></label><input name="uid" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('uid')) ?>"></p>
-      <p><label for="title"><?php echo $plxPlugin->getLang('L_BOOK_TITLE') ?></label><input name="title" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('title')) ?>"></p>
-      <p><label for="subtitle"><?php echo $plxPlugin->getLang('L_BOOK_DESC') ?></label> <input name="subtitle" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('subtitle')) ?>"></p>
+      <p><label for="uid"><?php echo $plxPlugin->getLang('L_UID') ?><small class="fs08"><?php echo $plxPlugin->getLang('L_IF_NO_ISSN_ISBN') ?></small></label><input name="uid" value="<?php echo plxUtils::strCheck($var['uid']) ?>"></p>
+      <p><label for="title"><?php echo $plxPlugin->getLang('L_BOOK_TITLE') ?></label><input name="title" value="<?php echo plxUtils::strCheck($var['title']) ?>"></p>
+      <p><label for="subtitle"><?php echo $plxPlugin->getLang('L_BOOK_DESC') ?></label> <input name="subtitle" value="<?php echo plxUtils::strCheck($var['subtitle']) ?>"></p>
       <p><label for="dateC"><?php echo $plxPlugin->getLang('L_FIRST_DATE_EDITION') ?></label> <input name="dateC" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('dateC')) ?>"></p>
       <p><label for="author"><?php echo $plxPlugin->getLang('L_AUTHOR_S') ?></label> <input name="author" value="<?php echo plxUtils::strCheck($var['author']) ?>"></p>
 	  <p><?php echo $plxPlugin->getLang('L_IF_ISSN_ISBN_IS_UID') ?></p>
@@ -3465,7 +3491,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
       <p><label for="publisher"><?php echo $plxPlugin->getLang('L_PUBLISHER') ?></label> <input name="publisher" value="<?php echo plxUtils::strCheck($plxAdmin->aUsers[$_SESSION['user']]['name']) ?>"></p>
       <p><label for="editor"><?php echo $plxPlugin->getLang('L_EDITOR') ?></label> <input name="editor" value="<?php echo plxUtils::strCheck($plugin) ; ?>"></p>
       <p><label for="dateM"><?php echo $plxPlugin->getLang('L_UPDATE_DATE') ?></label> <input name="dateM" value="<?php echo date('Y-m-d\Th:i:s\Z'); ?>"></p>
-      <p><label for="copyrights"><?php echo $plxPlugin->getLang('L_COPYRIGHTS') ?></label> <input name="copyrights" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('copyrights')) ?>"></p>
+      <p><label for="copyrights"><?php echo $plxPlugin->getLang('L_COPYRIGHTS') ?></label> <input name="copyrights" value="<?php echo plxUtils::strCheck($var['copyrights']) ?>"></p>
       <p><label for="licence"><?php echo $plxPlugin->getLang('L_LICENCE_TYPE') ?></label> <input name="licence" value="<?php echo $var['licence'] ?>"></p>
       <p><label for="urlLicence"><?php echo $plxPlugin->getLang('L_LICENCE_URL') ?></label> <input name="urlLicence" value="<?php echo $var['urlLicence'] ?>"></p>
       <p><label for="descLicence"><?php echo $plxPlugin->getLang('L_LICENCE_TERMS') ?></label> <textarea name="descLicence"><?php echo $var['descLicence'] ?></textarea></p>
@@ -3557,7 +3583,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
   </fieldset>
 
 </form>
-
+<!-- script kept here. vars are updated from plugin parameters -->
 <script>(function () {
   // get references to select list and display text box
   let sel = document.getElementById("epubMode");  
@@ -3571,11 +3597,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
     for (var i = 0, len = sel.options.length; i < len; i++) {
       opt = sel.options[i];
       let idobj=sel.options[i].value ;
-      //JSON.stringify(idobj);
       let formAdd = document.getElementById(idobj);
       if (opt.selected === true) {
         formAdd.classList.remove("hide");
-      //console.log(idobj);
       } else {
        formAdd.classList.add("hide");
       }
@@ -3597,23 +3621,3 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebo
 })();
 // immediate function to preserve global namespace
 </script>
-
-
-<?php
-
-	// p.m.
-/* TEXT-STROKE
-
-// http://www.johnciacia.com/2010/01/04/using-php-and-gd-to-add-border-to-text/
- function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
-for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
-    for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
-        $bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
-    return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
-}
-
-$font_color = imagecolorallocate($im, 255, 255, 255);
-$stroke_color = imagecolorallocate($im, 0, 0, 0);
-imagettfstroketext($im, 60, 10, 300, 130, $font_color, $stroke_color, "wqy-  microhei.ttc", "简体繁體", 2);
-*/
-?>

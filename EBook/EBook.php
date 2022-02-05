@@ -14,14 +14,9 @@ class EBook extends plxPlugin {
 	 *
 	 * @param	default_lang	langue par défaut
 	 * @return	stdio
-	 * @author	G.Cyrillus
+	 * @author	Stephane F
 	 **/
 	public function __construct($default_lang) {
-
-		# gestion du multilingue plxMyMultiLingue
-		if(preg_match('/([a-z]{2})\/(.*)/i', plxUtils::getGets(), $capture)) {
-				$this->lang = $capture[1].'/';
-		}
 
 		# appel du constructeur de la classe plxPlugin (obligatoire)
 		parent::__construct($default_lang);
@@ -33,7 +28,6 @@ class EBook extends plxPlugin {
 		$this->setConfigProfil(PROFIL_ADMIN);
 
 		# déclaration des hooks
-		$this->addHook('AdminTopEndHead', 'AdminTopEndHead');
 		$this->addHook('AdminTopBottom', 'AdminTopBottom');
 
 		# Si le fichier de langue existe on peut mettre en place la partie visiteur
@@ -52,7 +46,24 @@ class EBook extends plxPlugin {
 				mkdir(PLX_ROOT.'EPUBS', 0777, true);
 			}
 		}	
-	
+		
+
+
+	/**
+	 * Méthode qui affiche un message si l'adresse email du contact n'est pas renseignée
+	 *
+	 * @return	stdio
+	 * @author	Stephane F
+	 **/
+	public function AdminTopBottom() {
+		echo '<?php
+		$file = PLX_PLUGINS."EBook/lang/".$plxAdmin->aConf["default_lang"].".php";
+		if(!file_exists($file)) {
+			echo "<p class=\"warning\">Plugin EBook<br />".sprintf("'.$this->getLang('L_LANG_UNAVAILABLE').'", $file)."</p>";
+			plxMsg::Display();
+		}
+		?>';
+	}
 
 	/**
 	 * Méthode de traitement du hook plxShowConstruct
@@ -114,7 +125,6 @@ class EBook extends plxPlugin {
 			echo "<?php \$status = \$this->plxMotor->mode=='".$this->url."'?'active':'noactive'; ?>";
 			echo "<?php array_splice(\$menus, ".($this->getParam('mnuPos')-1).", 0, '<li class=\"static menu '.\$status.'\" id=\"static-contact\"><a href=\"'.\$this->plxMotor->urlRewrite('?".$this->url."').'\" title=\"".addslashes($this->getParam('mnuName_'.$this->default_lang))."\">".addslashes($this->getParam('mnuName_'.$this->default_lang))."</a></li>'); ?>";
 		}
-
 	}
 
 	/**
@@ -124,7 +134,6 @@ class EBook extends plxPlugin {
 	 * @author	Stephane F
 	 **/
 	public function plxShowPageTitle() {
-
 		echo '<?php
 			if($this->plxMotor->mode == "'.$this->url.'") {
 				$this->plxMotor->plxPlugins->aPlugins["EBook"]->lang("L_PAGE_TITLE");
@@ -132,7 +141,6 @@ class EBook extends plxPlugin {
 			}
 		?>';
 	}
-
 
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -263,7 +271,7 @@ class EBook extends plxPlugin {
 	*
 	* @author Cyrille G.
 	*/
-    public function cleanUp( $trA) { // traite le fichier comme une chaine et la modifie en fonction des routine préetablies. ajouter les votres au cas par cas.
+    public function cleanUp( $trA) { // traite le fichier comme une chaine et la modifie en fonction des routines préetablies. ajouter les votres au cas par cas.
 
 // about external ressource
 	$trA = str_replace('<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>','',$trA); // codepen widget
@@ -273,45 +281,35 @@ class EBook extends plxPlugin {
 	
 // nettoyage et mise conformité xhtml autant que possible, liste de routines non exhaustive.				
 	$trA = str_replace('<![CDATA[', '', $trA);
-	$trA = str_replace(']]>','',$trA);								// CDATA removed		
-	$trA = str_replace(' rel="lightbox"','',$trA);					// removed lightbox, not valid value, unless script kept it 																
-	$trA = str_replace(' value="-1"', '', $trA);					// not valid value, can be found on lis	
-// here is about attributes without values	, add yours	
-	$trA = str_replace(' id ',' id="badId" ',$trA);						// if empty add empty value		
-	$trA = str_replace(' class ',' class="" ',$trA);				// if empty add empty value					
-	//$trA = str_replace(' data-counter ',' data-counter="" ',$trA);	// if empty add empty value					
-	$trA = str_replace(' data-counter>',' data-counter="" >',$trA);	// if empty add empty value					
-	$trA = str_replace(' data-grid ',' data-grid="" ',$trA);		// if empty add empty value					
-	$trA = str_replace(' data-rt ',' data-rt="" ',$trA);			// if empty add empty value							
-	$trA = str_replace(' data-flex ',' data-flex="" ',$trA);		// if empty add empty value							
-	$trA = str_replace(' grad ',' grad="" ',$trA);					// if empty add empty value										
-	$trA = str_replace(' grad>',' grad="" >',$trA);					// if empty add empty value											
-	$trA = str_replace(' svg ',' svg="" ',$trA);					// if empty add empty value	
+	$trA = str_replace(']]>','',$trA);									
+//	$trA = str_replace(' string_to_remove_or_modify ',' empty_oo_modified ',$trA);	// copy and update with your the value you want to modify or be removed
+//	voir si ajout possible dans une page 'configuration avançées'
 	
 // about path inside ebooks not alike PluXml							
-	$trA = str_replace('src="/data','src="data',$trA);				// update path							
-	$trA = str_replace('src="/images','src="images',$trA);				// update path
+	$trA = str_replace('src="/data','src="data',$trA);					// update path							
+	$trA = str_replace('src="/images','src="images',$trA);				// update path							
+//	$trA = str_replace('src="/','src="',$trA);							// update path ... 
 	
 // about cleaning up styles,search and remove or update comments and self closing tags
-	$trA = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $trA); // remove <style>
+	$trA = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $trA); 		// remove <style>
 	$trA = preg_replace('#<script(.*?)/>#is','<script $1 ></script>', $trA);// format tag <script>
-	//$trA = preg_replace('#<script(.*?)>(.*?)</script>#is','', $trA);// remove <script>
-	$trA = preg_replace('#<!--(.*?)>(.*?)-->#is', '', $trA);		// remove comment
-	$trA = preg_replace('#style="(.*?)"#is', '', $trA);				// remove inline style
-	$trA = preg_replace('#<br(.*?)>#is', '<br/>', $trA);			// xhtml requirement
-	$trA = preg_replace('#<area(.*?)>#is', '<area $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<base(.*?)>#is', '<base $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<col(.*?)>#is', '<col $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<hr(.*?)>#is', '<hr $1/>', $trA);			// xhtml requirement
-	$trA = preg_replace('#<embed(.*?)>#is', '<embed $1/>', $trA);	// xhtml requirement
-	$trA = preg_replace('#<source(.*?)>#is', '<source $1/>', $trA);	// xhtml requirement
-	$trA = preg_replace('#<track(.*?)>#is', '<track $1/>', $trA);	// xhtml requirement
-	$trA = preg_replace('#<wbr(.*?)>#is', '<wbr $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<link(.*?)>#is', '<link $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<meta(.*?)>#is', '<meta $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<param(.*?)>#is', '<param $1/>', $trA);	// xhtml requirement
-	$trA = preg_replace('#<img(.*?)>#is', '<img $1/>', $trA);		// xhtml requirement
-	$trA = preg_replace('#<input(.*?)>#is', '<input $1/>', $trA);	// xhtml requirement
+//	$trA = preg_replace('#<script(.*?)>(.*?)</script>#is','', $trA);		// remove <script> if removed, don not generate inside epub pages the attribute/value :  properties="scripted"
+	$trA = preg_replace('#<!--(.*?)>(.*?)-->#is', '', $trA);				// remove comment
+	$trA = preg_replace('#style="(.*?)"#is', '', $trA);						// remove inline style
+	$trA = preg_replace('#<br(.*?)>#is', '<br/>', $trA);					// xhtml requirement
+	$trA = preg_replace('#<area(.*?)>#is', '<area $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<base(.*?)>#is', '<base $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<col(.*?)>#is', '<col $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<hr(.*?)>#is', '<hr $1/>', $trA);					// xhtml requirement
+	$trA = preg_replace('#<embed(.*?)>#is', '<embed $1/>', $trA);			// xhtml requirement
+	$trA = preg_replace('#<source(.*?)>#is', '<source $1/>', $trA);			// xhtml requirement
+	$trA = preg_replace('#<track(.*?)>#is', '<track $1/>', $trA);			// xhtml requirement
+	$trA = preg_replace('#<wbr(.*?)>#is', '<wbr $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<link(.*?)>#is', '<link $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<meta(.*?)>#is', '<meta $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<param(.*?)>#is', '<param $1/>', $trA);			// xhtml requirement
+	$trA = preg_replace('#<img(.*?)>#is', '<img $1/>', $trA);				// xhtml requirement
+	$trA = preg_replace('#<input(.*?)>#is', '<input $1/>', $trA);			// xhtml requirement
 
 // about alternative // needs feedback and tests
 	$trA = preg_replace('#<video(.*?)>(.*?)<video>#is', '<video $1/> $2 <p>Votre liseuse ne peut pas afficher cette vidéo.</p></video> ', $trA);		// xhtml requirement
@@ -319,7 +317,7 @@ class EBook extends plxPlugin {
 	
 // On reste en utf-8 accent et caractéres spéciaux en htmlentities retranscrits, indépendant de votre police.
 	$trA = str_replace('&quot;', '"', $trA);            // ((double) quotation mark)
-	$trA = str_replace('&amp;', '&', $trA);             // (ampersand)
+//	$trA = str_replace('&amp;', '&', $trA);             // (ampersand) This one should be kept
 	$trA = str_replace('&apos;', '\'', $trA);           // (apostrophe  = apostrophe-quote)
 	$trA = str_replace('&lt;', '&lsaquo;',$trA);        // (less-than sign TURNED into single left angle quotation for epub compatibility )
 	$trA = str_replace('&gt;', '>',$trA);               // (greater-than sign)
@@ -573,6 +571,7 @@ class EBook extends plxPlugin {
 	$trA = str_replace('&diams;', '♦',$trA);            // (diamond)
 	
 	$trA = str_replace('&#13;', '',$trA);            // (pollution)
+	
 // supplement object & iframe
 //	$dataObject = preg_replace("#<object(.*?)data='data:text/html,(.*?)'(.*?)> </object>#is"," $2", $trA);// tag object
 //	$dataObject = base64_encode($dataObject);
@@ -589,14 +588,15 @@ class EBook extends plxPlugin {
 	
 	
 // remove double  // that the script may have added on already well-formed self-closing tags.
-	$trA = str_replace('//>','/>',$trA );	
+	$trA = str_replace('//>','/>',$trA );				// xhtml requirement	
 	
 return $trA;  // renvoie la chaine traitée
 
 }
 
     /*
-	* ne lance une fonction qu'une seule fois
+	* ne lance une fonction qu'une seule fois ... 
+	* pas utilisé / unused
 	*/
 	
 	public function once($function){ // https://www.w3resource.com/php-exercises/php-basic-exercise-101.php
@@ -611,6 +611,7 @@ return $trA;  // renvoie la chaine traitée
 	}
 
 	/*  fonctionne a partir de config
+	/* aborted
 	$initZip =  makeEmptyZip('mimetype', 'application/epub+zip', $ebook); 
 	$once = once($initZip); 
 	*/
@@ -663,7 +664,7 @@ return $trA;  // renvoie la chaine traitée
 }
 		
 	/*
-	* telecharge un fichier dans l'archive
+	* televerse un fichier dans l'archive
 	*/
 	public function addFiles( $path, $file, $zipFile) {
 		$zip = new ZipArchive;
@@ -677,6 +678,7 @@ return $trA;  // renvoie la chaine traitée
 	
 }
 
+	/* verif si une valeur existe dans un tableau multidimensionnel*/
 	public function checkMultiArray($array,$needle) {			
 		$arrayToCheck = implode(" ",array_map(function($a) {return implode(" ",$a);},$array));
 		return strpos($arrayToCheck,$needle);
@@ -702,16 +704,14 @@ return $trA;  // renvoie la chaine traitée
 		RecursiveIteratorIterator::LEAVES_ONLY
 	);
 
-foreach ($files as $name => $file) {      // Skip directories (they would be added automatically)
+	foreach ($files as $name => $file) {      // Skip directories (they would be added automatically)
     if (!$file->isDir())     {
-
 			// Get real and relative path for current file
 			$filePath = $file->getRealPath();
 
 			// on regarde si l'on a besoin de cette image/fichier	
 			if(strpos($filesToCheck, basename($filePath)) !== false) {// search_array() & in_array() aléatoires ou buggués ??	=> $imgToFind passé en string 			
 			$relativePath = substr($filePath, strlen($rootPath) + 1);
-			// ajout du fichier au manifest 
 			
 			$path= trim(str_replace('../../', '',$path));
 			
@@ -720,9 +720,11 @@ foreach ($files as $name => $file) {      // Skip directories (they would be add
 			$bookpath = str_replace('\\','/',$bookpath);
 			
 			$count++;
+			
 			//on recupere le mimetype
 			$mtype=  mime_content_type($filePath);
 			
+			// ajout du fichier au manifest 			
 			$books =$opf->createElement('item');
 			$book_attr_1= $opf->createAttribute('id'); 
 			$book_attr_1->value=$id.'-'.$count;;	
@@ -740,12 +742,15 @@ foreach ($files as $name => $file) {      // Skip directories (they would be add
 
 			// Add current file to archive
 			$zip->addFile($filePath, 'EPUB/'.$path.'/'.$bookpath);
+			}
 		}
 	}
-}
-$zip->close();
-}
+	$zip->close();
+	}
 
+	/*
+	* Ajout des polices selectionnées au livre et inscriptions au manifest
+	*/
 	public function addFontDirectories($path, $zipfile, $opf, $id,$manifest,$fontCSS) {
 	// Get real path for our folder
 	$rootPath = realpath($path);
@@ -760,44 +765,44 @@ $zip->close();
 		RecursiveIteratorIterator::LEAVES_ONLY
 	);
 
-foreach ($files as $name => $file) 
-{      // Skip directories (they would be added automatically)
-    if (!$file->isDir())
-    {
-        // Get real and relative path for current file
-        $filePath = $file->getRealPath();
-			// check if we need this file/image	
-			if(strpos($fontCSS, basename($filePath)) !== false) {// search_array() & in_array() aléatoires ou buggués ??	=> $imgToFind passé en string 	
-        $relativePath = substr($filePath, strlen($rootPath) + 1);
-		// ajout du fichier au manifest 
-		
-		//recupe path du fichier dans l'archive		
-		$bookpath = str_replace('/.t','/t',$relativePath);		
-		$bookpath = str_replace('\\','/',$bookpath);	
-		$count++;
-		// on recupere le mimetype
-		$mtype=  mime_content_type($filePath);
-		
-		$books =$opf->createElement('item');
-		$book_attr_1= $opf->createAttribute('id'); 
-		$book_attr_1->value=$id.'-'.$count;;	
-		$books->appendChild($book_attr_1);
-		
-		$book_attr_2= $opf->createAttribute('href'); 
-		$book_attr_2->value='/CSS/fonts/'.basename($file);
-		$books->appendChild($book_attr_2);
-		
-		$book_attr_3= $opf->createAttribute('media-type'); 
-		$book_attr_3->value=$mtype;
-		$books->appendChild($book_attr_3);
-		
-		$manifest->appendChild($books);		
-		//echo 'ajout '.$filePath.' dans '. $zipfile .'<br>';
-        // Add current file to archive
-        $zip->addFile($filePath, 'EPUB/CSS/fonts/'.basename($file));
-			}
-    }
-}
+	foreach ($files as $name => $file) 
+	{      // Skip directories (they would be added automatically)
+		if (!$file->isDir())
+		{
+			// Get real and relative path for current file
+			$filePath = $file->getRealPath();
+				// check if we need this file/image	
+				if(strpos($fontCSS, basename($filePath)) !== false) {// search_array() & in_array() aléatoires ou buggués ??	=> $imgToFind passé en string 	
+			$relativePath = substr($filePath, strlen($rootPath) + 1);
+			// ajout du fichier au manifest 
+			
+			//recupe path du fichier dans l'archive		
+			$bookpath = str_replace('/.t','/t',$relativePath);		
+			$bookpath = str_replace('\\','/',$bookpath);	
+			$count++;
+			// on recupere le mimetype
+			$mtype=  mime_content_type($filePath);
+			
+			$books =$opf->createElement('item');
+			$book_attr_1= $opf->createAttribute('id'); 
+			$book_attr_1->value=$id.'-'.$count;;	
+			$books->appendChild($book_attr_1);
+			
+			$book_attr_2= $opf->createAttribute('href'); 
+			$book_attr_2->value='/CSS/fonts/'.basename($file);
+			$books->appendChild($book_attr_2);
+			
+			$book_attr_3= $opf->createAttribute('media-type'); 
+			$book_attr_3->value=$mtype;
+			$books->appendChild($book_attr_3);
+			
+			$manifest->appendChild($books);		
+			//echo 'ajout '.$filePath.' dans '. $zipfile .'<br>';
+			// Add current file to archive
+			$zip->addFile($filePath, 'EPUB/CSS/fonts/'.basename($file));
+				}
+		}
+	}
 $zip->close();
 }
 
@@ -988,18 +993,18 @@ $zip->close();
 	if($this->getParam('epubMode') == 'magM') { $period =' - '.  date("M-Y", strtotime('01-'.str_pad( $this->getParam('magMM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magMY'))); }  
 	if($this->getParam('epubMode') == 'magT') {
 		$last = $this->getParam('magTM') + 2 ;
-		$period = date("M", strtotime('01-'.str_pad( $this->getParam('magTM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magTY')))
+		$period =' | Mag:'. date("M", strtotime('01-'.str_pad( $this->getParam('magTM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magTY')))
 		.$this->getLang('L_TO') 
 		. date("M Y", strtotime('01-'.str_pad( $last, 2, "0", STR_PAD_LEFT)  .'-'.$this->getParam('magTY')));
 		}   
 	if($this->getParam('epubMode') == 'magS') {
 		$last = $this->getParam('magSM') + 6 ;
-		$period =  date("M", strtotime('01-'.str_pad( $this->getParam('magSM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magSY')))
+		$period =' | Mag:'.  date("M", strtotime('01-'.str_pad( $this->getParam('magSM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magSY')))
 		.$this->getLang('L_TO') 
 		. date("M Y", strtotime('01-'.str_pad( $last, 2, "0", STR_PAD_LEFT)  .'-'.$this->getParam('magSY')));
 		}  
 
-	$period = ' | Mag:'.$this->checkMonthLangDate($period);
+	$period = $this->checkMonthLangDate($period);
 	
 	
 	
@@ -1084,6 +1089,9 @@ $zip->close();
 		return $rgb;
 	}
 
+	/*
+	* translate month names if language file is avalaible
+	*/
 	public function checkMonthLangDate($stringPeriod) {
 		if($this->default_lang !='en' && file_exists(PLX_PLUGINS.'EBook/lang/'.$this->default_lang.'.php')) {
 			$MonthToTranslate = array('Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sept','Oct',' Nov','Dec') ;

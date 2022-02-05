@@ -50,12 +50,17 @@ $var['author'			] = $plxPlugin->getParam('author'				)=='' ? $plxAdmin->aUsers[$
 
 // $topAnnexe extraites a partir d'une page statique	
 $var['pageDedicace'		] =  $plxPlugin->getParam('pageDedicace'		)=='' ? 0  : $plxPlugin->getParam('pageDedicace');
+$var['pagededicaceId'	] =  $plxPlugin->getParam('pagededicaceId'		)=='' ? 0  : $plxPlugin->getParam('pagededicaceId');
 $var['pagePreface'		] =  $plxPlugin->getParam('pagePreface'			)=='' ? 0  : $plxPlugin->getParam('pagePreface');
+$var['pageprefaceId'	] =  $plxPlugin->getParam('pagePrefaceId'		)=='' ? 0  : $plxPlugin->getParam('pagePrefaceId');
 $var['pageForeword'		] =  $plxPlugin->getParam('pageForeword'		)=='' ? 0  : $plxPlugin->getParam('pageForeword');
+$var['pageforewordId'	] =  $plxPlugin->getParam('pageforewordId'		)=='' ? 0  : $plxPlugin->getParam('pageforewordId');
 
 // $endAnnexe extraites a partir d'une page statique	
 $var['pagePostface'		] =  $plxPlugin->getParam('pagePostface'		)=='' ? 0  : $plxPlugin->getParam('pagePostface');
+$var['pagepostfaceId'	] =  $plxPlugin->getParam('pagepostfaceId'		)=='' ? 0  : $plxPlugin->getParam('pagepostfaceId');
 $var['pagerRemerciement'] =  $plxPlugin->getParam('pagerRemerciement'	)=='' ? 0  : $plxPlugin->getParam('pagerRemerciement');
+$var['pageremerciementId']=  $plxPlugin->getParam('pageremerciementId'	)=='' ? 0  : $plxPlugin->getParam('pageremerciementId');
 
 
 $var['pageIndex'		] =  $plxPlugin->getParam('pageIndex'			)=='' ? 0  : $plxPlugin->getParam('pageIndex');
@@ -118,19 +123,25 @@ $var['comicsmedia'		] =  $plxPlugin->getParam('comicsmedia'		)=='' ? 'comics'			
 	$var['url'				] = $plxPlugin->getParam('url'					)=='' ? 'Ebook' 						: $plxPlugin->getParam('url');
 	$var['custom-start'		] = $plxPlugin->getParam('custom-start'			)=='' ? '<p>Tous Droits Reservés</p>'	: $plxPlugin->getParam('custom-start');
 	$var['custom-end'		] = $plxPlugin->getParam('custom-end'			)=='' ? '<p>Plugin Ebook</p>'			: $plxPlugin->getParam('custom-end');
+	$var['debugme'			] = $plxPlugin->getParam('debugme'				)=='' ? 0								: $plxPlugin->getParam('debugme');
 
 # repertoire reception epubs , voir pour ajouter une page de selection / creation  des liens pour du copier/coller dans article/statique
 	$var['epubRepertory'	] = $plxPlugin->getParam('epubRepertory'		)=='' ? $plxPlugin->epubRepertory  : $plxPlugin->getParam('epubRepertory');
 }//fin $var[]
 
 # titre-description-auteur pour couverture
-	$titreTh = strtoupper($plxPlugin->getParam('title'));
-	$descTh  = $plxPlugin->getParam('subtitle');
-	$AuthTh  = $plxPlugin->getParam('author');
+	$titreTh = strtoupper($var['title']);
+	$descTh  = $var['subtitle'];
+	$AuthTh  = $var['author'];
+	
+
 #licence
-	$var['licence'		] = $plxPlugin->getParam('licence'		)=='' ? 'public' 	: $plxPlugin->getParam('licence');
-	$var['urlLicence'	] = $plxPlugin->getParam('urlLicence'	)=='' ? '/' 		: $plxPlugin->getParam('urlLicence');
-	$var['descLicence'	] = $plxPlugin->getParam('descLicence'	)=='' ? '' 	: $plxPlugin->getParam('descLicence');
+	$var['licence'		] = $plxPlugin->getParam('licence'		)=='' ? 'public' 		: $plxPlugin->getParam('licence');
+	$var['urlLicence'	] = $plxPlugin->getParam('urlLicence'	)=='' ? '/' 			: $plxPlugin->getParam('urlLicence');
+	$var['descLicence'	] = $plxPlugin->getParam('descLicence'	)=='' ? '' 				: $plxPlugin->getParam('descLicence');
+	
+	$var['uid'			] = $plxPlugin->getParam('uid'			)=='' ? $var['title'] 	: $plxPlugin->getParam('uid');
+	$var['copyrights'	] = $plxPlugin->getParam('copyrights'	)=='' ? $var['author'] 	: $plxPlugin->getParam('copyrights');
 	
 # si epub seulement une sous-partie du site
 	$part='all'; // defaut :tout
@@ -322,7 +333,7 @@ while ($monthStart <= $monthEnd) {
 		$userTPL=PHP_EOL .'<option value="000">'.$plxPlugin->getLang('L_NO_FILTER').'</option>'.PHP_EOL;
 		foreach($plxAdmin->aUsers as $_userid => $_user)	{
 		// test sur active="1" profil="0" delete="0"
-		 if($_user['active'] ==1  &&  $_user['profil'] ==   max(min($_user['profil'], 5), 0) &&$_user['delete'] ==0) {// test min/max pour compatibilite plugin vip_zone ou autre ajoutant des profil en dehors des 5 natifs
+		 if($_user['active'] ==1  &&  $_user['profil'] ==   max(min($_user['profil'], 4), 0) && $_user['delete'] ==0) {// test min/max pour compatibilite plugin vip_zone ou autre ajoutant des profil en dehors des 5 natifs
 			$userTPL .='<option value="'.$_userid.'" title="'.$aProfils[$_user['profil']].'">'.$_user['name']. '</option>'.PHP_EOL;
 		 }
 		}
