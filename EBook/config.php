@@ -728,7 +728,7 @@ require('varEbook.php');
 							// sauvegarde fichier.
 							$plxPlugin->addFiletxt('EPUB/'.$Pagecmx_attr_2->value, $pageCMX, $ebook);
 							$plxPlugin->addFiles(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile),'EPUB/IMG/'.basename($comicsFile),$ebook);
-	
+						//unset($pageXHTML);
 							//ajout au manifest
 							$mtype=  mime_content_type(PLX_ROOT.'data/medias/'.$plxPlugin->getParam('comicsmedia').'/'.basename($comicsFile));
 							$books =$opf->createElement('item');
@@ -765,6 +765,7 @@ require('varEbook.php');
 							}											
 						}					
 					}
+					//unset($pageCMX);
 				}
 				$books =$opf->createElement('item');
 					$book_attr_1= $opf->createAttribute('id'); 
@@ -798,6 +799,7 @@ require('varEbook.php');
 					$tdm = str_replace('<?xml version="1.0"?>','<?xml version="1.0" encoding="utf-8"?>',$tdm);
 					// sauvegarde fichier.
 					$plxPlugin->addFiletxt('EPUB/toc.ncx',$tdm, $ebook);
+					unset($tdm);
 							
 				$backToTab='&tab=fmode';
 				if($var['debugme'] == 1) {				
@@ -923,7 +925,7 @@ require('varEbook.php');
 
 		// insertion page cover dans archive ebook
 				$plxPlugin->addFiletxt('EPUB/cover.xhtml', $pagecover->saveXML(), $ebook);	
-				
+				unset($pagecover);
 				// creation de la page de titre  
 				
 				$pagefront = new DOMDocument('1.0', 'utf-8'); 
@@ -2192,13 +2194,8 @@ require('varEbook.php');
 											$collator->asort( $indexTag );
 										}
 										else {
-											function compareASCII($a, $b) {
-												$at = iconv('UTF-8', 'ASCII//TRANSLIT', $a);
-												$bt = iconv('UTF-8', 'ASCII//TRANSLIT', $b);
-												return strcmp($at, $bt);
-											}
-
-											uasort($indexTag, 'compareASCII');
+											setlocale(LC_ALL, '');
+											array_multisort($indexTag, SORT_ASC, SORT_LOCALE_STRING);
 										}
 										
 										// ressort les tags un à un  et on prend la premiere lettre trouvée
@@ -3186,7 +3183,7 @@ $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 1
 
 <form action="parametres_plugin.php?p=EBook" method="post" id="formEpub">				
 <?php echo plxToken::getTokenPostMethod() ;
-echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/ebook/CSS/ebook-admin.css" media="screen">';
+echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css" media="screen">';
 ?>
   <input type="radio" name="nav" id="fA"    <?php if(!isset($_GET['tab']) || ( isset($_GET['tab']) && $_GET['tab']=='fA')) {echo ' checked="checked"' ;}?>>
   <input type="radio" name="nav" id="fB"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fB') 	{echo ' checked="checked"';}?>>

@@ -31,16 +31,15 @@ class EBook extends plxPlugin {
 		$this->addHook('AdminTopBottom', 'AdminTopBottom');
 
 		# Si le fichier de langue existe on peut mettre en place la partie visiteur
-		if(file_exists(PLX_PLUGINS.$this->plug['name'].'/lang/'.$default_lang.'.php')) {
-			 
+		if(file_exists(PLX_PLUGINS.$this->plug['name'].'/lang/'.$default_lang.'.php')) {			 
 				$this->addHook('plxMotorPreChauffageBegin', 'plxMotorPreChauffageBegin');
 				$this->addHook('plxShowConstruct', 'plxShowConstruct');
 				$this->addHook('plxShowStaticListEnd', 'plxShowStaticListEnd');
-				$this->addHook('plxShowPageTitle', 'plxShowPageTitle');
-			 
+				$this->addHook('plxShowPageTitle', 'plxShowPageTitle');			 
 		}
 	}
-	#code à exécuter à l’activation du plugin 
+	#code à exécuter à l’activation du plugin
+	/* repertoire par defaut de stockage des epubs */	
         public function OnActivate() { 
 			if (!file_exists(PLX_ROOT.'EPUBS')) {
 				mkdir(PLX_ROOT.'EPUBS', 0777, true);
@@ -50,7 +49,7 @@ class EBook extends plxPlugin {
 
 
 	/**
-	 * Méthode qui affiche un message si l'adresse email du contact n'est pas renseignée
+	 * Méthode qui affiche un message si laa langue n'est pas disponible
 	 *
 	 * @return	stdio
 	 * @author	Stephane F
@@ -273,9 +272,6 @@ class EBook extends plxPlugin {
 	*/
     public function cleanUp( $trA) { // traite le fichier comme une chaine et la modifie en fonction des routines préetablies. ajouter les votres au cas par cas.
 
-// about external ressource
-	$trA = str_replace('<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>','',$trA); // codepen widget
-	
 // add here other thingy bobs being a drag inside an ebook ... youtube insert and else or any outside scripts or ressource from all kinds off plugins/apis	
 	$trA = str_replace('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" >','',$trA); //one of the fontawesome CDN  
 	
@@ -587,7 +583,7 @@ class EBook extends plxPlugin {
 //	$trA = preg_replace("#<xmp>(.*?)</xmp>#is", $xmpTag , $trA);//contenus tag <xmp>
 	
 	
-// remove double  // that the script may have added on already well-formed self-closing tags.
+// remove double  //  the script may have added on already well-formed self-closing tags.
 	$trA = str_replace('//>','/>',$trA );				// xhtml requirement	
 	
 return $trA;  // renvoie la chaine traitée
@@ -657,7 +653,6 @@ return $trA;  // renvoie la chaine traitée
 	if ($res === TRUE) {
 		$zip->addFromString($file, $content);
 		$zip->close();
-		//echo 'ajout ficher:'. $file .'<br>';
 	} else {
 		echo 'échec ajout ficher:'. $file .' dans '. $zipFile .'<br>';
 	}
@@ -681,8 +676,7 @@ return $trA;  // renvoie la chaine traitée
 	/* verif si une valeur existe dans un tableau multidimensionnel*/
 	public function checkMultiArray($array,$needle) {			
 		$arrayToCheck = implode(" ",array_map(function($a) {return implode(" ",$a);},$array));
-		return strpos($arrayToCheck,$needle);
-		
+		return strpos($arrayToCheck,$needle);		
 	}
 	
 	/*
@@ -693,7 +687,7 @@ return $trA;  // renvoie la chaine traitée
 	// Get real path for our folder
 	$rootPath = realpath($path);
 	$count="0";// incrementation $id-XX pour le manifest
-	$filesToCheck = implode(" ",$imgToFind);// search_array() & in_array() aléatoires ou buggués ??
+	$filesToCheck = implode(" ",$imgToFind);
 	// Initialize archive object
 	$zip = new ZipArchive();
 	$zip->open($zipfile);
@@ -704,19 +698,19 @@ return $trA;  // renvoie la chaine traitée
 		RecursiveIteratorIterator::LEAVES_ONLY
 	);
 
-	foreach ($files as $name => $file) {      // Skip directories (they would be added automatically)
+	foreach ($files as $name => $file) {      // Skip directories 
     if (!$file->isDir())     {
 			// Get real and relative path for current file
 			$filePath = $file->getRealPath();
 
 			// on regarde si l'on a besoin de cette image/fichier	
-			if(strpos($filesToCheck, basename($filePath)) !== false) {// search_array() & in_array() aléatoires ou buggués ??	=> $imgToFind passé en string 			
+			if(strpos($filesToCheck, basename($filePath)) !== false) {	
 			$relativePath = substr($filePath, strlen($rootPath) + 1);
 			
 			$path= trim(str_replace('../../', '',$path));
 			
 			//recupe path du fichier dans l'archive		
-			$bookpath = str_replace('/.t','/t',$relativePath);		
+			$bookpath = str_replace('/.t','/t',$relativePath);	
 			$bookpath = str_replace('\\','/',$bookpath);
 			
 			$count++;
@@ -772,14 +766,16 @@ return $trA;  // renvoie la chaine traitée
 			// Get real and relative path for current file
 			$filePath = $file->getRealPath();
 				// check if we need this file/image	
-				if(strpos($fontCSS, basename($filePath)) !== false) {// search_array() & in_array() aléatoires ou buggués ??	=> $imgToFind passé en string 	
+				if(strpos($fontCSS, basename($filePath)) !== false) {
 			$relativePath = substr($filePath, strlen($rootPath) + 1);
 			// ajout du fichier au manifest 
 			
 			//recupe path du fichier dans l'archive		
 			$bookpath = str_replace('/.t','/t',$relativePath);		
-			$bookpath = str_replace('\\','/',$bookpath);	
+			$bookpath = str_replace('\\','/',$bookpath);
+			
 			$count++;
+			
 			// on recupere le mimetype
 			$mtype=  mime_content_type($filePath);
 			
@@ -810,11 +806,14 @@ $zip->close();
 	public function downloadRessource($externalLink) {
 	$file = basename($externalLink)	;
 	if (!file_exists( PLX_ROOT."data/medias/".$file)) {
+		//création du fichier en local 
 		$fh = fopen( PLX_ROOT."data/medias/".$file , "w");
-		$ch = curl_init();
+		$ch = curl_init();		
 		curl_setopt($ch, CURLOPT_URL, $externalLink);
+		curl_setopt($ch, CURLOPT_HEADER, true );
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
+		// remplissage du fichier. !! todo : tester taille et contenu puis validé
 		curl_setopt($ch, CURLOPT_FILE, $fh);
 		curl_exec($ch);
 		curl_close($ch); 
@@ -829,18 +828,18 @@ $zip->close();
 	$max= str_pad($max, 3, "0", STR_PAD_LEFT);
 	 $newStatName = PLX_ROOT.$plxAdmin->aConf['racine_statiques'].$max.'.'.$annexe.'.php';	
 	echo $newStatName.'<br>';
-					$plxAdmin->aStats[$max]['group'] = 'ebookAnnexe';
-					$plxAdmin->aStats[$max]['name'] = $aTitle;
-					$plxAdmin->aStats[$max]['url'] = $annexe;
-					$plxAdmin->aStats[$max]['active'] = '0';
-					$plxAdmin->aStats[$max]['menu'] = 'non';
-					$plxAdmin->aStats[$max]['ordre'] = $max;
-					$plxAdmin->aStats[$max]['template'] = 'static.php';
-					$plxAdmin->aStats[$max]['title_htmltag'] = $aTitle;
-					$plxAdmin->aStats[$max]['meta_description'] = $annexe;
-					$plxAdmin->aStats[$max]['meta_keywords'] = $annexe;
-					$plxAdmin->aStats[$max]['date_creation'] = date('YmdHi');
-					$plxAdmin->aStats[$max]['date_update'] = date('YmdHi');
+		$plxAdmin->aStats[$max]['group'] = 'ebookAnnexe';
+		$plxAdmin->aStats[$max]['name'] = $aTitle;
+		$plxAdmin->aStats[$max]['url'] = $annexe;
+		$plxAdmin->aStats[$max]['active'] = '0';
+		$plxAdmin->aStats[$max]['menu'] = 'non';
+		$plxAdmin->aStats[$max]['ordre'] = $max;
+		$plxAdmin->aStats[$max]['template'] = 'static.php';
+		$plxAdmin->aStats[$max]['title_htmltag'] = $aTitle;
+		$plxAdmin->aStats[$max]['meta_description'] = $annexe;
+		$plxAdmin->aStats[$max]['meta_keywords'] = $annexe;
+		$plxAdmin->aStats[$max]['date_creation'] = date('YmdHi');
+		$plxAdmin->aStats[$max]['date_update'] = date('YmdHi');
 	
 	// update fichier config
 			$xmlDoc = new DOMDocument("1.0", "utf-8");
@@ -916,9 +915,7 @@ $zip->close();
 			$xmlDoc->preserveWhiteSpace = false; 
 			$xmlDoc->formatOutput = true;  
 			$doUpdate =$xmlDoc->saveXML();
-			
-
-			
+						
 			$xmlDoc->save(PLX_ROOT.PLX_CONFIG_PATH.'statiques.xml');
 			
 			$createStat = fopen ($newStatName, 'w') ;
@@ -938,11 +935,8 @@ $zip->close();
 
 	/* coupe la chaine */
     public function checkImgTextLength($string, $font,$size) {
-    $width="1000";// pas trop large ni trop etriqué! (base:1200)
-//    $text = imageftbbox($size, 0, $font, $string );
-
-	 $words = explode(' ', $string);
-	 
+     $width="1000";// pas trop large ni trop etriqué! (base:1200)
+	 $words = explode(' ', $string); 
 	 $phraseContent=$words[0];
 	 
 	 foreach($words as $word ) {
@@ -956,20 +950,6 @@ $zip->close();
 		   $phraseContent = $phraseContent. ' '. $word;
 	   }
 	}	
-	/*
-    if ( $text[4] > $width ) {
-        $words = explode(' ', $string); 
-		
-		$position = round(sizeof($words) / 2.5 ) ; // on casse la chaine au mot du milieu en deux ligne .. voir pour une fonction récursive au mot à mot
-        $addreturn=array($position => PHP_EOL.$words[$position]);
- 		$words = array_replace($words, $addreturn);	
-		
-		//$position = round(sizeof($words) / 4 ) ;
-        //$addreturn=array($position => PHP_EOL.$words[$position]);
- 		//$words = array_replace($words, $addreturn);
-    } 
-	$string = implode(" ", $words);
-	*/
 
     $string= $phraseContent;
     return $string;
@@ -1066,11 +1046,6 @@ $zip->close();
 	imagefttext($im, 90, 0, $x , $y , $colorTitle, $fontA, $title   );
 	imagefttext($im, 50, 0, $x2, $y2, $colorsub,   $fontB, $subtitle);
 	
-	//ajout nom catégorie si epub en sous-partie
-	/*if($go==true && $part !=='all') {
-		imagefttext($im, 60, 0, $x2 , $y2 -100 , $colorsub, $fontB, $plxAdmin->aCats[$part]['name']);
-		imagefttext($im, 60, 0, $x2 , $y2 -103 , $pink,     $fontB, $plxAdmin->aCats[$part]['name']);
-		} */
 	// ajout auteur
 	imagefttext($im, 30, 0, $x3, $y3, $colorAuth, $fontC, $Auth);
 	
@@ -1105,6 +1080,11 @@ $zip->close();
 		
 	}
 
+	public 	function compareASCII($a, $b) {
+		$at = iconv('UTF-8', 'ASCII//TRANSLIT', $a);
+		$bt = iconv('UTF-8', 'ASCII//TRANSLIT', $b);
+		return strcmp($at, $bt);
+	}
 	
 }
 ?>

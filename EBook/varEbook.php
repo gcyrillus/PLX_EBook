@@ -17,7 +17,6 @@ foreach($aLangs as $lang) {
 	# chargement de chaque fichier de langue
 	$langs[$lang] = $plxPlugin->loadLang(PLX_PLUGINS.$plugin.'/lang/'.$lang.'.php');
 	$var[$lang]['mnuName'] =  $plxPlugin->getParam('mnuName_'.$lang)=='' ? $langs[$lang]['L_DEFAULT_MENU_NAME'] : $plxPlugin->getParam('mnuName_'.$lang);
-	//$var[$lang]['mnuText'] =  $plxPlugin->getParam('mnuText_'.$lang)=='' ? '' : $plxPlugin->getParam('mnuText_'.$lang); 
 }
 {# initialisation des variables 
 // catégorie dispo 
@@ -113,9 +112,6 @@ $var['comicsmedia'		] =  $plxPlugin->getParam('comicsmedia'		)=='' ? 'comics'			
 		$var['ISSNComics'		 ] =  $plxPlugin->getParam('ISSNComics'			)=='' ? ''													: $plxPlugin->getParam('ISSNComics'); 
 		$var['ISBNComics'		 ] =  $plxPlugin->getParam('ISBNComics'			)=='' ? ''													: $plxPlugin->getParam('ISBNComics'); 
 	
-
-
-
 # Options affichage
 	$var['mnuDisplay'		] =  $plxPlugin->getParam('mnuDisplay'			)=='' ? 0 								: $plxPlugin->getParam('mnuDisplay');
 	$var['mnuPos'			] =  $plxPlugin->getParam('mnuPos'				)=='' ? 2 								: $plxPlugin->getParam('mnuPos');
@@ -134,7 +130,6 @@ $var['comicsmedia'		] =  $plxPlugin->getParam('comicsmedia'		)=='' ? 'comics'			
 	$descTh  = $var['subtitle'];
 	$AuthTh  = $var['author'];
 	
-
 #licence
 	$var['licence'		] = $plxPlugin->getParam('licence'		)=='' ? 'public' 		: $plxPlugin->getParam('licence');
 	$var['urlLicence'	] = $plxPlugin->getParam('urlLicence'	)=='' ? '/' 			: $plxPlugin->getParam('urlLicence');
@@ -182,8 +177,6 @@ if ($plxPlugin->getParam('epubMode')=='magM' || 'magT' || 'magS' || 'magA') {
 	// on retire les articles hors dates.
     $magfiles =  $plxAdmin->plxGlob_arts->aFiles;
 
-
-	//$catsfound=array();
 	foreach ($magfiles as $key=>$v) { # On parcourt tous les fichiers
 	 $art =  $plxAdmin->parseArticle(PLX_ROOT . $plxAdmin->aConf['racine_articles'] . $v);
 		$testKey= substr($art['date_creation'],0,6);
@@ -305,9 +298,6 @@ $aProfils = array(
 	PROFIL_WRITER => L_PROFIL_WRITER
 );
 
-
-
-
 // tpl option Years 
 $optionTplY=PHP_EOL;
 $yearStart = date('Y');
@@ -325,7 +315,6 @@ while ($monthStart <= $monthEnd) {
 	$optionTplM .='<option value="'.$monthStart.'">'. str_pad($monthStart, 2, "0", STR_PAD_LEFT).'</option>'.PHP_EOL;
 	$monthStart++;
 }	
-	//$plxAdmin->plxGlob_arts->aFiles = $artMagsort;
 
 	
 // user select tpl
@@ -360,10 +349,7 @@ while ($monthStart <= $monthEnd) {
 			}
 	}
 }
-
-
 //echo '<hr>'.$plxPlugin->hexTorgb('#123456')[0].'<hr>';// fonction tester et valider pour création  theme perso à venir
-
 
 # base fichiers
 
@@ -677,7 +663,7 @@ $width='1200';
 $height = $width * '1.4' ;
 $imgPath = PLX_ROOT.'plugins/'.$plugin.'/covers/';
 $titreTh = $plxAdmin->aConf['title'];
-$descTh  = $plxAdmin->aConf['description'];
+//$descTh  = $plxAdmin->aConf['description'];
 $AuthTh  = $plxAdmin->aUsers[$_SESSION['user']]['name'];
 $dcId =  $plxPlugin->getParam('isbn')=='' ? $titreTh : $plxPlugin->getParam('isbn');
 if(isset($_POST['doComics'])) { 	$dcId=$plxPlugin->getParam('titreComics');}
@@ -713,7 +699,7 @@ $themePath = PLX_ROOT.$plxAdmin->aConf['racine_themes'].$plxAdmin->style;
 $xhtml     ='<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="'.$plxAdmin->aConf['default_lang'].'" lang="'.$plxAdmin->aConf['default_lang'].'"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link rel="stylesheet" type="text/css" href="CSS/epub.css" /><link rel="stylesheet" type="text/css" href="CSS/commun.css" /><link rel="stylesheet" type="text/css" href="CSS/fonts.css" /><link rel="stylesheet" type="text/css" href="CSS/theme.css" /><script src="JS/script.js"></script></head><body></body></html>'; 
 $xhtmlcomics='<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="'.$plxAdmin->aConf['default_lang'].'" lang="'.$plxAdmin->aConf['default_lang'].'"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link rel="stylesheet" type="text/css" href="CSS/epub.css" /></head><body></body></html>'; 
 
-// Chemins vers  fichier de police
+// Chemins vers  fichier de police - generation de l'image de couverture
 $ubuntuMono    = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/ubuntu/UbuntuMono-B.ttf');
 $freeSansB     = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/freeserif/FreeSansBold.otf');
 $freeSerif     = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/freeserif/FreeSerif.otf');
