@@ -26,17 +26,21 @@ class EBook extends plxPlugin {
 
 		# droits pour accèder à la page config.php du plugin
 		$this->setConfigProfil(PROFIL_ADMIN);
+		
+		# limite l'accès à l'écran d'administration du plugin
+        $this->setAdminProfil(PROFIL_ADMIN);        
+		$this->setAdminMenu( ' '. $this->getLang("L_MENU_CATEGORIES").''  , 20,  ''.$this->getLang("L_PLUGINS_HELP_TITLE").'');
 
 		# déclaration des hooks
 		$this->addHook('AdminTopBottom', 'AdminTopBottom');
 
 		# Si le fichier de langue existe on peut mettre en place la partie visiteur
-		if(file_exists(PLX_PLUGINS.$this->plug['name'].'/lang/'.$default_lang.'.php')) {			 
+		//if(file_exists(PLX_PLUGINS.$this->plug['name'].'/lang/'.$default_lang.'.php')) {			 
 				$this->addHook('plxMotorPreChauffageBegin', 'plxMotorPreChauffageBegin');
 				$this->addHook('plxShowConstruct', 'plxShowConstruct');
 				$this->addHook('plxShowStaticListEnd', 'plxShowStaticListEnd');
 				$this->addHook('plxShowPageTitle', 'plxShowPageTitle');			 
-		}
+		//}
 	}
 	#code à exécuter à l’activation du plugin
 	/* repertoire par defaut de stockage des epubs */	
@@ -76,7 +80,7 @@ class EBook extends plxPlugin {
 		$string  = "if(\$this->plxMotor->mode=='".$this->url."') {";
 		$string .= "	\$array = array();";
 		$string .= "	\$array[\$this->plxMotor->cible] = array(
-			'name'		=> '".addslashes($this->getParam('mnuName_'.$this->default_lang))."',
+			'name'		=> '".addslashes($this->getParam('mnuName'))."',
 			'menu'		=> '',
 			'url'		=> 'ebook',
 			'readable'	=> 1,
@@ -122,7 +126,7 @@ class EBook extends plxPlugin {
 		# ajout du menu pour accèder à la page epub
 		if($this->getParam('mnuDisplay')) {
 			echo "<?php \$status = \$this->plxMotor->mode=='".$this->url."'?'active':'noactive'; ?>";
-			echo "<?php array_splice(\$menus, ".($this->getParam('mnuPos')-1).", 0, '<li class=\"static menu '.\$status.'\" id=\"static-contact\"><a href=\"'.\$this->plxMotor->urlRewrite('?".$this->url."').'\" title=\"".addslashes($this->getParam('mnuName_'.$this->default_lang))."\">".addslashes($this->getParam('mnuName_'.$this->default_lang))."</a></li>'); ?>";
+			echo "<?php array_splice(\$menus, ".($this->getParam('mnuPos')-1).", 0, '<li class=\"static menu '.\$status.' nav-item\" id=\"static-".__CLASS__."\"><a href=\"'.\$this->plxMotor->urlRewrite('?".$this->url."').'\" class=\"nav-link\" title=\"".addslashes($this->getParam('mnuName'))."\">".addslashes($this->getParam('mnuName'))."</a></li>'); ?>";
 		}
 	}
 

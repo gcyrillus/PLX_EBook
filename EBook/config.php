@@ -48,7 +48,7 @@ require('varEbook.php');
 		$plxPlugin->setParam('debugme', 				$_POST['debugme'], 'numeric');
 		$var['debugme'] = $_POST['debugme'];
 			foreach($aLangs as $lang) {
-				$plxPlugin->setParam('mnuName_'.$lang, 	$_POST['mnuName_'.$lang], 'string');
+				$plxPlugin->setParam('mnuName', 	$_POST['mnuName'], 'string');
 			    //$plxPlugin->setParam('mnuText_'.$lang, 	$_POST['mnuText_'.$lang], 'string');
 			}
 		$plxPlugin->setParam('custom-start', $_POST['custom-start'], 'cdata');
@@ -110,7 +110,7 @@ require('varEbook.php');
             $plxPlugin->setParam('pageprefaceId',$plxPlugin->AnnexeId, 'numeric');
 			}
 		$plxPlugin->setParam('pagerRemerciement', $_POST['pagerRemerciement'], 'numeric');
-			if($_POST['pagerRemerciement'] =='1' && $plxPlugin->checkMultiArray(@$plxAdmin->aStats,'pagerRemerciement') ===false ) { 
+			if($_POST['pagerRemerciement'] =='1' && $plxPlugin->checkMultiArray(@$plxAdmin->aStats,'pageremerciement') ===false ) { 
 			$plxPlugin->createAnnexeStatique('pageremerciement','Remerciements');
             $plxPlugin->setParam('pageremerciementId',$plxPlugin->AnnexeId, 'numeric');
 			}
@@ -3153,7 +3153,7 @@ require('varEbook.php');
 				exit;
 			}				 		
 		}
-		header('Location: parametres_plugin.php?p='.$plugin.$backToTab);
+		header('Location: plugin.php?p='.$plugin.$backToTab);
 	}
 ?>
 
@@ -3181,7 +3181,7 @@ $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 1
 
 ?>
 
-<form action="parametres_plugin.php?p=EBook" method="post" id="formEpub">				
+<form action="?p=EBook" method="post" id="formEpub">				
 <?php echo plxToken::getTokenPostMethod() ;
 echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css" media="screen">';
 ?>
@@ -3195,7 +3195,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
   <h3><label for="fA"><span><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS') ?></span></label></h3>
   <fieldset id="A">
     <legend><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS_PAGE') ?></legend>				
-    <p class="field"><label for="id_mnuName_<?php echo $lang ?>"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName_'.$lang,$var[$lang]['mnuName'],'text','20-20') ?></p>
+    <p class="field"><label for="id_mnuName"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName',$var['mnuName'],'text','20-20') ?></p>
     <p><label for="id_mnuDisplay"><?php echo $plxPlugin->lang('L_MENU_DISPLAY') ?></label><?php plxUtils::printSelect('mnuDisplay',array('1'=>L_YES,'0'=>L_NO),$var['mnuDisplay']); ?></p>
 	<p class="field"><label for="id_url"><?php $plxPlugin->lang('L_URL') ?></label><?php plxUtils::printInput('url',$var['url'],'text','20-255') ?></p>
     <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>

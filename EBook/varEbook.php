@@ -16,7 +16,7 @@ $langs = array();
 foreach($aLangs as $lang) {
 	# chargement de chaque fichier de langue
 	$langs[$lang] = $plxPlugin->loadLang(PLX_PLUGINS.$plugin.'/lang/'.$lang.'.php');
-	$var[$lang]['mnuName'] =  $plxPlugin->getParam('mnuName_'.$lang)=='' ? $langs[$lang]['L_DEFAULT_MENU_NAME'] : $plxPlugin->getParam('mnuName_'.$lang);
+	$var['mnuName'] =  $plxPlugin->getParam('mnuName')=='' ? 'Ebooks' : $plxPlugin->getParam('mnuName');
 }
 {# initialisation des variables 
 // catégorie dispo 
