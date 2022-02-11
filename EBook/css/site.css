@@ -1,3 +1,6 @@
+	section {
+		min-width:96%;
+	}
 	.bold{
 	  font-weight:bold;
 	  font-size:1.15em;

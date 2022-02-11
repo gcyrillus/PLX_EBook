@@ -289,6 +289,9 @@ input[name="doMake"] {
  width:10rem;
   padding-left:1rem;
 }
+#A {grid-auto-flow:row dense}
+#A div {grid-row:auto / span 2;}
+#A p:not(p:nth-child(6)~p) {grid-column:1}
 #formEpub select {
   /*min-width:7.5em;*/
 }
@@ -341,8 +344,8 @@ input[name="doMake"] {
   border-radius: 5px;
   box-shadow:0 0 3px 3px white;
 }
-#parametres_plugin #formEpub h3 + fieldset[id] {
-  max-height: calc(100vh - 23rem);
+#formEpub h3 + fieldset[id] {
+  max-height: calc(100vh - 250px);
   overflow: auto;
 }
 
@@ -376,8 +379,6 @@ label[for^=f] {
 #fmode:checked ~ #mode {
   visibility:visible;
   position:relative;
-
-  max-height:max-content;
 }
 
 p.sep {

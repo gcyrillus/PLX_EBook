@@ -3,6 +3,7 @@
 $categories=array();
 #nombre article par catègorie aprés filtrage
 $catnb=array();
+$AuthorPublished=array();// recuperation auteurs publiés
 $UsersDesc[0]=$plxAdmin->aUsers['001']['infos']; // tableau infos utilisateurs - Defaut:ADMINISTRATEUR
 
 
@@ -16,7 +17,7 @@ $langs = array();
 foreach($aLangs as $lang) {
 	# chargement de chaque fichier de langue
 	$langs[$lang] = $plxPlugin->loadLang(PLX_PLUGINS.$plugin.'/lang/'.$lang.'.php');
-	$var['mnuName'] =  $plxPlugin->getParam('mnuName')=='' ? 'Ebooks' : $plxPlugin->getParam('mnuName');
+	$var['mnuName'] =  $plxPlugin->getParam('mnuName')=='' ? 'Ebooks' : $plxPlugin->getParam('mnuName');// pas de gestion de langue sur cette variable
 }
 {# initialisation des variables 
 // catégorie dispo 
@@ -25,7 +26,7 @@ foreach($aLangs as $lang) {
 			if( $values["articles"] >="1" && $values['active']=='1' ) {// on ne prend que les catégories disposant d'un articles et actives
 				// recup catégorie
 				$var[$catNumb] =  $plxPlugin->getParam($catNumb)=='' ? 0 : $plxPlugin->getParam($catNumb);
-				// variable pour le theme a assigné
+				// variable pour le theme à assigné
 				$var[$catNumb.'-th'] =  $plxPlugin->getParam($catNumb.'-th')=='' ? 'th1' : $plxPlugin->getParam($catNumb.'-th');
 			}
 		}
@@ -61,7 +62,7 @@ $var['pagepostfaceId'	] =  $plxPlugin->getParam('pagepostfaceId'		)=='' ? 0  : $
 $var['pagerRemerciement'] =  $plxPlugin->getParam('pagerRemerciement'	)=='' ? 0  : $plxPlugin->getParam('pagerRemerciement');
 $var['pageremerciementId']=  $plxPlugin->getParam('pageremerciementId'	)=='' ? 0  : $plxPlugin->getParam('pageremerciementId');
 
-
+// pages extraites des données site
 $var['pageIndex'		] =  $plxPlugin->getParam('pageIndex'			)=='' ? 0  : $plxPlugin->getParam('pageIndex');
 $var['pageCopy'			] =  $plxPlugin->getParam('pageCopy'			)=='' ? 1  : $plxPlugin->getParam('pageCopy');
 $var['pageAuteur'		] =  $plxPlugin->getParam('pageAuteur'			)=='' ? 0  : $plxPlugin->getParam('pageAuteur');
@@ -114,6 +115,7 @@ $var['comicsmedia'		] =  $plxPlugin->getParam('comicsmedia'		)=='' ? 'comics'			
 	
 # Options affichage
 	$var['mnuDisplay'		] =  $plxPlugin->getParam('mnuDisplay'			)=='' ? 0 								: $plxPlugin->getParam('mnuDisplay');
+	$var['description'		] = $plxPlugin->getParam('description'			)=='' ? '<p>Epubs Disponibles</p>'		: $plxPlugin->getParam('description');
 	$var['mnuPos'			] =  $plxPlugin->getParam('mnuPos'				)=='' ? 2 								: $plxPlugin->getParam('mnuPos');
 	$var['template'			] = $plxPlugin->getParam('template'				)=='' ? 'static.php'					: $plxPlugin->getParam('template');
 	$var['url'				] = $plxPlugin->getParam('url'					)=='' ? 'Ebook' 						: $plxPlugin->getParam('url');
@@ -153,27 +155,106 @@ if ($plxPlugin->getParam('epubMode')=='book' ) {$plxAdmin->tri ="asc"  ;}
 if ($plxPlugin->getParam('epubMode')=='blog' ) {$plxAdmin->tri ="desc" ;}
 if ($plxPlugin->getParam('epubMode')=='alpha') {$plxAdmin->tri ="alpha";}
 
-	if($plxAdmin->aUsers  && $plxPlugin->getParam('triAuthors') =='000' ){
-				foreach($plxAdmin->aUsers as $_userid => $_user)	{
-					$AllUsers[]= $_user['name'];
-				}
-				$var['author'] = implode(", ", $AllUsers);
+{// MAJ catégorie et nombre articles
+	$categories=array();
+	$catnb=array();
+    $artsfiles =  $plxAdmin->plxGlob_arts->aFiles;
+	foreach ($artsfiles as $key=>$v) { # On parcourt tous les fichiers
+// recuperation données	
+				$art =  $plxAdmin->parseArticle(PLX_ROOT . $plxAdmin->aConf['racine_articles'] . $v);
+				// recuperation catégories
+				$catsfound=explode(',',$art['categorie']); 
+					 foreach($catsfound as $keycat => $catval){						 
+						 if($catval =='draft') { unset($artsfiles[$key]);}// draft to remove
+						 if($catval !='draft') {
+				if(!isset($catnb[$catval])){$catnb[$catval]=1;}else{$catnb[$catval]=$catnb[$catval] + 1;}
+					$categories[$catval]= $catval;
+					array_unique($categories);
+						 }
+					 }
+			if( substr($v,5,5) != 'draft') {
+				$AuthorPublished[$plxAdmin->aUsers[$art['author']]['name']]=$plxAdmin->aUsers[$art['author']]['name'];
+			}
 	}
-// filtrage auteurs 
+	// maj liste fichiers articles
+	$plxAdmin->plxGlob_arts->aFiles =  $artsfiles;
+	
+	// maj tableau categories.
+	foreach ($plxAdmin->aCats as $catNumb => $values) {
+		if(!in_array($catNumb, $categories)) {		 
+			$plxAdmin->aCats[$catNumb]['active']='0';		 
+			$plxAdmin->aCats[$catNumb]['article']='0';
+			unset($plxAdmin->aCats[$catNumb]);
+		}
+	}
+		// MAJ categories active
+		$plxAdmin->activeCats = implode(' | ' , $categories);
+		
+		// tri cat et assignation nombre articles dispos
+		ksort($catnb);
+		foreach($catnb as $mctNb => $vlNm) {
+			$plxAdmin->aCats[$mctNb]['articles'] = $vlNm;
+		}	
+		
+		
+}//fin MAJ categories/nbr article
+
+	if($plxAdmin->aUsers  && $plxPlugin->getParam('triAuthors') =='000' ){
+		foreach($plxAdmin->aUsers as $_userid => $_user)	{
+			if(in_array($_user['name'],$AuthorPublished))  {$AllUsers[]= $_user['name'];}
+		}
+		$var['author'] = implode(", ", $AllUsers);
+	}
+	else {
+		$var['author'] = $plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'];
+	}
+	
+// filtrage auteurs
 if($plxPlugin->getParam('triAuthors') !=='000') {
+			$catnb=array();//reset
+			$categories=array();
 	foreach ($plxAdmin->plxGlob_arts->aFiles as $key=>$v) { # On parcourt tous les fichiers
 	 $art =  $plxAdmin->parseArticle(PLX_ROOT . $plxAdmin->aConf['racine_articles'] . $v);
-	 $checkAut['000']='000';// sans filre
-	 $checkAut[$art['author']]=$art['author'];// filtre
-	 array_unique($checkAut);
-	 if(!in_array($plxPlugin->getParam('triAuthors'), $checkAut)) {	  
-		unset($plxAdmin->plxGlob_arts->aFiles[$key]); 
-		continue;
+	 if($plxPlugin->getParam('triAuthors')!= $art['author']) {		 
+		unset($plxAdmin->plxGlob_arts->aFiles[$key]); 		
+		}
+		else {			 
+		// comptage occurence article par catégorie
+		// recuperation catégories
+		$catsfound=explode(',',$art['categorie']); 
+			 foreach($catsfound as $keycat => $catval){						 
+				 if($catval =='draft') { unset($plxAdmin->plxGlob_arts->aFiles[$key]);}// draft to remove
+				 else {
+		if(!isset($catnb[$catval])){$catnb[$catval]=1;}else{$catnb[$catval]=$catnb[$catval] + 1;}
+			$categories[$catval]= $catval;
+			array_unique($categories);
+				 }
+			 }
+		// fin comptage occurences		
 		}
 	}		
+	// maj tableau categories.
+	foreach ($plxAdmin->aCats as $catNumb => $values) {
+		if(!in_array($catNumb, $categories)) {		 
+			//$plxAdmin->aCats[$catNumb]['active']='0';		 
+			//$plxAdmin->aCats[$catNumb]['article']='0';
+			unset($plxAdmin->aCats[$catNumb]);// finalement on vire 
+		}
+	}
+		// MAJ categories active
+		$plxAdmin->activeCats = implode(' | ' , $categories);
+		
+		// tri cat et assignation nombre articles dispos
+		ksort($catnb);
+		foreach($catnb as $mctNb => $vlNm) {
+			$plxAdmin->aCats[$mctNb]['articles'] = $vlNm;
+		}
+
 }
 
+
 if ($plxPlugin->getParam('epubMode')=='magM' || 'magT' || 'magS' || 'magA') { 
+ $catnb=array();
 	// on retire les articles hors dates.
     $magfiles =  $plxAdmin->plxGlob_arts->aFiles;
 
@@ -199,6 +280,7 @@ if ($plxPlugin->getParam('epubMode')=='magM' || 'magT' || 'magS' || 'magA') {
 		}// magM
 
 		if ($plxPlugin->getParam('epubMode')=='magT') {
+			$catnb=array();//reset
 			$mois=str_pad($plxPlugin->getParam('magTM'), 2, "0", STR_PAD_LEFT);
 			$mois2= $mois + 1;
 			$mois3= $mois2 + 1;
@@ -222,6 +304,7 @@ if ($plxPlugin->getParam('epubMode')=='magM' || 'magT' || 'magS' || 'magA') {
 		}// magT		
 
 		if ($plxPlugin->getParam('epubMode')=='magS') {
+			$catnb=array();//reset
 			$mois=str_pad($plxPlugin->getParam('magSM'), 2, "0", STR_PAD_LEFT);
 			$mois2= $mois + 1;
 			$mois3= $mois2 + 1;
@@ -251,6 +334,7 @@ if ($plxPlugin->getParam('epubMode')=='magM' || 'magT' || 'magS' || 'magA') {
 		}// magT
 
 		if ($plxPlugin->getParam('epubMode')=='magA') {	
+			$catnb=array();//reset
 		$testKeyY=substr($art['date_creation'],0,4);
 		$string = 	$plxPlugin->getParam('magAY');
 		 if ($testKeyY != $string ) {
@@ -321,8 +405,8 @@ while ($monthStart <= $monthEnd) {
 	if($plxAdmin->aUsers) {
 		$userTPL=PHP_EOL .'<option value="000">'.$plxPlugin->getLang('L_NO_FILTER').'</option>'.PHP_EOL;
 		foreach($plxAdmin->aUsers as $_userid => $_user)	{
-		// test sur active="1" profil="0" delete="0"
-		 if($_user['active'] ==1  &&  $_user['profil'] ==   max(min($_user['profil'], 4), 0) && $_user['delete'] ==0) {// test min/max pour compatibilite plugin vip_zone ou autre ajoutant des profil en dehors des 5 natifs
+		// test sur active="1" profil="0" delete="0" et dans $AuthorPublished 
+		 if($_user['active'] ==1  &&  $_user['profil'] ==   max(min($_user['profil'], 4), 0) && $_user['delete'] ==0 && in_array($_user['name'],$AuthorPublished ) ) {// test min/max pour compatibilite plugin vip_zone ou autre ajoutant des profil en dehors des 5 natifs
 			$userTPL .='<option value="'.$_userid.'" title="'.$aProfils[$_user['profil']].'">'.$_user['name']. '</option>'.PHP_EOL;
 		 }
 		}

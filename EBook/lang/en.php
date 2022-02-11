@@ -1,8 +1,10 @@
 <?php
 
 $LANG = array(
-'L_PLUG_VERSION'					=>' Version BETA - 01/22 ',
+'L_PLUG_VERSION'					=>' Version BETA - 02/22 ',
 'L_PAGE_TITLE'						=> 'E-Book',
+'L_MENU_CATEGORIES' 				=> 'Ebook generator',
+'L_PLUGINS_HELP_TITLE' 				=> 'See how to use the plugin',
 
 #epub.Ebook.php 
 'L_DL_EPUBS'						=>'Avalaible Epubs to downlad',
@@ -22,9 +24,9 @@ $LANG = array(
 'L_DEFAULT_MENU_NAME'				=> 'E-Book',
 
 	# display options
-	'L_DISPLAY_OPTIONS'				=>'Display options',
-	'L_DISPLAY_OPTIONS_PAGE'		=>'Displays option on the site',
-	
+	'L_DISPLAY_OPTIONS'				=> 'Display options',
+	'L_DISPLAY_OPTIONS_PAGE'		=> 'Displays option on the site',
+	'L_DESCRIPTION'					=> 'Page Description',
 	'L_MENU_DISPLAY'				=> 'Display the menu of the contact page',
 	'L_MENU_TITLE'		    		=> 'Menu title',
 	'L_MENU_POS'		    		=> 'Menu position',
@@ -33,13 +35,14 @@ $LANG = array(
 	'L_EPUBS_STORAGE_REPERTORY'		=> 'Storage Epub repertory',
 	'L_CUSTOM_CONTENT_TOP'			=> 'Custom content before epub list',
 	'L_CUSTOM_CONTENT_END'			=> 'Custom content at the end of the list.',
+	'L_DEBUGME'						=> 'Debug option, show messages  ',
 	
 	# Publish mode
 	'L_PUBLISH_MODE'				=> 'Publication mode',
 	'L_PUBLISH_TYPE'				=> 'Type of publications and selected author(s))',
 	'L_AUTHOR_SELECTION'			=> 'Selection Author/writer',
 	'L_NO_FILTER'					=>' All selected ',
-	'L_SELECT_ALL_AUTHORS'			=>' Select All Authors',
+	'L_SELECT_ALL_AUTHORS'			=>' Select All Published Authors',
 	'L_SORT_PUBLICATION_OF'			=>' Select publication of',
 	'L_SORT_PUBLICATION'			=>' Sorting publication',
 	'L_BOOK_MODE'					=>' Book mode ',

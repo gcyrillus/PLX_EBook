@@ -51,6 +51,7 @@ require('varEbook.php');
 				$plxPlugin->setParam('mnuName', 	$_POST['mnuName'], 'string');
 			    //$plxPlugin->setParam('mnuText_'.$lang, 	$_POST['mnuText_'.$lang], 'string');
 			}
+		$plxPlugin->setParam('description', $_POST['description'], 'cdata');
 		$plxPlugin->setParam('custom-start', $_POST['custom-start'], 'cdata');
 		$plxPlugin->setParam('custom-end', $_POST['custom-end'], 'cdata');
 		$plxPlugin->saveParams();
@@ -1055,7 +1056,7 @@ require('varEbook.php');
 				$autId=1;
 				$UsersDesc=array();//reset
 						foreach($plxAdmin->aUsers as $_userid => $_user)	{
-							if($_user['profil'] >=0 && $_user['profil'] <= 4  && $_user['active'] == 1 ) {
+							if($_user['profil'] >=0 && $_user['profil'] <= 4  && $_user['active'] == 1  && in_array($_user['name'],$AuthorPublished )) {
 								$AllUsers[]= $_user['name'];
 								if($_user['infos'] !=''){ $UsersDesc[$_user['name']]= $_user['infos'];}// pour traitement ultérieur
 								
@@ -3183,7 +3184,7 @@ $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 1
 
 <form action="?p=EBook" method="post" id="formEpub">				
 <?php echo plxToken::getTokenPostMethod() ;
-echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css" media="screen">';
+echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css?t='.time().'" media="screen">';
 ?>
   <input type="radio" name="nav" id="fA"    <?php if(!isset($_GET['tab']) || ( isset($_GET['tab']) && $_GET['tab']=='fA')) {echo ' checked="checked"' ;}?>>
   <input type="radio" name="nav" id="fB"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fB') 	{echo ' checked="checked"';}?>>
@@ -3195,7 +3196,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
   <h3><label for="fA"><span><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS') ?></span></label></h3>
   <fieldset id="A">
     <legend><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS_PAGE') ?></legend>				
-    <p class="field"><label for="id_mnuName"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName',$var['mnuName'],'text','20-20') ?></p>
+    <p class="field"><label for="id_mnuName"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName',$var['mnuName'],'text','20-20') ?></p> 
+	  <p><label for="description"><?php $plxPlugin->lang('L_DESCRIPTION') ?></label> <textarea name="description"><?php echo $var['description'] ?></textarea></p>
     <p><label for="id_mnuDisplay"><?php echo $plxPlugin->lang('L_MENU_DISPLAY') ?></label><?php plxUtils::printSelect('mnuDisplay',array('1'=>L_YES,'0'=>L_NO),$var['mnuDisplay']); ?></p>
 	<p class="field"><label for="id_url"><?php $plxPlugin->lang('L_URL') ?></label><?php plxUtils::printInput('url',$var['url'],'text','20-255') ?></p>
     <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
@@ -3219,8 +3221,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		<?php echo $userTPL; ?>
 		</select>
 		<b id="000" class="fullWidth hide" style="margin-inline-start:auto;width:auto;"><?php echo $plxPlugin->getLang('L_SELECT_ALL_AUTHORS') ?></b>
-		<?php foreach($plxAdmin->aUsers as $_userid  => $_user) {	
-			echo '<b id="'.$_userid.'" class="fullWidth hide" style="margin-inline-start:auto;width:auto">'. $plxPlugin->getLang('L_SORT_PUBLICATION_OF').' '.$_user['name'].'</b>';
+		<?php foreach($plxAdmin->aUsers as $_userid  => $_user) {			
+			echo '<b id="'.$_userid.'" class="fullWidth hide" style="margin-inline-start:auto;width:auto">'. $plxPlugin->getLang('L_SORT_PUBLICATION_OF').' '.$_user['name'].'</b>';			
 		} ?>
 		<label for="epubMode"><?php echo $plxPlugin->getLang('L_SORT_PUBLICATION') ?></label>
 		<select name="epubMode" id="epubMode">
@@ -3345,9 +3347,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 							}
 						  echo '</select >';			
 						echo'</td>'.PHP_EOL; ?>
-			</tr><?php
-					
-					foreach ($plxAdmin->aCats as $catNumb => $values) {
+			</tr><?php	foreach ($plxAdmin->aCats as $catNumb => $values) {
 						if(@$values['active'] =='1') {
 					if($plxPlugin->getParam($catNumb) =="1") { $classS='on';} else {$classS='off';}
 						if(!isset($values['mother'])){$values['mother']='0';$classS .=" regular";}// compatibilité si plx-gc-categorie absent

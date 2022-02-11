@@ -119,16 +119,37 @@ class EBook extends plxPlugin {
 	 * Méthode de traitement du hook plxShowStaticListEnd
 	 *
 	 * @return	stdio
-	 * @author	Stephane F
+	 * @author	Bazooka07  https://forum.pluxml.org/discussion/7134/integration-plugin-comme-page-statique-beneficiant-de-la-variable-format
 	 **/
-	public function plxShowStaticListEnd() {
+public function plxShowStaticListEnd() {
 
-		# ajout du menu pour accèder à la page epub
-		if($this->getParam('mnuDisplay')) {
-			echo "<?php \$status = \$this->plxMotor->mode=='".$this->url."'?'active':'noactive'; ?>";
-			echo "<?php array_splice(\$menus, ".($this->getParam('mnuPos')-1).", 0, '<li class=\"static menu '.\$status.' nav-item\" id=\"static-".__CLASS__."\"><a href=\"'.\$this->plxMotor->urlRewrite('?".$this->url."').'\" class=\"nav-link\" title=\"".addslashes($this->getParam('mnuName'))."\">".addslashes($this->getParam('mnuName'))."</a></li>'); ?>";
-		}
-	}
+    # ajout du menu pour accèder à la page de recherche
+    if($this->getParam('mnuDisplay')) {
+        # $this correspond au plugin
+        $url = $this->lang . $this->url;; 
+        $pos = intval($this->getParam('mnuPos')) - 1;
+        $name = $this->getParam('mnuName');
+        $description = $this->getParam('description');
+        # valeur par défaut de $format dans plxShow::staticList() :
+        # <li class="#static_class #static_status" id="#static_id"><a href="#static_url" title="#static_name">#static_name</a></li>
+        echo '<?php' . PHP_EOL;
+?>
+		# Injection de code par le plugin  '<?php __CLASS__  ?>'
+		$stat = strtr($format, array(
+			'#static_class'     	=> 'static menu',
+			'#static_status'    	=> ($this->plxMotor->mode==  '<?= $url ?>' ) ? 'active' : 'noactive', 
+			'#static_id'        	=> 'static-<?= __CLASS__ ?>'  , 
+			'#static_url'       	=> $this->plxMotor->urlRewrite('?<?= $url ?>'), 
+			'#static_name'      	=>  '<?= $name ?>' ,
+			'#static_description'   =>  '<?= $description ?>' ,
+		));
+		array_splice($menus,  '<?= $pos ?>' , 0, array($stat));
+<?php
+        echo PHP_EOL . '?>';
+    }
+}
+
+
 
 	/**
 	 * Méthode qui rensigne le titre de la page dans la balise html <title>
@@ -1084,11 +1105,6 @@ $zip->close();
 		
 	}
 
-	public 	function compareASCII($a, $b) {
-		$at = iconv('UTF-8', 'ASCII//TRANSLIT', $a);
-		$bt = iconv('UTF-8', 'ASCII//TRANSLIT', $b);
-		return strcmp($at, $bt);
-	}
 	
 }
 ?>

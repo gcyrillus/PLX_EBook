@@ -1,8 +1,10 @@
 <?php
 
 $LANG = array(
-'L_PLUG_VERSION'					=>' Version BETA - 01/22 ',
-'L_PAGE_TITLE'						=> 'E-Book',
+'L_PLUG_VERSION'					=>' Version BETA - 02/22 ',
+'L_PAGE_TITLE'						=> 'E-Book',	'L_PLUGINS_HELP' => 'Aide',
+'L_PLUGINS_HELP_TITLE' 				=> 'Voir l\'aide du plugin',
+'L_MENU_CATEGORIES' 				=> 'Ebook Maker',
 
 #epub.Ebook.php 
 'L_DL_EPUBS'						=>'Epub(s) disponible(s) au téléchargement',
@@ -24,7 +26,7 @@ $LANG = array(
 	# display options
 	'L_DISPLAY_OPTIONS'				=>'Options d\'affichage',
 	'L_DISPLAY_OPTIONS_PAGE'		=>'Options d\'affichage sur le site.',
-	
+	'L_DESCRIPTION'					=> 'Description de la page',
 	'L_MENU_DISPLAY'				=> 'Afficher la page E-Book dans le menu',
 	'L_MENU_TITLE'		    		=> 'Titre du menu',
 	'L_MENU_POS'		   		 	=> 'Position du menu',
@@ -33,13 +35,14 @@ $LANG = array(
 	'L_EPUBS_STORAGE_REPERTORY'		=> 'Repértoire de stockage des Epubs.',
 	'L_CUSTOM_CONTENT_TOP'			=> 'Contenu personnalisé sous le titre',
 	'L_CUSTOM_CONTENT_END'			=> 'Contenu personnalisé fin de liste.',
+	'L_DEBUGME'						=> 'Options débogage, montre les messages ',
 	
 	# Publish mode
 	'L_PUBLISH_MODE'				=> 'Mode de publication',
 	'L_PUBLISH_TYPE'				=> 'Type de publications et tri Auteur(s)',
 	'L_AUTHOR_SELECTION'			=> 'Selection Auteur/Rédacteur',
 	'L_NO_FILTER'					=>' pas de filtre ',
-	'L_SELECT_ALL_AUTHORS'			=>' Selectionne tous les auteurs.',
+	'L_SELECT_ALL_AUTHORS'			=>' Selectionne tous les auteurs publiés.',
 	'L_SORT_PUBLICATION_OF'			=>' Trie uniquement les publication de',
 	'L_SORT_PUBLICATION'			=>' Mode de tri et de publication',
 	'L_BOOK_MODE'					=>' Mode Livre ',
@@ -98,7 +101,7 @@ $LANG = array(
 	'L_AKNOWLEDGE_PAGE'				=>' Page "Remerciements" ',
 	'L_THANKS_TO_ALL_HELPER'		=>' Page de remerciement aux divers contributeurs ou ressources qui ont aidé à la création de ce Livre.',
 	'L_TESTIMONIAL_PAGE'			=>' Page "Temoignage" ',
-	'L_TESTIMONIAL_S'					=>' Temoignage(s) ',
+	'L_TESTIMONIAL_S'				=>' Temoignage(s) ',
 	'L_SO_MANY_COM_TO_INCLUDE'		=>' Nombre de commentaire à inclure',
 	'L_INCLUDE_COMMENT_FROM'		=>' Inclure les commentaire de la page ',
 	'L_CHOICE'						=>' au choix ',
