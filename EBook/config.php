@@ -44,7 +44,10 @@ require('varEbook.php');
 		$plxPlugin->setParam('mnuPos', 					$_POST['mnuPos'], 'numeric');
 		$plxPlugin->setParam('template', 				$_POST['template'], 'string');
 		$plxPlugin->setParam('url', plxUtils::title2url($_POST['url']), 'string');
-		$plxPlugin->setParam('epubRepertory',	   trim($_POST['epubRepertory']), 'string');
+		//correction format chemin repertoire
+		$postedRepertory = preg_replace("/^(\\.\\.\\/)+/", "", trim($_POST['epubRepertory']));
+		$postedRepertory='../../'.$postedRepertory;
+		$plxPlugin->setParam('epubRepertory',$postedRepertory , 'string');
 		$plxPlugin->setParam('debugme', 				$_POST['debugme'], 'numeric');
 		$var['debugme'] = $_POST['debugme'];
 			foreach($aLangs as $lang) {
