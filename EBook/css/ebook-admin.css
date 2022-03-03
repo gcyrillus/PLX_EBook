@@ -249,6 +249,24 @@ input[name="doMake"] {
 #formEpub #A label {
   min-width: max-content;
 }
+#A p:nth-child(3) ~p,
+#A p:nth-child(6) ~ p{
+ color:blue;
+
+}
+#A p:nth-child(6) ~ p {
+  color:green 
+}
+fieldset#A  p:nth-child(10) {
+  color:hotpink
+}
+fieldset#A  p:nth-child(11) {
+  color:tomato
+}
+#A input,#A select {
+  color:inherit;
+}
+
 #annexe-table tr  label[for="art-coms"] {
   width: auto;
   display: flex;

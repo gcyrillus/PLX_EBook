@@ -33,6 +33,10 @@ $LANG = array(
 	'L_TEMPLATE'					=> 'Template',
 	'L_URL'							=> 'Url parameter',
 	'L_EPUBS_STORAGE_REPERTORY'		=> 'Storage Epub repertory',
+	'L_ERR_FORBIDDEN_NAME'			=>' Name already in use ',
+	'L_NEW_DIR_NAME'				=>' Choose another name ',
+	'L_BACK_TO_OLD_STORAGE_REPERTORY'	=>' Or choose of these repertories',
+	'L_HISTORY'						=>' history ',
 	'L_CUSTOM_CONTENT_TOP'			=> 'Custom content before epub list',
 	'L_CUSTOM_CONTENT_END'			=> 'Custom content at the end of the list.',
 	'L_DEBUGME'						=> 'Debug option, show messages  ',
@@ -58,10 +62,10 @@ $LANG = array(
 	'L_FROM_MONTH'					=>' From month ',
 	
 	#comics options
-	'L_COMIC_IMG_REPERTORY'			=>' Comics images repertory ',
-	'L_GO_TO_FOLDER'				=>' Go to folder ',
+	'L_COMIC_IMG_REPERTORY'			=>' Select or creates Comics images repertory ',
+	'L_GO_TO_MEDIA_FOLDER'			=>' Open Media folder: ',
 	'L_SIMPLIFIED_MODE' 			=>' Simplified Mode apart selection ',
-	'L_LIST_REPERTORY_IMG_COVER'	=>' Integrates the configured image directory. Cover Images is to be named: ',
+	'L_LIST_REPERTORY_IMG_COVER'	=>' Integrates the configured image directory sorting files by name. Cover Images is to be named: ',
 	# Magazine options
 	'L_OLDEST_TO_RECENT'  			=>' Publish from Oldest to most recent. ',
 	'L_RECENT_TO_OLDEST'  			=>' Publish from most recent to Oldest. ',

@@ -1,20 +1,20 @@
 <?php  if(!defined('PLX_ROOT')) exit; 
+$plugName= basename(dirname(__FILE__));
 
 # récupération d'une instance de plxShow
 $plxShow = plxShow::getInstance();
-$plxPlugin = $plxShow->plxMotor->plxPlugins->getInstance('EBook');
+$plxPlugin = $plxShow->plxMotor->plxPlugins->getInstance($plugName);
 
 # Si le fichier de langue n'existe pas
 $lang = $plxShow->plxMotor->aConf['default_lang'];
-if(!file_exists(PLX_PLUGINS.'EBook/lang/'.$lang.'.php')) {
-	echo '<p>'.sprintf($plxPlugin->getLang('L_LANG_UNAVAILABLE'), PLX_PLUGINS.'EBook/lang/'.$lang.'.php').'</p>';
+if(!file_exists(PLX_PLUGINS.$plugName.'/lang/'.$lang.'.php')) {
+	echo '<p>'.sprintf($plxPlugin->getLang('L_LANG_UNAVAILABLE'), PLX_PLUGINS.$plugName.'/lang/'.$lang.'.php').'</p>';
 	return;
 }
 	$values['mother']="0";	// compatibilite plugin  plx-gc-categories	valeur par défaut 
-echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/site.css?t='.time().'" media="screen">';
+echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css/site.css?t='.time().'" media="screen">';
 
 ?><section>
-	<style></style>
 	<div id ="eboooks">
 		<h2><?php $plxPlugin->lang('L_DL_EPUBS') ?></h2>
 		<div><?php echo plxUtils::cdataCheck($plxPlugin->getParam('custom-start'));?></div>		

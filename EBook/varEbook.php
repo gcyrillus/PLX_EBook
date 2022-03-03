@@ -30,7 +30,8 @@ foreach($aLangs as $lang) {
 				$var[$catNumb.'-th'] =  $plxPlugin->getParam($catNumb.'-th')=='' ? 'th1' : $plxPlugin->getParam($catNumb.'-th');
 			}
 		}
-
+//variable theme pour ebook complet
+$var['all-th'			] = $plxPlugin->getParam('all-th'				)=='' ? 'th1'										  : $plxPlugin->getParam('all-th');
 # titre et description auteur
 $var['title'			] = $plxPlugin->getParam('title'				)=='' ? $plxAdmin->aConf['title'					] : $plxPlugin->getParam('title');
 $var['subtitle'			] = $plxPlugin->getParam('subtitle'				)=='' ? $plxAdmin->aConf['description'				] : $plxPlugin->getParam('subtitle');
@@ -52,7 +53,7 @@ $var['author'			] = $plxPlugin->getParam('author'				)=='' ? $plxAdmin->aUsers[$
 $var['pageDedicace'		] =  $plxPlugin->getParam('pageDedicace'		)=='' ? 0  : $plxPlugin->getParam('pageDedicace');
 $var['pagededicaceId'	] =  $plxPlugin->getParam('pagededicaceId'		)=='' ? 0  : $plxPlugin->getParam('pagededicaceId');
 $var['pagePreface'		] =  $plxPlugin->getParam('pagePreface'			)=='' ? 0  : $plxPlugin->getParam('pagePreface');
-$var['pageprefaceId'	] =  $plxPlugin->getParam('pagePrefaceId'		)=='' ? 0  : $plxPlugin->getParam('pagePrefaceId');
+$var['pageprefaceId'	] =  $plxPlugin->getParam('pageprefaceId'		)=='' ? 0  : $plxPlugin->getParam('pageprefaceId');
 $var['pageForeword'		] =  $plxPlugin->getParam('pageForeword'		)=='' ? 0  : $plxPlugin->getParam('pageForeword');
 $var['pageforewordId'	] =  $plxPlugin->getParam('pageforewordId'		)=='' ? 0  : $plxPlugin->getParam('pageforewordId');
 
@@ -124,7 +125,9 @@ $var['comicsmedia'		] =  $plxPlugin->getParam('comicsmedia'		)=='' ? 'comics'			
 	$var['debugme'			] = $plxPlugin->getParam('debugme'				)=='' ? 0								: $plxPlugin->getParam('debugme');
 
 # repertoire reception epubs , voir pour ajouter une page de selection / creation  des liens pour du copier/coller dans article/statique
-	$var['epubRepertory'	] = $plxPlugin->getParam('epubRepertory'		)=='' ? $plxPlugin->epubRepertory  : $plxPlugin->getParam('epubRepertory');
+	$var['epubRepertory'		] = $plxPlugin->getParam('epubRepertory'		)=='' ? $plxPlugin->epubRepertory  : $plxPlugin->getParam('epubRepertory');
+	$var['epubRepertoryHisto'	] = $plxPlugin->getParam('epubRepertoryHisto'	)=='' ? $plxPlugin->epubRepertory  : $plxPlugin->getParam('epubRepertoryHisto');
+	$loopHisto= explode(' ',$plxPlugin->getParam('epubRepertoryHisto') );
 }//fin $var[]
 
 # titre-description-auteur pour couverture
@@ -381,7 +384,7 @@ $aProfils = array(
 	PROFIL_EDITOR => L_PROFIL_EDITOR,
 	PROFIL_WRITER => L_PROFIL_WRITER
 );
-
+///////////////// templates ////////////////
 // tpl option Years 
 $optionTplY=PHP_EOL;
 $yearStart = date('Y');
@@ -410,7 +413,20 @@ while ($monthStart <= $monthEnd) {
 			$userTPL .='<option value="'.$_userid.'" title="'.$aProfils[$_user['profil']].'">'.$_user['name']. '</option>'.PHP_EOL;
 		 }
 		}
-	}		
+	}
+
+// tpl select epub dir already created
+$existEpubDirTpl ='';
+if( count($loopHisto)>0) {
+	$existEpubDirTpl = '<p>'. PHP_EOL .'		<label for="epubDirHisto">'.$plxPlugin->getlang('L_BACK_TO_OLD_STORAGE_REPERTORY') .'</label>'. PHP_EOL .'		<select name="epubDirHisto">'.PHP_EOL.'<option>'. $plxPlugin->getLang('L_HISTORY') .'... </option>';
+	 foreach($loopHisto as $histoDir) {
+		$existEpubDirTpl .='			<option value="'.$histoDir.'" >'.$histoDir. '</option>'.PHP_EOL ;
+	 }
+	$existEpubDirTpl .='		</select>'. PHP_EOL .'	</p>';
+}
+
+
+	
 {// recherche commentaires et pages associées
 	$com=$plxAdmin->plxGlob_coms->aFiles;
 	$PagesCommentees= array();
@@ -735,8 +751,16 @@ a.gray {
 // on récupere le nom du plugin appelé (nom de class).		
 $plugin = isset($_GET['p'])?urldecode($_GET['p']):'';
 
-// initialisation du repertoire de stockage
+// initialisation du repertoire de stockage - premiere utilisation = EPUBS
 $repertoire = $plxPlugin->getParam('epubRepertory')=='' ? $plxPlugin->epubRepertory  : $plxPlugin->getParam('epubRepertory');
+/*$histRepertoire= function (){
+	$histo[]= $plxPlugin->epubRepertory;
+	if(isset($plxPlugin->getParam('epubRepertoryHisto'))) {
+		$loopHisto= explode(' ',$plxPlugin->getParam('epubRepertoryHisto') );
+	}		//&& $plxPlugin->getParam('epubRepertory') != $plxPlugin->epubRepertory){$histo[]=$plxPlugin->getParam('epubRepertory');}
+	
+};*/
+
 
 // création du repertoire de stockage si inexistant
 if (!file_exists($repertoire)) {

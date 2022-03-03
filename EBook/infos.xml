@@ -2,8 +2,8 @@
 <document>
 	<title><![CDATA[E-Book]]></title>
 	<author><![CDATA[G.Cyrille]]></author>
-	<version>Beta 1.0.2</version>
-	<date>11/02/2022</date>
+	<version>Beta 1.0.3</version>
+	<date>18/02/2022</date>
 	<site>http://re7net.com</site>
-	<description><![CDATA[ajoute une page E-book à votre PluXml pour partager vos contenus au format Epub, <br>tri par catégories,dates ,auteurs]]></description> 
+	<description><![CDATA[ajoute (ou pas) une page E-book à votre PluXml pour partager vos contenus au format Epub en frontEnd, <br>En backend: concaténe vos articles en epub selon diverses options<br> - tri par catégories,dates ,auteurs<br> - choix d'un théme(couverture,fonts,couleurs), pages ,rubriques ainsi que des pages spécifiques editables. <br> - Un mode simplifiée permet de faire un ebook Bande dessinées à partir de vos images/planches.<br><b>Ce plugin peut transformé votre CMS favoris en un éditeur d'epub.</b>. ]]></description> 
 </document>

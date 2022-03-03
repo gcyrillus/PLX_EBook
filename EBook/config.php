@@ -47,7 +47,15 @@ require('varEbook.php');
 		//correction format chemin repertoire
 		$postedRepertory = preg_replace("/^(\\.\\.\\/)+/", "", trim($_POST['epubRepertory']));
 		$postedRepertory='../../'.$postedRepertory;
-		$plxPlugin->setParam('epubRepertory',$postedRepertory , 'string');
+		$plxPlugin->setParam('epubRepertory',$postedRepertory , 'string');		
+			
+		// ajout/verif histo ?		
+		//$plxPlugin->setParam('epubRepertoryHisto', $var['epubRepertoryHisto'].' '.trim($_POST['epubRepertory']), 'string');
+        $checkHisto =explode(' ',$var['epubRepertoryHisto'].' '.trim($_POST['epubRepertory']));		
+		$checkHisto =array_unique($checkHisto);
+		$plxPlugin->setParam('epubRepertoryHisto', implode(' ', $checkHisto) , 'string');
+		
+		// option debogage partiel
 		$plxPlugin->setParam('debugme', 				$_POST['debugme'], 'numeric');
 		$var['debugme'] = $_POST['debugme'];
 			foreach($aLangs as $lang) {
@@ -3124,9 +3132,15 @@ require('varEbook.php');
 		$plxPlugin->setParam('mnuDisplay', $_POST['mnuDisplay'], 'numeric');
 		$plxPlugin->setParam('mnuPos', $_POST['mnuPos'], 'numeric');
 		$plxPlugin->setParam('template', $_POST['template'], 'string');
-		//$plxPlugin->setParam('url', plxUtils::title2url($_POST['url']), 'string');
+		$plxPlugin->setParam('url', plxUtils::title2url($_POST['url']), 'string');
 		$plxPlugin->setParam('epubRepertory', trim($_POST['epubRepertory']), 'string');
-
+		
+// ajout/verif histo ?		
+		$plxPlugin->setParam('epubRepertoryHisto', $var['epubRepertoryHisto'].' '.trim($_POST['epubRepertory']), 'string');
+        $checkHisto =explode(' ',$var['epubRepertoryHisto'].' '.trim($_POST['epubRepertory']));		
+		array_unique($checkHisto);
+		$plxPlugin->setParam('epubRepertoryHisto', implode(' ', $checkHisto) , 'string');
+		
 		// pages supplementaire à inclure
 		$plxPlugin->setParam('pageIndex', $_POST['pageIndex'], 'numeric');
 		$plxPlugin->setParam('pageCopy', $_POST['pageCopy'], 'numeric');
@@ -3204,14 +3218,81 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
     <p><label for="id_mnuDisplay"><?php echo $plxPlugin->lang('L_MENU_DISPLAY') ?></label><?php plxUtils::printSelect('mnuDisplay',array('1'=>L_YES,'0'=>L_NO),$var['mnuDisplay']); ?></p>
 	<p class="field"><label for="id_url"><?php $plxPlugin->lang('L_URL') ?></label><?php plxUtils::printInput('url',$var['url'],'text','20-255') ?></p>
     <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
-    <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><input name="epubRepertory" value="<?php echo $var['epubRepertory']; ?> "></p>
+    <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><span><input name="epubRepertory" value="<?php echo trim($var['epubRepertory'],' '); ?>"></span></p>
+	<?php echo $existEpubDirTpl; ?>	
+	<script>(function () {
+		// variables 
+		const dirNames = [<?php $plxPlugin->forbiddenUriList(PLX_ROOT) ?>]; 			
+		const dirValue = '<?php echo preg_replace("/^(\\.\\.\\/)+/", "", trim($var['epubRepertory'],' ')); ?>' ;
+		const dirHisto =[<?php echo "'". preg_replace("/(\\.\\.\\/)+/", "",implode("' , '",$loopHisto ))."'";?>];
+		// const dirInvalid = ' dirNames - dirHisto ' ;				
+		const dirInvalid = dirNames.filter(function(val) {
+		  return dirHisto.indexOf(val) == -1;
+		});
+
+		let iptUrl = document.querySelector('[name="url"]');
+		let iptDir = document.querySelector('[name="epubRepertory"]');
+		let histo  = document.querySelector('[name="epubDirHisto"]');
+		
+		
+			
+			
+		// dir
+		iptDir.addEventListener("keyup", function () {
+			checkVal(iptDir.value, dirInvalid);
+		});
+		// use histo dir
+		histo.addEventListener('change', function () {
+		  iptDir.value = this.value;
+		});
+		
+		// url
+		iptUrl.addEventListener("keyup", function () {
+			checkDir(iptUrl.value, dirNames);
+		});
+		
+		// comparaisons entre : valeur nettoyée et (valeurs interdites - valeurs déjà utilisées);
+		function checkVal(val, dirInvalid ) {
+			val=val.replace( '../../', '' );
+			strippedVal= iptDir.value;
+			strippedVal= strippedVal.replace( '../../', '' );
+			dirInvalid.push(iptUrl.value);
+			for (let i = 0; i < dirInvalid.length; i++) {
+				let name = dirInvalid[i];
+				if (name == val) {
+					iptDir.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + strippedVal +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>', iptDir.defaultValue);
+					if (iptDir.value === '') {
+							iptDir.value = iptDir.defaultValue;
+							return;
+					}
+					checkVal(iptDir.value, dirInvalid);// juste au cas où pas de chance
+					break;
+				}
+			}
+		}
+		
+		//verifie si le nom de repertoire existe
+		function checkDir(value, arr) {
+			for (let i = 0; i < arr.length; i++) {
+				let name = arr[i];
+				if (name == value) {
+					iptUrl.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + iptUrl.value +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>');
+					if (iptUrl.value === '') {
+					iptUrl.value = iptUrl.defaultValue;
+					return;
+					}
+					checkDir(iptUrl.value, arr);// juste au cas où c'est pas clair
+					break;
+				}
+			}
+		}
+})();</script>
     <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
 	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
     <div>  
 	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
       <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
 	 </div>
-
     <input type="submit" name="submitA" value="<?php $plxPlugin->lang('L_SAVE') ?>" />
   </fieldset>
   
@@ -3258,10 +3339,20 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		<label for="magAY"><?php echo $plxPlugin->getLang('L_CHOOSE_YEAR') ?> </label><select name="magAY" id ="magAY"><?php echo $optionTplY ; ?></select></p>
 		</div>		
 		<div class="fullWidth hide" id="comics"><h4><?php echo $plxPlugin->getLang('L_COMICS_MODE') ?></h4>
-		<p class="fullWidth block"><strong><u><?php echo $plxPlugin->getLang('L_SIMPLIFIED_MODE') ?></u>:</strong><?php echo $plxPlugin->getLang('L_LIST_REPERTORY_IMG_COVER') ?> <code>cover.jpg</code>.</p>		
-		<?php //$curFolder = '/'.plxUtils::strCheck(basename($_SESSION['medias']).'/'.$_SESSION['folder']);// la si pat ouvert admin medias, ça bogue! ?>
+		<p class="fullWidth block"><strong><u><?php echo $plxPlugin->getLang('L_SIMPLIFIED_MODE') ?></u>:</strong><?php echo $plxPlugin->getLang('L_LIST_REPERTORY_IMG_COVER') ?> <code>cover.jpg</code>.</p>	
 		<p class="fullWidth"><label for="comicsmedia"><?php echo $plxPlugin->getLang('L_COMIC_IMG_REPERTORY') ?></label><span>data/medias/<?php plxUtils::printInput('comicsmedia',$var['comicsmedia'],'text','20-255') ?></span></p>
-		<a href="medias.php" target="_blank"  class="fullWidth"><?php echo $plxPlugin->getLang('L_GO_TO_FOLDER');  $_SESSION['folder']= $var['comicsmedia'] ; echo $var['comicsmedia']; ?> </a>
+		<a href="medias.php" target="_blank"  class="fullWidth"><?php echo $plxPlugin->getLang('L_GO_TO_MEDIA_FOLDER').' ';  
+		if(empty($_SESSION['medias'])) {
+			$_SESSION['medias'] = $plxAdmin->aConf['medias'];
+			$_SESSION['folder'] =  $var['comicsmedia'].'/';
+			$_SESSION['currentfolder']=$_SESSION['folder'];
+			}
+			else {				
+			$_SESSION['folder'] =  $var['comicsmedia'].'/';
+			$_SESSION['currentfolder']=$_SESSION['folder'];
+			}
+			echo '<code>'.$_SESSION['folder'].'</code>'; 
+		?> </a>
 		<p class="fullWidth"><label for="titreComics"><?php echo $plxPlugin->getLang('L_TITLE') ?></label><?php plxUtils::printInput('titreComics',$var['titreComics'],'text','20-255') ?></p>
 		<p class="fullWidth"p><label for="descComics"><?php echo $plxPlugin->getLang('L_DESC') ?></label><?php plxUtils::printInput('descComics',$var['descComics'],'text','20-255') ?></p>
 		<p class="fullWidth"><label for="auteurComics"><?php echo $plxPlugin->getLang('L_AUTHOR') ?></label><?php plxUtils::printInput('auteurComics',$var['auteurComics'],'text','20-255') ?></p>
@@ -3521,10 +3612,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
   <h3><label for="fF"><span><?php echo $plxPlugin->getLang('L_AVALAIBLE_THEMES') ?></span></label></h3>
   <fieldset id="F">
     <legend><?php echo $plxPlugin->getLang('L_COVER_&_DESIGN') ?></legend>
-
-	  <div id="coverslider">
- 
-	
+	  <div id="coverslider">	
 	<?php
 				$i="0";
 				foreach($themesList as $themes => $theme) {
@@ -3581,7 +3669,6 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 	<?php include(PLX_PLUGINS.$plugin.'/lang/fr-help.php'); ?>
 	</div>
   </fieldset>
-
 </form>
 <!-- script kept here. vars are updated from plugin parameters -->
 <script>(function () {
@@ -3614,10 +3701,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 
 	for (let e of document.querySelectorAll('#magMY, #magMM,#magTY, #magTM,#magSY, #magSM,#magAY,#triAuthors')) {
 		let setVl=  e.getAttribute('name');
-    console.log(setVl)
 		e.value = calConfig[setVl];  
 	}
 
 })();
-// immediate function to preserve global namespace
 </script>

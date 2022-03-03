@@ -100,6 +100,7 @@ class EBook extends plxPlugin {
 	 **/
 	public function plxMotorPreChauffageBegin() {
 
+
 		$template = $this->getParam('template')==''?'static.php':$this->getParam('template');
 
 		$string = "
@@ -123,7 +124,7 @@ class EBook extends plxPlugin {
 	 **/
 public function plxShowStaticListEnd() {
 
-    # ajout du menu pour accèder à la page de recherche
+    # ajout au menu pour accèder à la page ebook
     if($this->getParam('mnuDisplay')) {
         # $this correspond au plugin
         $url = $this->lang . $this->url;; 
@@ -134,7 +135,7 @@ public function plxShowStaticListEnd() {
         # <li class="#static_class #static_status" id="#static_id"><a href="#static_url" title="#static_name">#static_name</a></li>
         echo '<?php' . PHP_EOL;
 ?>
-		# Injection de code par le plugin  '<?php __CLASS__  ?>'
+		# Injection de code par le plugin  '<?= __CLASS__  ?>'
 		$stat = strtr($format, array(
 			'#static_class'     	=> 'static menu',
 			'#static_status'    	=> ($this->plxMotor->mode==  '<?= $url ?>' ) ? 'active' : 'noactive', 
@@ -166,8 +167,6 @@ public function plxShowStaticListEnd() {
 		?>';
 	}
 
-	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	/**
 	* Fonctions internes au plugin
 	*
@@ -1105,6 +1104,18 @@ $zip->close();
 		
 	}
 
+	/* On récupere et interdit de réutiliser les url potentiellement valides
+	*
+	*avoids to set an URL that is already valid, used elseway.
+	*/
+	public function forbiddenUriList($directory) {
+		$forbidden = glob($directory.'*');
+foreach( $forbidden as $dir){
+    $item=pathinfo($dir);
+    $forbiddenName[]= $item['filename'];
+}
+echo "'". strtolower(implode("' , '",$forbiddenName ))."'";
+	}
 	
 }
 ?>

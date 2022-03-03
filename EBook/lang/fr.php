@@ -33,6 +33,10 @@ $LANG = array(
 	'L_TEMPLATE'					=> 'Template',
 	'L_URL'							=> 'Paramètre de l\'url',
 	'L_EPUBS_STORAGE_REPERTORY'		=> 'Repértoire de stockage des Epubs.',
+	'L_ERR_FORBIDDEN_NAME'			=>' Nom reservé ',
+	'L_NEW_DIR_NAME'				=>' Choisissez un autre nom ',
+	'L_BACK_TO_OLD_STORAGE_REPERTORY'	=>' Ou choisir un des repertoire existant',
+	'L_HISTORY'						=>' historique ',
 	'L_CUSTOM_CONTENT_TOP'			=> 'Contenu personnalisé sous le titre',
 	'L_CUSTOM_CONTENT_END'			=> 'Contenu personnalisé fin de liste.',
 	'L_DEBUGME'						=> 'Options débogage, montre les messages ',
@@ -58,10 +62,10 @@ $LANG = array(
 	'L_FROM_MONTH'					=>' à partir du mois',
 	
 	#comics options
-	'L_COMIC_IMG_REPERTORY'			=>' repertoire images Bande dessinée ',
-	'L_GO_TO_FOLDER'				=>' Aller au dossier ',
+	'L_COMIC_IMG_REPERTORY'			=>' Selectionne ou créer le repertoire "images Bande dessinée" ',
+	'L_GO_TO_MEDIA_FOLDER'			=>' Ouvrir le dossier Médias: ',
 	'L_SIMPLIFIED_MODE' 			=>' Mode simplifié à part ',
-	'L_LIST_REPERTORY_IMG_COVER'	=>' Integre le repertoire d\'image designé. L\'image de couverture sera celle nommée: ',
+	'L_LIST_REPERTORY_IMG_COVER'	=>' Integre le repertoire d\'image designé en triant les images par nom de fichier. L\'image de couverture sera celle nommée: ',
 	# Magazine options
 	'L_OLDEST_TO_RECENT'  			=>' Publie du plus ancien au plus récent. ',
 	'L_RECENT_TO_OLDEST'  			=>' Publie du plus récent au plus ancien. ',
