@@ -834,9 +834,6 @@ $zip->close();
 		$fh = fopen( PLX_ROOT."data/medias/".$file , "w");
 		$ch = curl_init();		
 		curl_setopt($ch, CURLOPT_URL, $externalLink);
-		curl_setopt($ch, CURLOPT_HEADER, true );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 		// remplissage du fichier. !! todo : tester taille et contenu puis validé
 		curl_setopt($ch, CURLOPT_FILE, $fh);
 		curl_exec($ch);
