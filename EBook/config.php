@@ -1635,7 +1635,7 @@ require('varEbook.php');
 								$img = $imgs->item($i);
 								$src = $img->getAttribute("src");
 								$extension = pathinfo($src, PATHINFO_EXTENSION);
-								if(substr($src, 0, 4) =='http' && $extension !=null) {
+								if(substr($src, 0, 4) =='http' /*&& $extension !=null*/) {
 								$plxPlugin->downloadRessource($src);
 								$newSrc = 'data/medias/'.basename($src);
 								$img->setAttribute('src', $newSrc); 
@@ -2066,7 +2066,7 @@ require('varEbook.php');
 																$img = $imgs->item($i);
 																$src = $img->getAttribute("src");
 																$extension = pathinfo($src, PATHINFO_EXTENSION);
-																if(substr($src, 0, 4) =='http' && $extension !=null) {
+																if(substr($src, 0, 4) =='http' /*&& $extension !=null*/) {
 																$plxPlugin->downloadRessource($src);
 																$newSrc = 'data/medias/'.basename($src);
 																$img->setAttribute('src', $newSrc); 
@@ -2452,7 +2452,7 @@ require('varEbook.php');
 										$img = $imgs->item($i);
 										$src = $img->getAttribute("src");
 										$extension = pathinfo($src, PATHINFO_EXTENSION);
-										if(substr($src, 0, 4) =='http' && $extension !=null) {
+										if(substr($src, 0, 4) =='http' /*&& $extension !=null*/) {
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
@@ -2632,7 +2632,7 @@ require('varEbook.php');
 										$img = $imgs->item($i);
 										$src = $img->getAttribute("src");
 										$extension = pathinfo($src, PATHINFO_EXTENSION);
-										if(substr($src, 0, 4) =='http' && $extension !=null) {
+										if(substr($src, 0, 4) =='http'/* && $extension !=null*/) {
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
@@ -2813,7 +2813,7 @@ require('varEbook.php');
 										$img = $imgs->item($i);
 										$src = $img->getAttribute("src");
 										$extension = pathinfo($src, PATHINFO_EXTENSION);
-										if(substr($src, 0, 4) =='http' && $extension !=null) {
+										if(substr($src, 0, 4) =='http' /*&& $extension !=null*/) {
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
@@ -2994,7 +2994,7 @@ require('varEbook.php');
 										$img = $imgs->item($i);
 										$src = $img->getAttribute("src");
 										$extension = pathinfo($src, PATHINFO_EXTENSION);
-										if(substr($src, 0, 4) =='http' && $extension !=null) {
+										if(substr($src, 0, 4) =='http' /*&& $extension !=null*/) {
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
@@ -3185,7 +3185,7 @@ $hotpink	= imagecolorallocate($im, 255, 105, 80);
 $royalblue 	= imagecolorallocate($im, 92 , 126, 229); 
 $color6a6 	= imagecolorallocate($im, 92 , 126, 229);  
 */
-
+		if (isset($_POST['updatecovers'])){
 $plxPlugin->makeThemeImg('th1/' ,'cover1.jpg',array(90,90,90)      , array(125,125,125) , array(92,126,229) ,$RobotoBold,$LatoRegular,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
 $plxPlugin->makeThemeImg('th2/' ,'cover2.jpg',array(140,0,0)       , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.8' ,'1.6','1.05',$plugin,$part);
 $plxPlugin->makeThemeImg('th3/' ,'cover3.jpg',array(255,100,200)   , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
@@ -3196,7 +3196,7 @@ $plxPlugin->makeThemeImg('th7/' ,'cover7.jpg',array(150,200,60)    , array(255,2
 $plxPlugin->makeThemeImg('th8/' ,'cover8.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
 $plxPlugin->makeThemeImg('th9/' ,'cover9.jpg',array(234, 205, 159) , array(255,255,255) , array(92,126,229) ,$ubuntuMono,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'1.5','1.05',$plugin,$part);
 $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 165, 232), array(200,200,200),$freeSansB ,$ubuntuMono ,$ubuntuMono,$titreTh,$descTh,$AuthTh,'2.5','1.25','40' ,$plugin,$part);
-
+		}
 ?>
 
 <form action="?p=EBook" method="post" id="formEpub">				
@@ -3635,6 +3635,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 	?>
 	<!-- voir pour ajout theme perso / upload img,font + config makeimage()-->
 	<!--<input type="submit" name="submitF" value="Enregistrer" />-->
+	  <input type="submit" name="updatecovers" value="<?php echo $plxPlugin->getLang('L_UPDATE_COVERS') ?>" />
 	</div>
 	<style>
 	</style>

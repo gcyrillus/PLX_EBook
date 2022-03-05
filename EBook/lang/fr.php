@@ -144,6 +144,7 @@ $LANG = array(
 	#Themes
 	'L_AVALAIBLE_THEMES'			=>' themes disponibles ',
 	'L_COVER_&_DESIGN'				=>' Cover et design ',
+	'L_UPDATE_COVERS'				=>' Mettre à jour les couvertures',
 	
 	#Help
 	'L_CHOICE_FRONT_DISPLAY'		=>' Vous pouvez choisir d\'afficher une page de téléchargement de vos epubs disponibles ou non sur votre site.',
