@@ -204,12 +204,11 @@ if ($plxPlugin->getParam('epubMode')=='alpha') {$plxAdmin->tri ="alpha";}
 
 	if($plxAdmin->aUsers  && $plxPlugin->getParam('triAuthors') =='000' ){
 		foreach($plxAdmin->aUsers as $_userid => $_user)	{
-			if(in_array($_user['name'],$AuthorPublished))  {$AllUsers[]= $_user['name'];}
-		}
+			if(in_array($_user['name'],$AuthorPublished))  
+			{$AllUsers[]= $_user['name'];}
+
 		$var['author'] = implode(", ", $AllUsers);
-	}
-	else {
-		$var['author'] = $plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'];
+		}
 	}
 	
 // filtrage auteurs
