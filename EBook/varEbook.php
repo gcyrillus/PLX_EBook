@@ -201,14 +201,15 @@ if ($plxPlugin->getParam('epubMode')=='alpha') {$plxAdmin->tri ="alpha";}
 		
 		
 }//fin MAJ categories/nbr article
-
 	if($plxAdmin->aUsers  && $plxPlugin->getParam('triAuthors') =='000' ){
 		foreach($plxAdmin->aUsers as $_userid => $_user)	{
 			if(in_array($_user['name'],$AuthorPublished))  
 			{$AllUsers[]= $_user['name'];}
-
-		$var['author'] = implode(", ", $AllUsers);
 		}
+		$var['author'] = implode(", ", $AllUsers);
+	}
+	else {
+		if(isset($plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'])) {$var['author'] = $plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'];}
 	}
 	
 // filtrage auteurs
