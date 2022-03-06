@@ -4,7 +4,7 @@ ____
   ### Modifs en cours:
   
   [+] 06/03/2022
-- Ajout javascript !désactive le bouton de création si des changement sont effectués dans l'onglet configuration et crèation.
+- Ajout javascript: désactive le bouton de création si des changement sont effectués dans l'onglet configuration et crèation.
 - Maj fichier fr.php/en.php
 - warning message if publish mode not yet configured (config.php)
 - rename: function listdir_by_date -> listdir_by_natsort (epub.ebook.php)
