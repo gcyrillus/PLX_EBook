@@ -23,7 +23,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 	$dir = PLX_ROOT. trim(str_replace('../../', '',$plxPlugin->getParam('epubRepertory')));
 	$sorted_array = listdir_by_date($dir.'/'.$file);
 	function listdir_by_date($pathtosearch) {
-		$i="0";
+		$i="0";		
+		$file_array=array();
 		foreach (glob($pathtosearch) as $filename){
 			$i++;
 			$file_array[$filename]=filectime($filename).'.'.$i; // or just $filename
