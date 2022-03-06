@@ -4,6 +4,7 @@ ____
   ### Modifs en cours:
   
   [+] 06/03/2022
+- Maj fichier fr.php/en.php
 - warning message if publish mode not yet configured (config.php)
 - rename: function listdir_by_date -> listdir_by_natsort (epub.ebook.php)
 - initialisation de  $file_array=array(); par defaut si repertoire epubs vide(epub.ebook.php)
