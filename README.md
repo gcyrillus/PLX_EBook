@@ -1,6 +1,31 @@
 # PLX_EBook  <sub><sup>(runs with PluXml >= 5.8.7. | compatible plx_gc_categorie & vip_zone)</sup><sub>
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
+____
+  ### Modifs en cours:
+  
+  [+] 06/03/2022
+- warning message if publish mode not yet configured (config.php)
+- rename: function listdir_by_date -> listdir_by_natsort (epub.ebook.php)
+- initialisation de  $file_array=array(); par defaut si repertoire epubs vide(epub.ebook.php)
 
+[+] 05/03/2022
+- bug tri sur multi-utilisateur validé si isset() (config.php)
+
+[+] 04/03/2022
+- cover updates on demand only(config.php)
+
+[+] 03/03/2022
+-  javascript, historique dossier epub, couleurs(config.php)
+
+[+] 11/2/22
+- reformat  le chemin  du repertoire de stockage des epubs(config.php)
+- ajout lien direct dans le menu admin(EBook.php)
+- valeur $format de la fonction catList() pris en compte(EBook.php)
+- n'affiche que les auteurs qui ont au moins une publication(config.php)
+- comptage article par categorie selon l'auteur selectionné (categorie vides non affichées)
+- ajout du champ description commun aux pages statiques(config.php)
+- modif mineures du CSS coté admin
+ ____
 
 <div id="help">
 <h2>Aide</h2>
