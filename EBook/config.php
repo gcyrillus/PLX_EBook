@@ -3705,6 +3705,18 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		let setVl=  e.getAttribute('name');
 		e.value = calConfig[setVl];  
 	}
+		
+	// desactive la creation si config modifié
+	const create = document.querySelector('input[name="doMake"]');
+	const labelValid = document.querySelector('label[for="submitC"]');
+	for (let e of document.querySelectorAll('#C select')) {
+ 		e.addEventListener("change", function() {
+      			create.setAttribute('disabled','disabled');
+     			labelValid.style.color="red";    
+     			labelValid.style.textDecoration="underline";    
+     			labelValid.style.fontWeight="bold";    
+ 		});   
+ 	}
 
 })();
 </script>
