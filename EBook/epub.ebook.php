@@ -21,8 +21,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 	<?php 
 	$file = '*.epub';
 	$dir = PLX_ROOT. trim(str_replace('../../', '',$plxPlugin->getParam('epubRepertory')));
-	$sorted_array = listdir_by_date($dir.'/'.$file);
-	function listdir_by_date($pathtosearch) {
+	$sorted_array = listdir_by_natsort($dir.'/'.$file);
+	function listdir_by_natsort($pathtosearch) {
 		$i="0";		
 		$file_array=array();
 		foreach (glob($pathtosearch) as $filename){
