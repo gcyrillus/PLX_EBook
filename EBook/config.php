@@ -3299,6 +3299,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 <h3><label for="fmode"><span><?php echo $plxPlugin->getLang('L_PUBLISH_MODE') ?></span></label></h3>
   <fieldset id="mode">
     <legend><?php echo $plxPlugin->getLang('L_PUBLISH_TYPE') ?></legend>
+	<?php if(!isset($plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'])) { echo  '<p class="warning fullWidth">'. $plxPlugin->getLang('L_PUBLISH_TYPE').' '. $plxPlugin->getLang('L_NOT_CONFIGURED').'</p>';} ?>
     <div>
 		<label for="triAuthors"><?php echo $plxPlugin->getLang('L_AUTHOR_SELECTION') ?></label>
 		<select name="triAuthors" id="triAuthors">

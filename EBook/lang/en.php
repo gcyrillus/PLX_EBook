@@ -40,6 +40,7 @@ $LANG = array(
 	'L_CUSTOM_CONTENT_TOP'			=> 'Custom content before epub list',
 	'L_CUSTOM_CONTENT_END'			=> 'Custom content at the end of the list.',
 	'L_DEBUGME'						=> 'Debug option, show messages  ',
+	'L_NOT_CONFIGURED'				=> 'not configured, Save to continue.',
 	
 	# Publish mode
 	'L_PUBLISH_MODE'				=> 'Publication mode',

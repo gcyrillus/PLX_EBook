@@ -40,6 +40,7 @@ $LANG = array(
 	'L_CUSTOM_CONTENT_TOP'			=> 'Contenu personnalisé sous le titre',
 	'L_CUSTOM_CONTENT_END'			=> 'Contenu personnalisé fin de liste.',
 	'L_DEBUGME'						=> 'Options débogage, montre les messages ',
+	'L_NOT_CONFIGURED'				=> 'non configuré, enregistrez pour continuer.',
 	
 	# Publish mode
 	'L_PUBLISH_MODE'				=> 'Mode de publication',
