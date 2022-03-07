@@ -86,7 +86,7 @@ require('varEbook.php');
 		
 		if (isset($_POST['submitC'])) {// choix categorie/annexe
 		// catégories à inclure 
-		
+		$plxPlugin->setParam('settitle', $_POST['settitle'], 'numeric');		
 		$plxPlugin->setParam('all', $_POST['all'], 'numeric');
 		$plxPlugin->setParam('all-th', $_POST['all-th'], 'string');
 		foreach ($plxAdmin->aCats as $catNumb => $values) {
@@ -185,7 +185,7 @@ require('varEbook.php');
         $plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
         $plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
 
-        $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
+        //$plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
 		$plxPlugin->saveParams();
 		$backToTab='&tab=fD';
 		
@@ -205,7 +205,7 @@ require('varEbook.php');
 			$plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
 			$plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
 
-			$plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
+			//$plxPlugin->setParam('cover1', $_POST['cover1'], 'string');		
 			
 			$plxPlugin->saveParams();
 			$backToTab='&tab=fE';
@@ -3126,7 +3126,7 @@ require('varEbook.php');
         $plxPlugin->setParam('clayout', $_POST['clayout'], 'string');
         $plxPlugin->setParam('ctool', $_POST['ctool'], 'string');	
 
-        $plxPlugin->setParam('cover1', $_POST['cover1'], 'string');			
+        //$plxPlugin->setParam('cover1', $_POST['cover1'], 'string');			
 
 		// options affichage
 		$plxPlugin->setParam('mnuDisplay', $_POST['mnuDisplay'], 'numeric');
@@ -3425,6 +3425,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		
 
 		<h3><?php echo $plxPlugin->getLang('L_SELECTED_CATEGORIES') ?></h3>
+		<p><label style="flex-basis:calc(100% - 6em);background:tomato;color:ivory" for="id_settitle"><?php echo $plxPlugin->getLang('L_SET_TITLE') ?></label><?php plxUtils::printSelect('settitle',array('1'=>L_YES,'0'=>L_NO),$var['settitle']); ?></p>
 		<table>
 			<tr style="border-bottom:solid;filter: hue-rotate(240deg);">
 				<th class="bigger"><label for="all"><?php echo $plxPlugin->getLang('L_ALL_CATEGORIES') ?> (<?php echo $plxAdmin->nbArticles('published', $var['publishedUser'], '') ?>)</label></th>
@@ -3705,18 +3706,15 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		let setVl=  e.getAttribute('name');
 		e.value = calConfig[setVl];  
 	}
-		
 	// desactive la creation si config modifié
 	const create = document.querySelector('input[name="doMake"]');
 	const labelValid = document.querySelector('label[for="submitC"]');
 	for (let e of document.querySelectorAll('#C select')) {
- 		e.addEventListener("change", function() {
-      			create.setAttribute('disabled','disabled');
-     			labelValid.style.color="red";    
-     			labelValid.style.textDecoration="underline";    
-     			labelValid.style.fontWeight="bold";    
- 		});   
- 	}
+	  e.addEventListener("change", function() {
+		  create.setAttribute('disabled','disabled');
+		 labelValid.style.color="red";    
+		});   
+	}
 
 })();
 </script>

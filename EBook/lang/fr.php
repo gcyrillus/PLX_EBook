@@ -115,6 +115,7 @@ $LANG = array(
 	'L_INCLUDE_ID_CREDITS'			=>' Inclus les infos de la fiche d\'identité et les Crédits. ',
 	'L_KEYWORDS_INDEX'				=>' Index des mots clés. ',
 	'L_KEYWORDS_INDEX_FROM_ARTICLE'	=>' Créer un Index à partir des mots clés des articles. ',
+	'L_SET_TITLE'					=>' Toujours garder le nom du site en titre principal sur la couverture ',
 	
 	#ID CARD
 	'L_ID_CARD'						=>' fiche d\'identité ',

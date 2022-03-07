@@ -834,8 +834,12 @@ $zip->close();
 		$fh = fopen( PLX_ROOT."data/medias/".$file , "w");
 		$ch = curl_init();		
 		curl_setopt($ch, CURLOPT_URL, $externalLink);
+		//curl_setopt($ch, CURLOPT_HEADER, true );
+		//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 		// remplissage du fichier. !! todo : tester taille et contenu puis validé
 		curl_setopt($ch, CURLOPT_FILE, $fh);
+
 		curl_exec($ch);
 		curl_close($ch); 
 		}
@@ -986,6 +990,7 @@ $zip->close();
 	$logos= $imgPath.'logosPlux/LogoViolet.png';
 	$sub = 'Cat: '.$part;
 	$go="false";
+	if( $this->getParam('settitle') ==1) {$titre=$plxAdmin->aConf['title'];}// on recupere la valeur de settotle pour option titre couverture
 	
 	if (!file_exists($imgPath.$th)) {
 		mkdir($imgPath.$th, 0777, true);
@@ -1033,6 +1038,7 @@ $zip->close();
 	
 	// on verifie la longueur des texte et on coupe en deux si trop long.
 	if($part !=='all') {$title = $this->checkImgTextLength($plxAdmin->aCats[$part]['name'], $fontA, '90');} else {	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );}
+	if( $this->getParam('settitle') ==1) {	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );}//option titre cover  uniquement titre du ste ou selon selection categories
 	if($part !=='all') {$subtitle = $this->checkImgTextLength( $desc . PHP_EOL .'Part:_'.$part , $fontB, '50' );} else {$subtitle = $this->checkImgTextLength( $desc  , $fontB, '50' );}
 	
 	//recup auteur administrateur

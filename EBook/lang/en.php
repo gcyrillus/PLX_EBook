@@ -115,6 +115,7 @@ $LANG = array(
 	'L_INCLUDE'						=>' Include ',
 	'L_KEYWORDS_INDEX'				=>' Keywords index. ',
 	'L_KEYWORDS_INDEX_FROM_ARTICLE'	=>' Creates an index from article\s keywords. ',
+	'L_SET_TITLE'					=>' Always set website name as title on the cover ',
 	
 	#ID CARD
 	'L_ID_CARD'						=>' Id card ',

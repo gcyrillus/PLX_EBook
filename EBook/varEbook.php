@@ -32,10 +32,13 @@ foreach($aLangs as $lang) {
 		}
 //variable theme pour ebook complet
 $var['all-th'			] = $plxPlugin->getParam('all-th'				)=='' ? 'th1'										  : $plxPlugin->getParam('all-th');
-# titre et description auteur
+# titre, description et auteur
 $var['title'			] = $plxPlugin->getParam('title'				)=='' ? $plxAdmin->aConf['title'					] : $plxPlugin->getParam('title');
 $var['subtitle'			] = $plxPlugin->getParam('subtitle'				)=='' ? $plxAdmin->aConf['description'				] : $plxPlugin->getParam('subtitle');
 $var['author'			] = $plxPlugin->getParam('author'				)=='' ? $plxAdmin->aUsers[$_SESSION['user']]['name'	] : $plxPlugin->getParam('author');
+
+// option titre cover nom de cat ou du site
+$var['settitle'			] = $plxPlugin->getParam('settitle'				)=='' ? 0											  : $plxPlugin->getParam('settitle');
 
 # page annexes	. 
 	/*	inclus aux options si:  
@@ -201,6 +204,7 @@ if ($plxPlugin->getParam('epubMode')=='alpha') {$plxAdmin->tri ="alpha";}
 		
 		
 }//fin MAJ categories/nbr article
+
 	if($plxAdmin->aUsers  && $plxPlugin->getParam('triAuthors') =='000' ){
 		foreach($plxAdmin->aUsers as $_userid => $_user)	{
 			if(in_array($_user['name'],$AuthorPublished))  
