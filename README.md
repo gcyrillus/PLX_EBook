@@ -3,7 +3,7 @@ Turns PluXml into an epub editor , allows you to save entirely or partially your
 ____
   ### Modifs en cours:
   
-  [+] 08/03/2022  
+  [+] 08/03/2022
 - integre a l'epub une image située en dehors du repertoire `data/medias` via cURL
   
   [+] 07/03/2022
