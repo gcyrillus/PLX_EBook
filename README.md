@@ -2,6 +2,7 @@
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
 ____
   ### Modifs en cours:
+  
   [+] 08/03/2022  
 - integre a l'epub une image située en dehors du repertoire `data/medias` via cURL
   
