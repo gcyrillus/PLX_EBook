@@ -90,7 +90,7 @@ require('varEbook.php');
 		$plxPlugin->setParam('all', $_POST['all'], 'numeric');
 		$plxPlugin->setParam('all-th', $_POST['all-th'], 'string');
 		foreach ($plxAdmin->aCats as $catNumb => $values) {
-			if( $values["articles"] >="1" && $values['active']=='1' ) {// on ne prend que les catégories disposant d'un articles et actives
+			if($catNumb !=='000' && $catNumb !=='home' &&  $values["articles"] >="1" && $values['active']=='1'  ) {// on ne prend que les catégories disposant d'un articles et actives, pas nulerotées 000 ni home
 				$plxPlugin->setParam($catNumb, $_POST[$catNumb], 'numeric');
 				$plxPlugin->setParam($catNumb.'-th', $_POST[$catNumb.'-th'], 'string');
 			}
@@ -1639,7 +1639,14 @@ require('varEbook.php');
 								$plxPlugin->downloadRessource($src);
 								$newSrc = 'data/medias/'.basename($src);
 								$img->setAttribute('src', $newSrc); 
-								}															
+								}
+								// locale mais pas dans le repertoire data/medias
+								if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+									echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+								$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+								$newSrc = 'data/medias/'.basename($src);
+								$img->setAttribute('src', $newSrc); 
+								}								
 								$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 							}
 							$imgToFind = array_unique($imgToFind);								
@@ -2070,7 +2077,14 @@ require('varEbook.php');
 																$plxPlugin->downloadRessource($src);
 																$newSrc = 'data/medias/'.basename($src);
 																$img->setAttribute('src', $newSrc); 
-																}															
+																}	
+																// locale mais pas dans le repertoire data/medias
+																if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+																	echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+																$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+																$newSrc = 'data/medias/'.basename($src);
+																$img->setAttribute('src', $newSrc); 
+																}																
 																$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 																$srctrouve[]=basename($src);
 															}
@@ -2456,7 +2470,14 @@ require('varEbook.php');
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
-										}															
+										}
+										// locale mais pas dans le repertoire data/medias
+										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+										$newSrc = 'data/medias/'.basename($src);
+										$img->setAttribute('src', $newSrc); 
+										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
 									$imgToFind = array_unique($imgToFind);								
@@ -2636,7 +2657,14 @@ require('varEbook.php');
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
-										}															
+										}
+										// locale mais pas dans le repertoire data/medias
+										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+										$newSrc = 'data/medias/'.basename($src);
+										$img->setAttribute('src', $newSrc); 
+										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
 									$imgToFind = array_unique($imgToFind);								
@@ -2817,7 +2845,14 @@ require('varEbook.php');
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
-										}															
+										}
+										// locale mais pas dans le repertoire data/medias
+										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+										$newSrc = 'data/medias/'.basename($src);
+										$img->setAttribute('src', $newSrc); 
+										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
 									$imgToFind = array_unique($imgToFind);								
@@ -2998,7 +3033,14 @@ require('varEbook.php');
 										$plxPlugin->downloadRessource($src);
 										$newSrc = 'data/medias/'.basename($src);
 										$img->setAttribute('src', $newSrc); 
-										}															
+										}
+										// locale mais pas dans le repertoire data/medias
+										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
+											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
+										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+										$newSrc = 'data/medias/'.basename($src);
+										$img->setAttribute('src', $newSrc); 
+										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
 									$imgToFind = array_unique($imgToFind);								

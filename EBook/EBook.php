@@ -990,7 +990,7 @@ $zip->close();
 	$logos= $imgPath.'logosPlux/LogoViolet.png';
 	$sub = 'Cat: '.$part;
 	$go="false";
-	if( $this->getParam('settitle') ==1) {$titre=$plxAdmin->aConf['title'];}// on recupere la valeur de settotle pour option titre couverture
+	if( $this->getParam('settitle') ==1) {$titre=$plxAdmin->aConf['title'];}// on recupere la valeur de settitle pour option titre couverture
 	
 	if (!file_exists($imgPath.$th)) {
 		mkdir($imgPath.$th, 0777, true);
@@ -1113,11 +1113,11 @@ $zip->close();
 	*/
 	public function forbiddenUriList($directory) {
 		$forbidden = glob($directory.'*');
-foreach( $forbidden as $dir){
-    $item=pathinfo($dir);
-    $forbiddenName[]= $item['filename'];
-}
-echo "'". strtolower(implode("' , '",$forbiddenName ))."'";
+		foreach( $forbidden as $dir){
+			$item=pathinfo($dir);
+			$forbiddenName[]= $item['filename'];
+		}
+		echo "'". strtolower(implode("' , '",$forbiddenName ))."'";
 	}
 	
 }
