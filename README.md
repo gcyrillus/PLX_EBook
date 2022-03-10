@@ -6,6 +6,7 @@ ____
 - ajout bouton 'delete' sur la page ebook si connecté comme administrateur. (epub.ebook.php)
 - ajout CSS pour ce bouton.(site.css)
 - Réarrangement des titres, sous-titres et nom de catégories sur la couverture en fonction de l'option choisie pour le titre principale(nom de site ou catégorie)(EBook.php)
+ - Données onglets crédits Options ajout à la page remerciements. 
  - maj fichiers langues
 
 [+] 08/03/2022
