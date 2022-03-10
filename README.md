@@ -2,12 +2,17 @@
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
 ____
   ### Modifs en cours:
+[+] 10/03/2022
+- ajout bouton 'delete' sur la page ebook si connecté comme administrateur. (epub.ebook.php)
+- ajout CSS pour ce bouton.(site.css)
+- Réarrangement des titres, sous-titres et nom de catégories sur la couverture en fonction de l'option choisie pour le titre principale(nom de site ou catégorie)(EBook.php)
+ - maj fichiers langues
 
 [+] 08/03/2022
-- integre a l'epub une image située en dehors du repertoire `data/medias` via cURL
+- integre a l'epub une image située en dehors du repertoire `data/medias` via cURL (EBook.php, config.php)
 
 [+] 07/03/2022
-- ajout choix du titre de la couverture pour les catégories selectionnées = nom de categorie(defaut) ou nom du site
+- ajout choix du titre de la couverture pour les catégories selectionnées = nom de categorie(defaut) ou nom du site (config.php, EBook.php, varEBook.php)
 
 [+] 06/03/2022
 - Ajout javascript: désactive le bouton de création si des changement sont effectués dans l'onglet configuration et crèation.
