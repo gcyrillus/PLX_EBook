@@ -1,6 +1,12 @@
 <?php  if(!defined('PLX_ROOT')) exit; 
 $plugName= basename(dirname(__FILE__));
-
+//recuperation nom epub à effacer
+$FileToDelete='';
+if($_SESSION['profil']=='0') {
+	if ( parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) !="") { 
+		$FileToDelete = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY));
+	}
+ }
 # récupération d'une instance de plxShow
 $plxShow = plxShow::getInstance();
 $plxPlugin = $plxShow->plxMotor->plxPlugins->getInstance($plugName);
@@ -21,10 +27,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 	<?php 
 	$file = '*.epub';
 	$dir = PLX_ROOT. trim(str_replace('../../', '',$plxPlugin->getParam('epubRepertory')));
-	$sorted_array = listdir_by_natsort($dir.'/'.$file);
-	function listdir_by_natsort($pathtosearch) {
-		$i="0";		
-		$file_array=array();
+	$sorted_array = listdir_by_date($dir.'/'.$file);
+	function listdir_by_date($pathtosearch) {
+		$i="0";
 		foreach (glob($pathtosearch) as $filename){
 			$i++;
 			$file_array[$filename]=filectime($filename).'.'.$i; // or just $filename
@@ -35,8 +40,17 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 	echo '<ol id="epubs">'.PHP_EOL;
 		$i="0";
 		foreach($sorted_array as $book => $val) {
+			 if (isset($_SESSION['profil']) && $_SESSION['profil']=='0' && $FileToDelete == basename($book))  {
+				unlink($book);
+				echo '<li><s>'.$FileToDelete .'</s></li>';
+				continue;
+			 }
+			
 			$i++;
 			echo '	<li><div><a href="'.$book.'">'.basename($book).'</a>';
+			 if (isset($_SESSION['profil']) && $_SESSION['profil']=='0')  {
+				 echo ' <a href="'.$_SERVER['REQUEST_URI'].'?del='.$book.'" class="delete" title="DELETE">X</a>';
+				 } 
 			$za = new ZipArchive();
 			$za->open($book);
 			for ($i = 0; $i < $za->numFiles; $i++)    {

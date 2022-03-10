@@ -53,19 +53,19 @@ $var['settitle'			] = $plxPlugin->getParam('settitle'				)=='' ? 0											  :
 	}
 
 // $topAnnexe extraites a partir d'une page statique	
-$var['pageDedicace'		] =  $plxPlugin->getParam('pageDedicace'		)=='' ? 0  : $plxPlugin->getParam('pageDedicace');
-$var['pagededicaceId'	] =  $plxPlugin->getParam('pagededicaceId'		)=='' ? 0  : $plxPlugin->getParam('pagededicaceId');
-$var['pagePreface'		] =  $plxPlugin->getParam('pagePreface'			)=='' ? 0  : $plxPlugin->getParam('pagePreface');
-$var['pageprefaceId'	] =  $plxPlugin->getParam('pageprefaceId'		)=='' ? 0  : $plxPlugin->getParam('pageprefaceId');
-$var['pageForeword'		] =  $plxPlugin->getParam('pageForeword'		)=='' ? 0  : $plxPlugin->getParam('pageForeword');
-$var['pageforewordId'	] =  $plxPlugin->getParam('pageforewordId'		)=='' ? 0  : $plxPlugin->getParam('pageforewordId');
+$var['pageDedicace'		 ] =  $plxPlugin->getParam('pageDedicace'		)=='' ? 0  : $plxPlugin->getParam('pageDedicace');
+$var['pagededicaceId'	 ] =  $plxPlugin->getParam('pagededicaceId'		)=='' ? 0  : $plxPlugin->getParam('pagededicaceId');
+$var['pagePreface'		 ] =  $plxPlugin->getParam('pagePreface'		)=='' ? 0  : $plxPlugin->getParam('pagePreface');
+$var['pageprefaceId'	 ] =  $plxPlugin->getParam('pageprefaceId'		)=='' ? 0  : $plxPlugin->getParam('pageprefaceId');
+$var['pageForeword'		 ] =  $plxPlugin->getParam('pageForeword'		)=='' ? 0  : $plxPlugin->getParam('pageForeword');
+$var['pageforewordId'	 ] =  $plxPlugin->getParam('pageforewordId'		)=='' ? 0  : $plxPlugin->getParam('pageforewordId');
 
 // $endAnnexe extraites a partir d'une page statique	
-$var['pagePostface'		] =  $plxPlugin->getParam('pagePostface'		)=='' ? 0  : $plxPlugin->getParam('pagePostface');
-$var['pagepostfaceId'	] =  $plxPlugin->getParam('pagepostfaceId'		)=='' ? 0  : $plxPlugin->getParam('pagepostfaceId');
-$var['pagerRemerciement'] =  $plxPlugin->getParam('pagerRemerciement'	)=='' ? 0  : $plxPlugin->getParam('pagerRemerciement');
-$var['pageremerciementId']=  $plxPlugin->getParam('pageremerciementId'	)=='' ? 0  : $plxPlugin->getParam('pageremerciementId');
-
+$var['pagePostface'		 ] =  $plxPlugin->getParam('pagePostface'		)=='' ? 0  : $plxPlugin->getParam('pagePostface');
+$var['pagepostfaceId'	 ] =  $plxPlugin->getParam('pagepostfaceId'		)=='' ? 0  : $plxPlugin->getParam('pagepostfaceId');
+$var['pagerRemerciement' ] =  $plxPlugin->getParam('pagerRemerciement'	)=='' ? 0  : $plxPlugin->getParam('pagerRemerciement');
+$var['pageremerciementId'] =  $plxPlugin->getParam('pageremerciementId'	)=='' ? 0  : $plxPlugin->getParam('pageremerciementId');
+$var['thks'				 ] =  $plxPlugin->getParam('thks'				)=='' ? 0  : $plxPlugin->getParam('thks');
 // pages extraites des données site
 $var['pageIndex'		] =  $plxPlugin->getParam('pageIndex'			)=='' ? 0  : $plxPlugin->getParam('pageIndex');
 $var['pageCopy'			] =  $plxPlugin->getParam('pageCopy'			)=='' ? 1  : $plxPlugin->getParam('pageCopy');
@@ -820,5 +820,14 @@ $RobotoBold    = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/roboto/Roboto-Bold
 $dislexia      = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/opendyslexic/OpenDyslexicAlta-Regular.otf'); 
 $fontawesome   = realpath(PLX_ROOT.'plugins/'.$plugin.'/fonts/fontawesome-webfont.ttf'); 
 
-
+// generation image preview covers
+// colors
+/*
+$black 		= imagecolorallocate($im, 100, 100, 100);
+$white 		= imagecolorallocate($im, 255, 255, 255);
+$gray 		= imagecolorallocate($im, 125, 125, 125);
+$hotpink	= imagecolorallocate($im, 255, 105, 80);
+$royalblue 	= imagecolorallocate($im, 92 , 126, 229); 
+$color6a6 	= imagecolorallocate($im, 92 , 126, 229);  
+*/
 ?>

@@ -416,7 +416,7 @@ p.sep {
 }
 #coverslider div[id^="coverth"] {
   display:grid;
-  grid-template-columns:4em minmax(200px,350px) minmax(200px,500px)4em;
+  grid-template-columns:4em minmax(200px,330px) minmax(200px,500px)4em;
   justify-content:center;
 }
 

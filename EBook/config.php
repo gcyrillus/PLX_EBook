@@ -121,6 +121,7 @@ require('varEbook.php');
 			$plxPlugin->createAnnexeStatique('pagepreface','Préface');
             $plxPlugin->setParam('pageprefaceId',$plxPlugin->AnnexeId, 'numeric');
 			}
+		$plxPlugin->setParam('thks',trim($_POST['thks']), 'numeric');
 		$plxPlugin->setParam('pagerRemerciement', $_POST['pagerRemerciement'], 'numeric');
 			if($_POST['pagerRemerciement'] =='1' && $plxPlugin->checkMultiArray(@$plxAdmin->aStats,'pageremerciement') ===false ) { 
 			$plxPlugin->createAnnexeStatique('pageremerciement','Remerciements');
@@ -2774,9 +2775,15 @@ require('varEbook.php');
 									
 									{//CREATION PAGE et injection TITRE ET DESCRIPTION CATEGORIES
 									$pageXHTML = new DOMDocument('1.0', 'utf-8'); 
-									$pageXHTML->loadHTML($xhtml);
-									$title = $pageXHTML->createElement('title',$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'] );
+									$pageXHTML->loadHTML($xhtml); 
+									if($pageA_Id == "pageremerciementId" && $plxPlugin->getParam('thks') == 1 ){ 
+									$titlePage = $plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'].' - '.$plxPlugin->getLang('L_CREDITS');}
+									else {
+									$titlePage = $plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'] ;
+									}
+									$title = $pageXHTML->createElement('title',$titlePage);
 									// ajout du titre 
+									
 									$xpath = new DOMXPath($pageXHTML);    
 									$results = $xpath->query('/html/head');   
 									$head = $results->item(0);
@@ -2792,14 +2799,14 @@ require('varEbook.php');
 									$section->appendChild($section_attr);
 									
 									$section_attr_1=$pageXHTML->createAttribute('title');
-									$section_attr_1->value=$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'];
+									$section_attr_1->value=$titlePage;
 									$section->appendChild($section_attr_1);
 									
 									$section_attr_2=$pageXHTML->createAttribute('class');
 									$section_attr_2->value="annexe";
 									$section->appendChild($section_attr_2);
 									
-									$h1=$pageXHTML->createElement('h1',$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name']);
+									$h1=$pageXHTML->createElement('h1',$titlePage);
 									$section->appendChild($h1);
 																
 									$div=$pageXHTML->createElement('div');
@@ -2815,6 +2822,88 @@ require('varEbook.php');
 									$div_attr_1=$pageXHTML->createAttribute('title');
 									$div_attr_1->value='dc: '.$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'];
 									$div->appendChild($div_attr_1);
+									if($pageA_Id == "pageremerciementId" && $plxPlugin->getParam('thks') == 1 ){
+										$divCredits = $pageXHTML->createElement('div');
+										
+										if($plxPlugin->getParam('ctxt') !="") {
+											$ctxt= $pageXHTML->createElement('p');
+											$ctxtU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_PREFACE_AUTHOR') );
+											$ctxt->appendChild($ctxtU);
+											$ctxtauth= $pageXHTML->createTextNode($plxPlugin->getParam('ctxt'));
+											$ctxt->appendChild($ctxtauth);
+											$divCredits->appendChild($ctxt);
+										}
+										
+										if($plxPlugin->getParam('cread') !="") {
+											$cread= $pageXHTML->createElement('p');
+											$creadU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_PROOFREADER_S') );
+											$cread->appendChild($creadU);
+											$creadauth= $pageXHTML->createTextNode($plxPlugin->getParam('cread'));
+											$cread->appendChild($creadauth);											
+											$divCredits->appendChild($cread);
+										}	
+										
+										if($plxPlugin->getParam('cimg') !="") {
+											$cimg= $pageXHTML->createElement('div');
+											$cimgP= $pageXHTML->createElement('p');
+											$cimgU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_SRC_&_ILLUSTRATION').':' );
+											$cimgP->appendChild($cimgU);
+											$cimg->appendChild($cimgP);
+											$cimgill= $pageXHTML->createElement('div');
+											$divcimg=$pageXHTML->createCDATASection( $plxPlugin->getParam('cimg'));
+											$cimgill->appendChild($divcimg);
+											$cimg->appendChild($cimgill);
+											$divCredits->appendChild($cimg);
+										}	
+										
+										if($plxPlugin->getParam('ctrslt') !="") {
+											$ctrslt= $pageXHTML->createElement('p');
+											$ctrsltU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_TRANSLATION').':' );
+											$cread->appendChild($ctrsltU);
+											$ctrsltauth= $pageXHTML->createTextNode(' '.$plxPlugin->getParam('ctrslt'));
+											$ctrslt->appendChild($ctrsltauth);
+											$divCredits->appendChild($ctrslt);
+										}		
+										
+										if($plxPlugin->getParam('cbiblio') !="") {
+											$cbiblio= $pageXHTML->createElement('div');
+											$cbiblioh3 = $pageXHTML->createElement('h3',$plxPlugin->getLang('L_BIBLIOGRAPHY') );
+											$cbiblio->appendChild($cbiblioh3);
+											$cbibliobill= $pageXHTML->createElement('div');
+											$divbiblio=$pageXHTML->createCDATASection($plxPlugin->getParam('cbiblio'));
+											$cbibliobill->appendChild($divbiblio);
+											$cbiblio->appendChild($cbibliobill);
+											$divCredits->appendChild($cbiblio);
+										}		
+										
+										if($plxPlugin->getParam('clayout') !="") {
+											$clayout= $pageXHTML->createElement('p');
+											$clayoutU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_DESIGN_&_LAYOUT').':' );
+											$clayout->appendChild($clayoutU);
+											$clayoutauth= $pageXHTML->createTextNode(' '.$plxPlugin->getParam('clayout'));
+											$clayout->appendChild($clayoutauth);
+											$divCredits->appendChild($clayout);
+										}	
+										
+										if($plxPlugin->getParam('ctool') !="") {
+											$ctool= $pageXHTML->createElement('p');
+											$ctoolU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_CREATED_WITHT').':' );
+											$ctool->appendChild($ctoolU);
+											$ctoolauth= $pageXHTML->createTextNode(' '.$plxPlugin->getParam('ctool'));
+											$ctool->appendChild($ctoolauth);
+											$divCredits->appendChild($ctool);
+										}		
+										
+										if($plxPlugin->getParam('ccover') !="") {
+											$ccover= $pageXHTML->createElement('p');
+											$ccoverU = $pageXHTML->createElement('u',$plxPlugin->getLang('L_COVER_IMG').':' );
+											$ccover->appendChild($ccoverU);
+											$ccoverauth= $pageXHTML->createTextNode(' '.$plxPlugin->getParam('ccover'));
+											$ccover->appendChild($ccoverauth);
+											$divCredits->appendChild($ccover);
+										}									
+									$div->appendChild($divCredits);	
+									}
 									
 									$section->appendChild($div);
 									
@@ -2886,7 +2975,7 @@ require('varEbook.php');
 									$ref_attr->value=$PageAx_attr_2->value;
 									$ref->appendChild($ref_attr);
 									$ref_attr_1 = $opf->createAttribute('title');
-									$ref_attr_1->value=$plxAdmin->aCats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'];
+									$ref_attr_1->value=$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'];
 									$ref->appendChild($ref_attr_1);
 									$ref_attr_2 = $opf->createAttribute('type');
 									$ref_attr_2->value="text";
@@ -3213,32 +3302,27 @@ require('varEbook.php');
 				exit;
 			}				 		
 		}
-		header('Location: plugin.php?p='.$plugin.$backToTab);
-	}
-?>
 
-<?php  // generation image preview covers
-// colors
-/*
-$black 		= imagecolorallocate($im, 100, 100, 100);
-$white 		= imagecolorallocate($im, 255, 255, 255);
-$gray 		= imagecolorallocate($im, 125, 125, 125);
-$hotpink	= imagecolorallocate($im, 255, 105, 80);
-$royalblue 	= imagecolorallocate($im, 92 , 126, 229); 
-$color6a6 	= imagecolorallocate($im, 92 , 126, 229);  
-*/
 		if (isset($_POST['updatecovers'])){
-$plxPlugin->makeThemeImg('th1/' ,'cover1.jpg',array(90,90,90)      , array(125,125,125) , array(92,126,229) ,$RobotoBold,$LatoRegular,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th2/' ,'cover2.jpg',array(140,0,0)       , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.8' ,'1.6','1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th3/' ,'cover3.jpg',array(255,100,200)   , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th4/' ,'cover4.jpg',array(255,255,255)   , array(255,230,100) , array(250,126,29) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th5/' ,'cover5.jpg',array(255,255,255)   , array(0,0,140)     , array(92,126,229) ,$ubuntuMono,$freeSerif  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'7'   ,'1.8','1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th6/' ,'cover6.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th7/' ,'cover7.jpg',array(150,200,60)    , array(255,255,255) , array(255,255,255),$dislexia  ,$dislexia   ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.5' ,'1.8','1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th8/' ,'cover8.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th9/' ,'cover9.jpg',array(234, 205, 159) , array(255,255,255) , array(92,126,229) ,$ubuntuMono,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'1.5','1.05',$plugin,$part);
-$plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 165, 232), array(200,200,200),$freeSansB ,$ubuntuMono ,$ubuntuMono,$titreTh,$descTh,$AuthTh,'2.5','1.25','40' ,$plugin,$part);
-		}
+			$plxPlugin->makeThemeImg('th1/' ,'cover1.jpg',array(90,90,90)      , array(125,125,125) , array(92,126,229) ,$RobotoBold,$LatoRegular,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th2/' ,'cover2.jpg',array(140,0,0)       , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.8' ,'1.6','1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th3/' ,'cover3.jpg',array(255,100,200)   , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th4/' ,'cover4.jpg',array(255,255,255)   , array(255,230,100) , array(250,126,29) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th5/' ,'cover5.jpg',array(255,255,255)   , array(0,0,140)     , array(92,126,229) ,$ubuntuMono,$freeSerif  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'7'   ,'1.8','1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th6/' ,'cover6.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th7/' ,'cover7.jpg',array(150,200,60)    , array(255,255,255) , array(255,255,255),$dislexia  ,$dislexia   ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.5' ,'1.8','1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th8/' ,'cover8.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th9/' ,'cover9.jpg',array(234, 205, 159) , array(255,255,255) , array(92,126,229) ,$ubuntuMono,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'1.5','1.05',$plugin,$part);
+			$plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 165, 232), array(200,200,200),$freeSansB ,$ubuntuMono ,$ubuntuMono,$titreTh,$descTh,$AuthTh,'2.5','1.25','40' ,$plugin,$part);
+
+					$backToTab='&tab=fF';
+				if($var['debugme'] == 1) {		
+					echo 'fiche themes:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
+					exit;
+				}
+			}
+	header('Location: plugin.php?p='.$plugin.$backToTab);
+	}
 ?>
 
 <form action="?p=EBook" method="post" id="formEpub">				
@@ -3562,6 +3646,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 						<?php plxUtils::printSelect('pagerRemerciement',array('1'=>L_YES,'0'=>L_NO),$var['pagerRemerciement']); ?>
 						<small <?php if($var['pagerRemerciement'] =="1") {echo'class="on"';} ?>><?php echo $plxPlugin->getLang('L_THANKS_TO_ALL_HELPER') ?>
 						<?php if($var['pageremerciementId'] > 0) {echo '<a href=" statique.php?p='. str_pad($var['pageremerciementId'], 3, "0", STR_PAD_LEFT) .'">'. $plxPlugin->getLang('L_EDIT_PAGE') .'</a>';}  ?></small>  
+					<div><label for="id_thks"><?php echo $plxPlugin->getLang('L_INCLUDE_CREDITS') ?></label>
+					<?php plxUtils::printSelect('thks',array('1'=>L_YES,'0'=>L_NO),$var['thks']); ?>
+					<?php echo $plxPlugin->getLang('L_ADD_BEHIND') ?> <?php echo $plxPlugin->getLang('L_AKNOWLEDGE_PAGE') ?>.</div>
 					</td>
 				<?php
 				if ($PagesCommentees !='') {

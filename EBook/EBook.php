@@ -1038,17 +1038,28 @@ $zip->close();
 	
 	// on verifie la longueur des texte et on coupe en deux si trop long.
 	if($part !=='all') {$title = $this->checkImgTextLength($plxAdmin->aCats[$part]['name'], $fontA, '90');} else {	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );}
-	if( $this->getParam('settitle') ==1) {	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );}//option titre cover  uniquement titre du ste ou selon selection categories
 	if($part !=='all') {$subtitle = $this->checkImgTextLength( $desc . PHP_EOL .'Part:_'.$part , $fontB, '50' );} else {$subtitle = $this->checkImgTextLength( $desc  , $fontB, '50' );}
+	if( $this->getParam('settitle') ==1) {	//option titre cover  uniquement titre du ste ou selon selection categories
+	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );
+	}
+	if( $this->getParam('settitle') ==1 && $part !=='all' ) {
+	$subtitle = $subtitle = $this->checkImgTextLength( $plxAdmin->aCats[$part]['name'] . PHP_EOL .'Part:_'.$part , $fontB, '50' );
+	}
+	
 	
 	//recup auteur administrateur
 	$author = $Auth;
 	
 	// si sous partie, récup n° catégorie avec un effet d'ombre et opacité
-	if($part !=='all') {
+	if($part !=='all' && $this->getParam('settitle') !=1) {
 		$go=true;
 		imagettftext($im, 40, 90, 102, 1722, $colorPartB, $fontA, $plxAdmin->aConf['title'].$period );// shadow
 		imagettftext($im, 40, 90, 100, 1720, $colorPart , $fontA, $plxAdmin->aConf['title'].$period );
+	}
+	if($part !=='all' && $this->getParam('settitle') ==1) {
+		$go=true;
+		imagettftext($im, 40, 90, 102, 1722, $colorPartB, $fontA, $plxAdmin->aConf['description'].$period );// shadow
+		imagettftext($im, 40, 90, 100, 1720, $colorPart , $fontA, $plxAdmin->aConf['description'].$period );
 	}
 
 	//création des textes
