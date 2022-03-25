@@ -114,8 +114,11 @@ ____
 <li>un fichier <code>test.html</code> pour visualiser les styles dans l'administration.</li>
 </ol>
 <p>Chaque théme comprend aussi les fichiers: <code>epub.css</code> (reset epub) et <code>commun.css</code>, ces fichiers sont inserer dans le livre au moment de sa création.</p>
-<h4>Dernier onglet</h4>
-<p><b>Provisoirement :</b> Affichage de ce fichier d'aide. <small>Réservé pour une fonctionnalité supplementaire prochaine.</small></p>
+<h4>Ajout thème</h4>
+<p>Cette Onglet vous permet d'editer un théme ou d'en créer un nouveau.</p>
+<p>Vous pouvez uploader de nouvelles polices et images pour vos couvertures</p>
+<p>Un editeur vous permet de visualiser et repositionner verticalement les textes de couverture en utilisant les fonts(police) disponibles ainsi que de choisir vos couleurs.</p>
+<p>Pour les contenus, les titres, titres secondaire et textes peuvent aussi avoir les fonts et couleurs de votre choix</p>
 
 
 </div>
