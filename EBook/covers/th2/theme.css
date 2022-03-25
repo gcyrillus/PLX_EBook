@@ -1,0 +1,34 @@
+body {
+  font-family: 'FreeSerif';
+  color:#800001  ;  
+}
+
+th, td {
+  border:solid 1px silver; 
+  color:#6AA6CE; 
+}
+ h1, section> h2:first-child, th, li.main , li.mother{ 
+  color:#EE4F01; 
+  font-family: 'FreeSansBold';
+}
+h2,
+h4,
+h3,
+h5,
+h6 {
+  color:royalblue;
+  font-family: 'FreeSerif';
+  font-weight:normal
+}
+blockquote:before {
+  color:#6AA6CE;
+  border-color:#DF9F01;
+}
+blockquote {
+  border-left:solid 0.75rem hotpink;
+  background:#efefef;
+}
+
+th {
+  background:#efefef ;
+  }
