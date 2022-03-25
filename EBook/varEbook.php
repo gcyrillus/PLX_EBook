@@ -1,5 +1,5 @@
 <?php if(!defined('PLX_ROOT')) exit;
-
+$plugName = get_class($plxPlugin);
 $categories=array();
 #nombre article par catègorie aprés filtrage
 $catnb=array();
@@ -429,8 +429,46 @@ if( count($loopHisto)>0) {
 	$existEpubDirTpl .='		</select>'. PHP_EOL .'	</p>';
 }
 
+// tpl TTF font 
+{
+	$ttfStyleSheet='<style>';
+	$ttfTPL =PHP_EOL;
+	$ttfTPL .='<option value="" style="font-family:courier;">'.$plxPlugin->getlang('L_SELECT_A_FONT') .'...</option>'.PHP_EOL;
+	$ttfFont =array_merge(glob(PLX_PLUGINS.$plugName.'/fonts/*/*.otf' ),glob(PLX_PLUGINS.$plugName.'/fonts/*.otf' ), glob(PLX_PLUGINS.$plugName.'/fonts/*/*.ttf'), glob(PLX_PLUGINS.$plugName.'/fonts/*.ttf'));
+	foreach($ttfFont as $font => $file) {
+		$ext = pathinfo($file);
+		 $ttfTPL .='<option value="'.$file.'" style="font-family:'.basename($file,'.'.$ext['extension']).';">'.basename($file).'</option>'.PHP_EOL;
+		 $ttfStyleSheet.= '@font-face{'. PHP_EOL .'font-family:'.basename($file,'.'.$ext['extension']).';'.PHP_EOL.'src:url('.$file.');'.PHP_EOL .'}'. PHP_EOL .PHP_EOL ;
+	}
+	$ttfStyleSheet.='</style>'.PHP_EOL;
+}
 
+// tpl Epub Fonts + fontface page test
+{
+		$fontFace='';
+		$epubTPL =PHP_EOL;
+		$epubTPL .='<option value="" style="font-family:courier;">'.$plxPlugin->getlang('L_SELECT_A_FONT') .'...</option>'.PHP_EOL;
+		$epubStyleSheet='<style>';
+	$epubFont =array_merge(glob(PLX_PLUGINS.$plugName.'/fonts/*/*.otf' ),glob(PLX_PLUGINS.$plugName.'/fonts/*.otf' ), glob( PLX_PLUGINS.$plugName.'/fonts/*/*.woff'),glob( PLX_PLUGINS.$plugName.'/fonts/*.woff'), glob( PLX_PLUGINS.$plugName.'/fonts/*/*.woff2'), glob( PLX_PLUGINS.$plugName.'/fonts/*.woff2'));	
+	foreach($epubFont as $fontE => $fileE) {
+		$ext = pathinfo($fileE);
+		$epubTPL .='<option value="'.$fileE.'" style="font-family:'.basename($fileE,'.'.$ext['extension']).';">'.basename($fileE).'</option>'.PHP_EOL;	
+		$epubStyleSheet.= '@font-face{'. PHP_EOL .'font-family:'.basename($fileE,'.'.$ext['extension']).';'.PHP_EOL.'src:url('.$fileE.');'.PHP_EOL .'}'. PHP_EOL .PHP_EOL ;
+	}	
+	$epubStyleSheet.='</style>'.PHP_EOL;
+	$fontFace.= "@font-face {
+	  font-family: '".basename($fileE,'.'.$ext['extension'])."' ;
+	  src: url('fonts/".basename($fileE)."');
+	}";
+}
+
+// tpl drawcover.xml files	
+{
 	
+}
+
+
+
 {// recherche commentaires et pages associées
 	$com=$plxAdmin->plxGlob_coms->aFiles;
 	$PagesCommentees= array();
@@ -785,6 +823,15 @@ $ISSN = $plxPlugin->getParam('issn')=='' ? null : $plxPlugin->getParam('issn');
 //aperçus themes 
 $themesList = glob($imgPath.'th*', GLOB_ONLYDIR);
  natcasesort($themesList);
+ 
+// stockages fichiers parametres des thèmes:
+
+ foreach($themesList as $theme => $thId) {
+	 $xml = simplexml_load_file($thId.'/drawcover.xml');
+	 $id= trim($xml->dirTheme);
+     $themesParameter[$id] = file_get_contents($thId.'/drawcover.xml');
+ }
+
 // chemin vers le theme en cours 
 $themePath = PLX_ROOT.$plxAdmin->aConf['racine_themes'].$plxAdmin->style;
 // base fichier toc 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <dirTheme>th6</dirTheme>
+  <coverfile>cover6.jpg</coverfile>
+  <titleFont>../../plugins/EBook/fonts/lato/Lato-BoldItalic.ttf</titleFont>
+  <titleFontColor>255,83,0</titleFontColor>
+  <subtitleFont>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</subtitleFont>
+  <subtitleFontColor>95,134,239</subtitleFontColor>
+  <authorFont>../../plugins/EBook/fonts/roboto/Roboto-Bold.ttf</authorFont>
+  <authorFontColor>128,255,128</authorFontColor>
+  <titlePos>2.8</titlePos>
+  <subtitlePos>2</subtitlePos>
+  <authorPos>2.125</authorPos>
+  <epubfont>../../plugins/EBook/fonts/ubuntu/UbuntuMono-B.woff</epubfont>
+  <epubTitleH1font>../../plugins/EBook/fonts/OpenDyslexicAlta-Bold.otf</epubTitleH1font>
+  <epubTitlesfont>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</epubTitlesfont>
+  <epubBodyColor>#808080</epubBodyColor>
+  <epubh1Color>#0080c0</epubh1Color>
+  <epubhxColor>#ff8040</epubhxColor>
+  <epubborderColor>#0080c0</epubborderColor>
+</document>

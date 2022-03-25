@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <dirTheme>th3</dirTheme>
+  <coverfile>cover3.jpg</coverfile>
+  <titleFont>../../plugins/EBook/fonts/OpenSans-Regular-webfont.ttf</titleFont>
+  <titleFontColor>255,0,0</titleFontColor>
+  <subtitleFont>../../plugins/EBook/fonts/OpenSans-Regular-webfont.ttf</subtitleFont>
+  <subtitleFontColor>255,128,64</subtitleFontColor>
+  <authorFont>../../plugins/EBook/fonts/OpenSans-Regular-webfont.ttf</authorFont>
+  <authorFontColor>0,255,64</authorFontColor>
+  <titlePos>4</titlePos>
+  <subtitlePos>2</subtitlePos>
+  <authorPos>1.1</authorPos>
+  <epubfont>../../plugins/EBook/fonts/OpenSans-Regular-webfont.woff</epubfont>
+  <epubTitleH1font>../../plugins/EBook/fonts/OpenSans-Regular-webfont.woff</epubTitleH1font>
+  <epubTitlesfont>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</epubTitlesfont>
+  <epubBodyColor>#808080</epubBodyColor>
+  <epubh1Color>#ff0080</epubh1Color>
+  <epubhxColor>#0080c0</epubhxColor>
+  <epubborderColor>#ff0080</epubborderColor>
+</document>

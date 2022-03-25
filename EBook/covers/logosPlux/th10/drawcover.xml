@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <dirTheme>th10</dirTheme>
+  <coverfile>cover10.jpg</coverfile>
+  <titleFont>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</titleFont>
+  <titleFontColor>230, 82, 1</titleFontColor>
+  <subtitleFont>../../plugins/EBook/fonts/ubuntu/UbuntuMono-B.ttf</subtitleFont>
+  <subtitleFontColor>77, 165, 232</subtitleFontColor>
+  <authorFont>../../plugins/EBook/fonts/ubuntu/UbuntuMono-B.ttf</authorFont>
+  <authorFontColor>200,200,200</authorFontColor>
+  <titlePos>2.5</titlePos>
+  <subtitlePos>1.25</subtitlePos>
+  <authorPos>40</authorPos>
+</document>

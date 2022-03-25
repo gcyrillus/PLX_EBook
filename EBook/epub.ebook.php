@@ -34,9 +34,11 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 			$i++;
 			$file_array[$filename]=filectime($filename).'.'.$i; // or just $filename
 		}
-		natcasesort($file_array);
-		return $file_array;
+
+			if(isset($file_array)) {return $file_array;}
 	}
+	if(isset($file_array)) {
+		natcasesort($file_array);
 	echo '<ol id="epubs">'.PHP_EOL;
 		$i="0";
 		foreach($sorted_array as $book => $val) {
@@ -121,7 +123,8 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 		}
 	echo '<li><div>'. plxUtils::cdataCheck($plxPlugin->getParam('custom-end')) .'</div></li>'.PHP_EOL ;  
 	echo '</ol>'.PHP_EOL;	
-	
+	}
+	else {echo 'no file';}
    function showImg($epub,$img) {
 	    $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
 		$allow = array('gif', 'png', 'jpg','jpeg','webp','bmp','tif','tiff');

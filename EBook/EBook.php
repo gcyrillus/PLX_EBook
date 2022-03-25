@@ -989,14 +989,18 @@ $zip->close();
 	$imgPath = PLX_ROOT.'plugins/'.$plugin.'/covers/';
 	$logos= $imgPath.'logosPlux/LogoViolet.png';
 	$sub = 'Cat: '.$part;
-	$go="false";
-	if( $this->getParam('settitle') ==1) {$titre=$plxAdmin->aConf['title'];}// on recupere la valeur de settitle pour option titre couverture
+	$go="false";	
+	if( $this->getParam('settitle') ==1) {// on recupere la valeur de settitle pour option titre couverture
+		$titre=$plxAdmin->aConf['title'];
+	}
 	
 	if (!file_exists($imgPath.$th)) {
 		mkdir($imgPath.$th, 0777, true);
 	}
 	
-	if($this->getParam('epubMode') == 'magM') { $period =' - '.  date("M-Y", strtotime('01-'.str_pad( $this->getParam('magMM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magMY'))); }  
+	if($this->getParam('epubMode') == 'magM') { 
+		$period =' - '.  date("M-Y", strtotime('01-'.str_pad( $this->getParam('magMM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magMY'))); 
+	}  
 	if($this->getParam('epubMode') == 'magT') {
 		$last = $this->getParam('magTM') + 2 ;
 		$period =' | Mag:'. date("M", strtotime('01-'.str_pad( $this->getParam('magTM'), 2, "0", STR_PAD_LEFT).'-'.$this->getParam('magTY')))
@@ -1010,14 +1014,20 @@ $zip->close();
 		. date("M Y", strtotime('01-'.str_pad( $last, 2, "0", STR_PAD_LEFT)  .'-'.$this->getParam('magSY')));
 		}  
 
-	$period = $this->checkMonthLangDate($period);
-	
-	
+	$period = $this->checkMonthLangDate($period);	
 	
 	//recup image 
 	$logo 	= imagecreatefrompng($logos);
-	$im 	= imagecreatefromjpeg($imgPath.$jpg); 
-	$im 	= imagecrop($im, ['x' => 0, 'y' => 0, 'width' => $width, 'height' => $height]);//si de taille non conforme	
+	$im = imagecreatetruecolor($width,  $height);
+	$img = getimagesize($imgPath.$jpg);;
+	$cover 	= imagecreatefromjpeg($imgPath.$jpg); 
+	$black			 =imagecolorallocate($im,'0'          ,'0'          ,'0'          );
+	$white			 =imagecolorallocate($im,'255'        ,'255'        ,'255'        );
+	$pink			 =imagecolorallocate($im,'255'        ,'105'        ,'180'        );
+	imagefill($im, 0, 0, $white);	
+	//Ajout cover 
+	imagecopyresampled($im, $cover, 0, 0, 0, 0, $img[0], $img[1], $img[0] , $img[1] );	
+	$im 	= imagecrop($im, ['x' => 0, 'y' => 0, 'width' => $width, 'height' => $height]);//si de taille non conforme
 	//Ajout logo pluxml 
 	imagecopyresampled($im, $logo, 30, 1740, 0, 0, 104, 82, 104 , 82 );
 	// recup font
@@ -1026,15 +1036,12 @@ $zip->close();
 	$Authorfont   = $fontC;
 	
 	// recup couleur des textes
-	$black			 =imagecolorallocate($im,'0'          ,'0'          ,'0'          );
-	$white			 =imagecolorallocate($im,'255'        ,'255'        ,'255'        );
-	$pink			 =imagecolorallocate($im,'255'        ,'105'        ,'180'        );
+
 	$colorTitle 	 =imagecolorallocate($im,$tcolor[0]   ,$tcolor[1]   ,$tcolor[2]   );
 	$colorsub		 =imagecolorallocate($im,$subcolor[0] ,$subcolor[1] ,$subcolor[2] );
 	$colorAuth		 =imagecolorallocate($im,$AuthColor[0],$AuthColor[1],$AuthColor[2]);
 	$colorPart	=imagecolorallocatealpha($im,'255'        ,'255'        ,'255'        ,'90');
-	$colorPartB	=imagecolorallocatealpha($im,$tcolor[0]   ,$tcolor[1]   ,$tcolor[2]   ,'90');
-	
+	$colorPartB	=imagecolorallocatealpha($im,$tcolor[0]   ,$tcolor[1]   ,$tcolor[2]   ,'90');	
 	
 	// on verifie la longueur des texte et on coupe en deux si trop long.
 	if($part !=='all') {$title = $this->checkImgTextLength($plxAdmin->aCats[$part]['name'], $fontA, '90');} else {	$title  = $this->checkImgTextLength( $titre , $fontA, '90' );}
@@ -1044,12 +1051,10 @@ $zip->close();
 	}
 	if( $this->getParam('settitle') ==1 && $part !=='all' ) {
 	$subtitle = $subtitle = $this->checkImgTextLength( $plxAdmin->aCats[$part]['name'] . PHP_EOL .'Part:_'.$part , $fontB, '50' );
-	}
+	}	
 	
-	
-	//recup auteur administrateur
+	//recup auteur 
 	$author = $Auth;
-	
 	// si sous partie, récup n° catégorie avec un effet d'ombre et opacité
 	if($part !=='all' && $this->getParam('settitle') !=1) {
 		$go=true;
@@ -1071,14 +1076,15 @@ $zip->close();
 	// Nos coordonnées en X et en Y
 	// title
 	$x  = $bbox[0] 	+ (imagesx($im) / 2			) - ($bbox[4] / 2) - 5	;
-	$y  = $bbox[1] 	+ (imagesy($im) / $top		) - ($bbox[5] ) 		;
+	$y  = $bbox[1] 	+ (imagesy($im) / floatval($top) 		) - ($bbox[5] ) 		;
 	// description/ sous-titre
 	$x2 = $bbox2[0]	+ (imagesx($im) / 2			) - ($bbox2[4] / 2) - 5	;
-	$y2 = $bbox2[1]	+ (imagesy($im) / $middle	) - ($bbox2[5]  )		;
+	$y2 = $bbox2[1]	+ (imagesy($im) / floatval($middle)	) - ($bbox2[5]  )		;
+
 	// auteur
 	$x3 = $bbox3[0]	+ (imagesx($im) / 2			) - ($bbox3[4] / 2) - 5	;
-	$y3 = $bbox3[1]	+ (imagesy($im) / $bottom	) - ($bbox3[5]  )		;
-	
+	$y3 =  (imagesy($im) / floatval($bottom)	) - ($bbox3[5]  )		;
+
 	if ($jpg =='cover10.jpg') {imagefttext($im, 90, 0, $x + 4, $y + 4, $black, $fontA, $title);}// shadow text
 	
 	imagefttext($im, 90, 0, $x , $y , $colorTitle, $fontA, $title   );
@@ -1087,10 +1093,12 @@ $zip->close();
 	// ajout auteur
 	imagefttext($im, 30, 0, $x3, $y3, $colorAuth, $fontC, $Auth);
 	
+	// efface l'image si celle-ci existe avant de la créer à nouveau
+	if (file_exists($imgPath.$th.'/cover.jpg')){unlink($imgPath.$th.'/cover.jpg');}
 	// sauvegarde de l'image
-	imagejpeg($im, $imgPath.$th.'/cover.jpg');
-	imagedestroy($im);	
-	
+	if(imagejpeg($im, $imgPath.$th.'/cover.jpg')){echo '<b>Cover Image =></b> '.$imgPath.$th.'/cover.jpg'.' okay!<br>';}
+	// libere la memoire
+	imagedestroy($im);		
 }
 
 	/* passe valeurs couleurs hexadécimale en rgb() dans un tableau */

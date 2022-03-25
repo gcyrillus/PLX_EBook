@@ -26,9 +26,8 @@ require('varEbook.php');
 			 $plxPlugin->setParam('magMY', $_POST['magMY'], 'numeric');  
 			 $plxPlugin->setParam('magTY', $_POST['magTY'], 'numeric');   
 			 $plxPlugin->setParam('magSY', $_POST['magSY'], 'numeric');   
-			 $plxPlugin->setParam('magAY', $_POST['magAY'], 'numeric'); 
-			 
-			$plxPlugin->setParam('triAuthors',$_POST['triAuthors'] , 'string');		
+			 $plxPlugin->setParam('magAY', $_POST['magAY'], 'numeric'); 			 
+			 $plxPlugin->setParam('triAuthors',$_POST['triAuthors'] , 'string');		
 			
 			$plxPlugin->saveParams();
 			
@@ -74,9 +73,454 @@ require('varEbook.php');
 				}		
 		} 	
 		
-		if (isset($_POST['submitB'])) {// vide
-		$plxPlugin->saveParams();
+		if (isset($_POST['submitB'])) {// ajout/edition theme
+
+// theme directory avalaible
+		$dirTH = glob(PLX_PLUGINS.$plugName.'/covers/th*' );
+		natsort($dirTH);
+		$i='0';
+		foreach($dirTH as $theme => $themeNb) {
+			$i++;			 
+			if(substr(basename($themeNb),2,5) == $i ) {/* on recherche si il y a une place */}
+			else { // si un trou dans la suite , on s'y cale
+			$newDirTheme='th'.$i;
+			break;
+			}			
+		}
+		if(!isset($newDirTheme)) { // si pas de trou trouvé, on allonge la liste de 1
+			$i++;
+			$newDirTheme = 'th'.$i;
+			}
 		
+// upload cover
+	if($_FILES["addCover"]["tmp_name"] !='') {
+		$filename=$_FILES["addCover"]["tmp_name"];
+	// theme cover
+		$newfilename='cover'.$i .'.jpg';
+		if($_POST['editTheme'] !="") {
+			$newDirTheme=$_POST['editTheme'];
+			$newfilename='cover'.substr($newDirTheme, 2, 10) .'.jpg';
+		}
+    	if ($_FILES["addCover"]["type"] ==  "image/jpeg") {
+      		if ($_FILES["addCover"]["error"] > 0)  {
+       			 echo "Return Code: " . $_FILES["addCover"]["error"] . "<br />";
+        	}
+      		else {
+        		echo "Upload: " . $_FILES["addCover"]["name"] . "<br />";
+        		echo "Type: " . $_FILES["addCover"]["type"] . "<br />";
+        		if (file_exists(PLX_PLUGINS.$plugName.'/covers/'. $newfilename))  {
+					unlink(PLX_PLUGINS.$plugName.'/covers/'. $newfilename);
+          			echo 'old ' .$newfilename . " deleted. <br>";
+          		}
+          		move_uploaded_file($filename, PLX_PLUGINS.$plugName.'/covers/'. $newfilename);
+          		echo "=>: " . PLX_PLUGINS.$plugName."/covers/".$newfilename."<br>";
+        	}
+      	}
+    	else {
+      		echo "Invalid file, File must be with <b>.jpg</b>  extension<br>";
+      	}
+	}
+	else {// is edition or a fail ?
+		if($_POST['editTheme'] !="") {
+			$newDirTheme=$_POST['editTheme'];
+			$newfilename='cover'.substr($newDirTheme, 2, 10) .'.jpg';
+			}
+		else {
+			$newDirTheme='tmp';// on jette au oubliettes 
+			$i--;
+			$newfilename='covertmp.jpg';
+			}
+	}
+// repertoire du theme / theme repertory
+	if (!file_exists(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme)) {
+		mkdir(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme);	
+	}
+	echo '<br> theme N°: '.$newDirTheme.'<hr>';
+		
+ 
+ {// new fonts
+	 if(isset($_FILES['fontfile']) && $_FILES['fontfile']['name'][0] !=''){
+	 // Count new fonts
+	 $countfiles = count($_FILES['fontfile']['name']);
+		 // Loop fonts
+		 for($i=0;$i<$countfiles;$i++){
+		  $filename = $_FILES['fontfile']['name'][$i];
+		 
+		  // Upload fonts
+		  move_uploaded_file($_FILES['fontfile']['tmp_name'][$i],PLX_PLUGINS.$plugName.'/fonts/'.$filename);
+		  echo '<br>'.$filename .' Uploaded <br>';	  
+		 }
+	 } 
+ } 
+	 
+		
+// fichier d'initialisation du theme de l'epub
+	$drawCoverFile='drawcover.xml';	
+    $drawCover = new DOMDocument('1.0', 'utf-8'); 	
+	$drawCover->preserveWhiteSpace = false; 
+	$drawCover->formatOutput = true; 	
+    $root = $drawCover->createElement( 'document' );
+	{//cover
+	// nom dossier
+	$themedir= $drawCover->createElement('dirTheme',$newDirTheme);
+	$root->appendChild($themedir);
+	//chemin image couverture
+	$coverFile =$drawCover->createElement('coverfile',$newfilename);
+	$root->appendChild($coverFile);
+	// fonts
+	$fontForCover=array();		
+	$fontColorForCover=array();
+	if($_POST['titleFontcover'] !='') {
+		$fontForCover['titleFontcover'] = $_POST['titleFontcover'];
+	}
+	else {
+		$fontForCover['titleFontcover'] =PLX_ROOT.'plugins/'.$plugin.'/fonts/roboto/Roboto-Bold.ttf';
+	}
+	$titleFontCover = $drawCover->createElement( 'titleFont',$fontForCover['titleFontcover']  )	;
+ 	$root->appendChild($titleFontCover);			
+	
+	if($_POST['titleFontcolor'] !='') {
+		$fontColorForCover['titleFontcolor']=implode(',',$plxPlugin->hexTorgb($_POST['titleFontcolor']));
+	}
+	else {
+		$fontColorForCover['titleFontcolor']= '0,0,0';
+	}
+	$titleFontColor = $drawCover->createElement( 'titleFontColor',$fontColorForCover['titleFontcolor']  );	
+	$root->appendChild($titleFontColor);		
+	
+	if($_POST['subtitleFontcover'] !='') {
+		$fontForCover['subtitleFontcover'] = $_POST['subtitleFontcover'];
+		}
+	else {
+		$fontForCover['subtitleFontcover'] =PLX_ROOT.'plugins/'.$plugin.'/fonts/roboto/Roboto-Bold.ttf';
+		}	
+	$subtitleFontCover = $drawCover->createElement( 'subtitleFont',$fontForCover['subtitleFontcover']  );	
+	$root->appendChild($subtitleFontCover);		
+	
+	if($_POST['subtitleFontcolor'] !='') {
+		$fontColorForCover['subtitleFontcolor']=implode(',',$plxPlugin->hexTorgb($_POST['subtitleFontcolor']));
+	}
+	else {
+		$fontColorForCover['subtitleFontcolor']= '0,0,0';
+	}
+	$subtitleFontColor = $drawCover->createElement( 'subtitleFontColor',$fontColorForCover['subtitleFontcolor']  );	
+	$root->appendChild($subtitleFontColor);
+
+	
+	if($_POST['authorFontcover'] !='') {
+		$fontForCover['authorFontcover'] = $_POST['authorFontcover'];
+	}
+	else {
+		$fontForCover['authorFontcover'] =PLX_ROOT.'plugins/'.$plugin.'/fonts/roboto/Roboto-Bold.ttf';
+	}	
+	$authorFontCover = $drawCover->createElement( 'authorFont',$fontForCover['authorFontcover']  );	
+	$root->appendChild($authorFontCover);			
+	
+	if($_POST['authorFontcolor'] !='') {
+	$fontColorForCover['authorFontcolor']=implode(',',$plxPlugin->hexTorgb($_POST['authorFontcolor']));			
+	}
+	else {
+		$fontColorForCover['authorFontcolor']= '0,0,0';
+	}
+	$authorFontColor = $drawCover->createElement( 'authorFontColor',$fontColorForCover['authorFontcolor']  );	
+	$root->appendChild($authorFontColor);
+	
+	// enregistrement position textes 
+		$titlePos = $drawCover->createElement('titlePos',trim($_POST['titlePos']));
+		$root->appendChild($titlePos);
+		$subtitlePos = $drawCover->createElement('subtitlePos',trim($_POST['subtitlePos']));
+		$root->appendChild($subtitlePos);
+		$authorPos = $drawCover->createElement('authorPos',trim($_POST['authorPos']));
+		$root->appendChild($authorPos);
+	}	
+
+	{// font / color CSS
+
+	$fontBodyFamily	='';
+	$fonth1Family ='';
+	$fonthxFamily ='';
+	$fontForEpub=array();
+	if($_POST['bodyfont'] !='') {
+		echo 'bodyfont :'.basename($_POST['bodyfont']).'<br>';
+		$bodyfontName=pathinfo( $_POST['bodyfont']);
+		$fontName =  basename($_POST['bodyfont'],'.'.$bodyfontName['extension']);
+		$fontBodyFamily= 'font-family:'. $fontName.';' ;
+		$fontForEpub['bodyfont'] = $_POST['bodyfont'];
+		
+		$epubFont = $drawCover->createElement( 'epubfont',trim($_POST['bodyfont']))	;
+ 		$root->appendChild($epubFont);
+	} else {
+		$epubFont = $drawCover->createElement( 'epubfont','/* defaut font family */')	;
+ 		$root->appendChild($epubFont);
+	}
+	if($_POST['titleh1font'] !='') {
+		echo 'titleh1font: '.basename($_POST['titleh1font']).'<br>';
+		$h1fontName=pathinfo( $_POST['titleh1font']);
+		$fontName =  basename($_POST['titleh1font'],'.'.$h1fontName['extension']);
+		$fonth1Family='font-family:'. $fontName.';' ;
+		$fontForEpub['titleh1font'] = $_POST['titleh1font'];
+		
+		$epubTitleH1Font = $drawCover->createElement( 'epubTitleH1font',trim($_POST['titleh1font'])  )	;
+ 		$root->appendChild($epubTitleH1Font);
+	} else {
+		$epubTitleH1Font = $drawCover->createElement( 'epubTitleH1font','/* defaut font family */')	;
+ 		$root->appendChild($epubTitleH1Font);
+	}
+	if($_POST['titlesfont'] !='') {
+		echo 'titlesfont: '.basename($_POST['titlesfont']).'<br>';
+		$hxfontName=pathinfo( $_POST['titlesfont']);
+		$fontName =  basename($_POST['titlesfont'],'.'.$hxfontName['extension']);
+		$fonthxFamily='font-family:'. $fontName.';' ;
+		$fontForEpub['titlesfont'] = $_POST['titlesfont'];
+		
+		$epubTitlesFont = $drawCover->createElement( 'epubTitlesfont',trim($_POST['titlesfont'])  )	;
+ 		$root->appendChild($epubTitlesFont);
+	} else {
+		$epubTitlesFont = $drawCover->createElement( 'epubTitlesfont','/* defaut font family */')	;
+ 		$root->appendChild($epubTitlesFont);
+	} 
+
+$bodyColor=		'color:'.$_POST['bodycolor'		].';'.PHP_EOL;
+$epubbodyColor = $drawCover->createElement('epubBodyColor',trim($_POST['bodycolor']));
+$root->appendChild($epubbodyColor);
+
+$titleH1Color=	'color:'.$_POST['titleh1color'	].';'.PHP_EOL;
+$epubh1Color = $drawCover->createElement('epubh1Color',trim($_POST['titleh1color']));
+$root->appendChild($epubh1Color);
+
+$titlesColor=	'color:'.$_POST['titlescolor'	].';'.PHP_EOL;
+$epubhxColor = $drawCover->createElement('epubhxColor',trim($_POST['titlescolor']));
+$root->appendChild($epubhxColor);
+
+$borderColor=	$_POST['titleh1color'];
+$epubborderColor = $drawCover->createElement('epubborderColor',trim($_POST['titleh1color']));
+$root->appendChild($epubborderColor);
+
+	$fontForEpub=array_unique($fontForEpub);
+	
+	$fontCSS ='';	
+	foreach($fontForEpub as $fontE) {
+		$info = pathinfo($fontE);
+		$fontName =  basename($fontE,'.'.$info['extension']);
+		$fontCSS .='@font-face {'. PHP_EOL .'	font-family:'. $fontName .';'. PHP_EOL .'	src:url(fonts/'.basename($fontE).');'. PHP_EOL .'}'.PHP_EOL;
+		if (!file_exists(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/fonts')) {     mkdir(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/fonts');}
+		copy($fontE, PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/fonts/'.basename($fontE));
+	}
+	}
+
+# generates file fonts.css	, can be an empty file
+file_put_contents(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/fonts.css', $fontCSS);	
+    $drawCover->appendChild( $root );	
+    $drawCover->save(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/'.$drawCoverFile);
+
+# file theme.css to fill and update	with font-family where it was set 
+		{$themeCSS ='
+body {
+  '.$bodyColor. $fontBodyFamily.'
+}
+
+th, td {
+  border:solid 1px silver; 
+  '.$bodyColor.' 
+}
+
+ h1, section> h2:first-child, th, li.main , li.mother{ 
+  '.$titleH1Color.$fonth1Family.'
+  font-weight:bold;
+}
+h2,
+h4,
+h3,
+h5,
+h6 {
+  '.$titlesColor.$fonthxFamily.'
+  font-weight:normal
+}
+blockquote:before {
+  '.$bodyColor.' 
+}
+blockquote {
+  border-left:solid 0.75rem '.$borderColor.';
+  background:#efefef;
+}
+th {
+  background:#efefef ;
+}';
+		}
+
+# generates file theme.css
+	file_put_contents(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/theme.css', $themeCSS);
+	$xml = simplexml_load_file(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/'.$drawCoverFile);
+	if($_FILES["addCover"]["tmp_name"] !='' || $_POST['editTheme'] !='') {
+# creation du cover de demo pour l'aperçu dans thèmes.
+	$plxPlugin->makeThemeImg($xml->dirTheme ,$xml->coverfile, explode(',', $xml->titleFontColor),explode(',', $xml->subtitleFontColor),explode(',', $xml->authorFontColor),realpath($xml->titleFont),realpath($xml->subtitleFont),realpath($xml->authorFont),$var['title'],$var['subtitle'],$var['author'],$xml->titlePos,$xml->subtitlePos,$xml->authorPos,$plugin,'all');
+	}	
+	else {
+		if($_POST['editTheme'] !="") {
+			echo 'Theme Updated';
+		}
+		else {
+			echo	'<p>No cover generated, just a few datas saved in tmp folder about testpage <a href="'.PLX_PLUGINS.$plugName.'/covers/tmp/test.html" target="_blank">test.html</a>.</p>';
+		}
+	}	
+		
+{$pageTest='<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>  HTML5 </title>
+  <meta name="description" content=" HTML5 ">
+  <meta name="author" content="MyPc">
+  <link rel="stylesheet" href="../epub.css">
+  <link rel="stylesheet" href="../commun.css">
+  <style>
+     '.$fontFace.'
+  </style>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+ <section>
+	<h1>Lorem Title</h1>
+	<h2>Sub Ipsum</h2>
+	<p><strong>Pellentesque habitant morbi tristique</strong> tortor quam, feugiat vitae. <em>Aenean ultricies mi vitae est.</em> Mauris. Quisque sit amet est et sapien, <code>commodo vitae</code>, ornare sit amet, wisi. <a href="#">Donec non enim</a> in turpis pulvinar facilisis.</p>
+	<h3>Title Level 3</h3>
+	<ol>
+	   <li>Lorem ipsum dolor sit amet.</li>
+	   <li>Aliquam tincidunt.</li>
+	</ol>
+	<blockquote><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. Cras in mi at felis aliquet congue. </p></blockquote>
+	<h4>Table level 4</h4>
+	<table>
+	<tbody>
+	<tr>
+	<th>Table Header 1</th>
+	<th>Table Header 2</th>
+	<th>Table Header 3</th>
+	</tr>
+	<tr>
+	<td>Division 1</td>
+	<td>Division 2</td>
+	<td>Division 3</td>
+	</tr>
+	<tr class="even">
+	<td>Division 1</td>
+	<td>Division 2</td>
+	<td>Division 3</td>
+	</tr>
+	<tr>
+	<td>Division 1</td>
+	<td>Division 2</td>
+	<td>Division 3</td>
+	</tr>
+	</tbody>
+	</table>
+<p>Below is just about everything you&#8217;ll need to style in the theme. Check the source code to see the many embedded elements within paragraphs.</p>
+<hr />
+<h1>Heading 1</h1>
+<h2>Heading 2</h2>
+<h3>Heading 3</h3>
+<h4>Heading 4</h4>
+<h5>Heading 5</h5>
+<h6>Heading 6</h6>
+<hr />
+<p>Lorem ipsum dolor sit amet, <a title="test link" href="#">test link</a> adipiscing elit. <strong>This is strong.</strong> Nullam dignissim convallis est. Quisque aliquam. <em>This is emphasized.</em> Donec faucibus. Nunc iaculis suscipit dui. 5<sup>3</sup> = 125. Water is H<sub>2</sub>O. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. <cite>The New York Times</cite> (That&#8217;s a citation). <span style="text-decoration:underline;">Underline.</span> Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
+<p><abbr title="Hyper Text Markup Language">HTML</abbr> and <abbr title="Cascading Style Sheets">CSS</abbr> are our tools. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.  Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. To copy a file type <code>COPY <var>filename</var></code>. <del>Dinner&#8217;s at 5:00.</del> <ins>Let&#8217;s make that 7.</ins> This <span style="text-decoration:line-through;">text</span> has been struck.</p>
+<hr />
+<h2>List Types</h2>
+<h3>Definition List</h3>
+<dl>
+<dt>Definition List Title</dt>
+<dd>This is a definition list division.</dd>
+<dt>Definition</dt>
+<dd>An exact statement or description of the nature, scope, or meaning of something: <em>our definition of what constitutes poetry.</em></dd>
+</dl>
+<h3>Ordered List</h3>
+<ol>
+<li>List Item 1</li>
+<li>List Item 2
+<ol>
+<li>Nested list item A</li>
+<li>Nested list item B</li>
+</ol>
+</li>
+<li>List Item 3</li>
+</ol>
+<h3>Unordered List</h3>
+<ul>
+<li>List Item 1</li>
+<li>List Item 2
+<ul>
+<li>Nested list item A</li>
+<li>Nested list item B</li>
+</ul>
+</li>
+<li>List Item 3</li>
+</ul>
+<hr />
+<h2>Table</h2>
+<table>
+<tbody>
+<tr>
+<th>Table Header 1</th>
+<th>Table Header 2</th>
+<th>Table Header 3</th>
+</tr>
+<tr>
+<td>Division 1</td>
+<td>Division 2</td>
+<td>Division 3</td>
+</tr>
+<tr class="even">
+<td>Division 1</td>
+<td>Division 2</td>
+<td>Division 3</td>
+</tr>
+<tr>
+<td>Division 1</td>
+<td>Division 2</td>
+<td>Division 3</td>
+</tr>
+</tbody>
+</table>
+<h2>Preformatted Text</h2>
+<p>Typographically, preformatted text is not the same thing as code. Sometimes, a faithful execution of the text requires preformatted text that may not have anything to do with code. Most browsers use Courier and that&#8217;s a good default &#8212; with one slight adjustment, Courier 10 Pitch over regular Courier for Linux users. For example:</p>
+<pre>"Beware the Jabberwock, my son!
+    The jaws that bite, the claws that catch!
+Beware the Jubjub bird, and shun
+    The frumious Bandersnatch!"</pre>
+<h3>Code</h3>
+<p>Code can be presented inline, like <code>&lt;?php echo "This is my first static page"; ?&gt;</code>, or within a <code>&lt;pre&gt;</code> block. Because we have more specific typographic needs for code, we&#8217;ll specify Consolas and Monaco ahead of the browser-defined monospace font.</p>
+<pre><code>
+#container {
+	float: left;
+	margin: 0 -240px 0 0;
+	width: 100%;
+}</code></pre>
+<hr />
+<h2>Blockquotes</h2>
+<p>Let&#8217;s keep it simple. Italics are good to help set it off from the body text (and italic Georgia is lovely at this size). Be sure to style the citation.</p>
+<blockquote><p>Good afternoon, gentlemen. I am a HAL 9000 computer. I became operational at the H.A.L. plant in Urbana, Illinois on the 12th of January 1992. My instructor was Mr. Langley, and he taught me to sing a song. If you&#8217;d like to hear it I can sing it for you.</p>
+<p><cite>— <a href="http://en.wikipedia.org/wiki/HAL_9000">HAL 9000</a></cite></p></blockquote>
+<p>And here&#8217;s a bit of trailing text.</p>
+</section>
+</body>
+<script>
+for (let e of document.querySelectorAll(\'link[rel="stylesheet"]\')) {
+let att = e.getAttribute("href");
+let d = new Date();
+let n = d.getTime();
+e.setAttribute(\'href\', att + \'?d=\' + n );
+}
+</script>
+</html>';
+		}
+
+#generates file test.html for theme preview
+	file_put_contents(PLX_PLUGINS.$plugName.'/covers/'.$newDirTheme.'/test.html', $pageTest);
+	
+
+		$plxPlugin->saveParams();
 		$backToTab='&tab=fB';
 			if($var['debugme'] == 1) {		
 				echo 'vide:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
@@ -225,7 +669,7 @@ require('varEbook.php');
 			}				 
 		}
 
-		if(isset($_POST['doComics'])) { // créations epub à partir d'images		$dcId=$plxPlugin->getParam('titreComics');
+		if(isset($_POST['doComics'])) {// créations epub à partir d'images		$dcId=$plxPlugin->getParam('titreComics');
 		
 		// MAJ données
 		$plxPlugin->setParam('epubMode', $_POST['epubMode'], 'string');	
@@ -821,7 +1265,7 @@ require('varEbook.php');
 				}
 		}
 		
-		if (isset($_POST['doMake'])) { 
+		if (isset($_POST['doMake']))  { 
 			$ebook="";
 			//recup categories
 			$MyCats=$plxAdmin->aCats;
@@ -1643,10 +2087,9 @@ require('varEbook.php');
 								}
 								// locale mais pas dans le repertoire data/medias
 								if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-									echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-								$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-								$newSrc = 'data/medias/'.basename($src);
-								$img->setAttribute('src', $newSrc); 
+									$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+									$newSrc = 'data/medias/'.basename($src);
+									$img->setAttribute('src', $newSrc); 
 								}								
 								$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 							}
@@ -2081,10 +2524,9 @@ require('varEbook.php');
 																}	
 																// locale mais pas dans le repertoire data/medias
 																if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-																	echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-																$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-																$newSrc = 'data/medias/'.basename($src);
-																$img->setAttribute('src', $newSrc); 
+																	$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+																	$newSrc = 'data/medias/'.basename($src);
+																	$img->setAttribute('src', $newSrc); 
 																}																
 																$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 																$srctrouve[]=basename($src);
@@ -2474,10 +2916,9 @@ require('varEbook.php');
 										}
 										// locale mais pas dans le repertoire data/medias
 										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-										$newSrc = 'data/medias/'.basename($src);
-										$img->setAttribute('src', $newSrc); 
+											$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+											$newSrc = 'data/medias/'.basename($src);
+											$img->setAttribute('src', $newSrc); 
 										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
@@ -2661,10 +3102,9 @@ require('varEbook.php');
 										}
 										// locale mais pas dans le repertoire data/medias
 										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-										$newSrc = 'data/medias/'.basename($src);
-										$img->setAttribute('src', $newSrc); 
+											$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+											$newSrc = 'data/medias/'.basename($src);
+											$img->setAttribute('src', $newSrc); 
 										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
@@ -2937,10 +3377,9 @@ require('varEbook.php');
 										}
 										// locale mais pas dans le repertoire data/medias
 										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-										$newSrc = 'data/medias/'.basename($src);
-										$img->setAttribute('src', $newSrc); 
+											$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+											$newSrc = 'data/medias/'.basename($src);
+											$img->setAttribute('src', $newSrc); 
 										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
@@ -3125,10 +3564,9 @@ require('varEbook.php');
 										}
 										// locale mais pas dans le repertoire data/medias
 										if(substr($src, 0, 4) !='http'&& substr($src, 0, 4) !=('data')) {
-											echo '<p> Pas data/ - '. parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src.'</p>';
-										$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
-										$newSrc = 'data/medias/'.basename($src);
-										$img->setAttribute('src', $newSrc); 
+											$plxPlugin->downloadRessource(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME).'://'.parse_url($_SERVER['HTTP_REFERER'])["host"].'/'.$src);
+											$newSrc = 'data/medias/'.basename($src);
+											$img->setAttribute('src', $newSrc); 
 										}										
 										$imgToFind[]= basename($src);// will overwrite downloaded img if same file's name  found 
 									}
@@ -3229,7 +3667,7 @@ require('varEbook.php');
 			}		
 		}// fin sauvegarde fichiers epub 	
 
-		if (isset($_POST['submit'])){
+		if (isset($_POST['submit']))  {
 		// MAJ metas du bouquin
         $plxPlugin->setParam('uid', $_POST['uid'], 'string');
         $plxPlugin->setParam('title', trim($_POST['title']), 'string');
@@ -3304,17 +3742,11 @@ require('varEbook.php');
 		}
 
 		if (isset($_POST['updatecovers'])){
-			$plxPlugin->makeThemeImg('th1/' ,'cover1.jpg',array(90,90,90)      , array(125,125,125) , array(92,126,229) ,$RobotoBold,$LatoRegular,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th2/' ,'cover2.jpg',array(140,0,0)       , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.8' ,'1.6','1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th3/' ,'cover3.jpg',array(255,100,200)   , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th4/' ,'cover4.jpg',array(255,255,255)   , array(255,230,100) , array(250,126,29) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th5/' ,'cover5.jpg',array(255,255,255)   , array(0,0,140)     , array(92,126,229) ,$ubuntuMono,$freeSerif  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'7'   ,'1.8','1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th6/' ,'cover6.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th7/' ,'cover7.jpg',array(150,200,60)    , array(255,255,255) , array(255,255,255),$dislexia  ,$dislexia   ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.5' ,'1.8','1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th8/' ,'cover8.jpg',array(192,226,229)   , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th9/' ,'cover9.jpg',array(234, 205, 159) , array(255,255,255) , array(92,126,229) ,$ubuntuMono,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'1.5','1.05',$plugin,$part);
-			$plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 165, 232), array(200,200,200),$freeSansB ,$ubuntuMono ,$ubuntuMono,$titreTh,$descTh,$AuthTh,'2.5','1.25','40' ,$plugin,$part);
-
+			 foreach($themesList as $theme => $thId) {
+				// echo $thId .'<br>';
+				 $xml = simplexml_load_file($thId.'/drawcover.xml');
+				 $plxPlugin->makeThemeImg($xml->dirTheme ,$xml->coverfile, explode(',', $xml->titleFontColor),explode(',', $xml->subtitleFontColor),explode(',', $xml->authorFontColor),realpath($xml->titleFont),realpath($xml->subtitleFont),realpath($xml->authorFont),$var['title'],$var['subtitle'],$var['author'],$xml->titlePos,$xml->subtitlePos,$xml->authorPos,$plugin,$part);
+			 }
 					$backToTab='&tab=fF';
 				if($var['debugme'] == 1) {		
 					echo 'fiche themes:  debug affiche les messages et erreurs. redirection manuelle => <a href="parametres_plugin.php?p='.$plugin.$backToTab.'">retour page '.$plugin.'</a>';   
@@ -3323,9 +3755,14 @@ require('varEbook.php');
 			}
 	header('Location: plugin.php?p='.$plugin.$backToTab);
 	}
+	
+	$plugName = get_class($plxPlugin);
+echo $plugName.' - ';
+echo $plugin;
+
 ?>
 
-<form action="?p=EBook" method="post" id="formEpub">				
+<form action="?p=EBook" method="post" id="formEpub"  enctype="multipart/form-data">				
 <?php echo plxToken::getTokenPostMethod() ;
 echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css?t='.time().'" media="screen">';
 ?>
@@ -3358,10 +3795,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 
 		let iptUrl = document.querySelector('[name="url"]');
 		let iptDir = document.querySelector('[name="epubRepertory"]');
-		let histo  = document.querySelector('[name="epubDirHisto"]');
-		
-		
-			
+		let histo  = document.querySelector('[name="epubDirHisto"]');	
 			
 		// dir
 		iptDir.addEventListener("keyup", function () {
@@ -3425,7 +3859,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 <h3><label for="fmode"><span><?php echo $plxPlugin->getLang('L_PUBLISH_MODE') ?></span></label></h3>
   <fieldset id="mode">
     <legend><?php echo $plxPlugin->getLang('L_PUBLISH_TYPE') ?></legend>
-	<?php if(!isset($plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name'])) { echo  '<p class="warning fullWidth">'. $plxPlugin->getLang('L_PUBLISH_TYPE').' '. $plxPlugin->getLang('L_NOT_CONFIGURED').'</p>';} ?>
+	<?php if(!isset($plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name']) && $plxPlugin->getParam('triAuthors') !='000') { echo  '<p class="warning fullWidth">'. $plxPlugin->getLang('L_PUBLISH_TYPE').' '. $plxPlugin->getLang('L_USER_DO_NOT_EXIST').'</p>';} ?>
     <div>
 		<label for="triAuthors"><?php echo $plxPlugin->getLang('L_AUTHOR_SELECTION') ?></label>
 		<select name="triAuthors" id="triAuthors">
@@ -3551,7 +3985,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		
 
 		<h3><?php echo $plxPlugin->getLang('L_SELECTED_CATEGORIES') ?></h3>
-		<p><label style="flex-basis:calc(100% - 6em);background:tomato;color:ivory" for="id_settitle"><?php echo $plxPlugin->getLang('L_SET_TITLE') ?></label><?php plxUtils::printSelect('settitle',array('1'=>L_YES,'0'=>L_NO),$var['settitle']); ?></p>
+		<p><label style="flex-basis:calc(100% - 7em);background:tomato;color:ivory" for="id_settitle"><?php echo $plxPlugin->getLang('L_SET_TITLE') ?></label><?php plxUtils::printSelect('settitle',array('1'=>L_YES,'0'=>L_NO),$var['settitle']); ?></p>
 		<table>
 			<tr style="border-bottom:solid;filter: hue-rotate(240deg);">
 				<th class="bigger"><label for="all"><?php echo $plxPlugin->getLang('L_ALL_CATEGORIES') ?> (<?php echo $plxAdmin->nbArticles('published', $var['publishedUser'], '') ?>)</label></th>
@@ -3714,7 +4148,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
       <p><label for="editor"><?php echo $plxPlugin->getLang('L_EDITOR') ?></label> <input name="editor" value="<?php echo plxUtils::strCheck($plugin) ; ?>"></p>
       <p><label for="dateM"><?php echo $plxPlugin->getLang('L_UPDATE_DATE') ?></label> <input name="dateM" value="<?php echo date('Y-m-d\Th:i:s\Z'); ?>"></p>
       <p><label for="copyrights"><?php echo $plxPlugin->getLang('L_COPYRIGHTS') ?></label> <input name="copyrights" value="<?php echo plxUtils::strCheck($var['copyrights']) ?>"></p>
-      <p><label for="licence"><?php echo $plxPlugin->getLang('L_LICENCE_TYPE') ?></label> <input name="licence" value="<?php echo $var['licence'] ?>"></p>
+      <p><label for="licence"><?php echo $plxPlugin->getLang('L_LICENCE_TYPE') ?></label> <input name="licence" value="<?php echo $var['licence'] ?>"><b class="helpLicence"><span title="<?php echo $plxPlugin->getLang('L_HELP_LICENCE_OPTION') ?>">?</span><a href="https://creativecommons.org/licenses/" target="_blank">[➚] https://creativecommons.org/licenses/</a></b></p>
       <p><label for="urlLicence"><?php echo $plxPlugin->getLang('L_LICENCE_URL') ?></label> <input name="urlLicence" value="<?php echo $var['urlLicence'] ?>"></p>
       <p><label for="descLicence"><?php echo $plxPlugin->getLang('L_LICENCE_TERMS') ?></label> <textarea name="descLicence"><?php echo $var['descLicence'] ?></textarea></p>
       <!--<p><label for="coverimg">Image de couverture   </label> <input type="file" name="coverimg"></p>-->
@@ -3756,8 +4190,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 					if($i>1) {echo '<a class="previous" href="#coverth'.$p .'">&#11013;</a>'.PHP_EOL;}
 					echo '	<figure>
 					<!--<figcaption><label>cover theme '.$i.' <input type="radio" name="coverImage"></label></figcaption>-->
-					<img src="'.$imgPath.$thi.'/cover.jpg" style="max-width:800px;width:100%;">';
+					<img src="'.$imgPath.$thi.'/cover.jpg?t='.time().'" style="max-width:800px;width:100%;">';
 					echo '	</figure>
+					<div class="editTheme"><button type="button" data-theme="th'.$i.'" name="coverth'.$i.'">'.$plxPlugin->getLang('L_EDIT_THEMES').'</button></div>
 					<object data="'.$imgPath.$thi.'/test.html"></object>';
 					if($i < sizeof($themesList)) {echo '<a class="next" href="#coverth'.$n .'">&#10145;</a>';} else {echo '<a class="next" href="#coverth1">&#10145;</a>';}
 					echo '</div>';
@@ -3768,47 +4203,557 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 	<!--<input type="submit" name="submitF" value="Enregistrer" />-->
 	  <input type="submit" name="updatecovers" value="<?php echo $plxPlugin->getLang('L_UPDATE_COVERS') ?>" />
 	</div>
-	<style>
-	</style>
   </fieldset>
   <?php echo plxToken::getTokenPostMethod() ?>
 
-  <h3><label for="fB"><span><?php echo $plxPlugin->getLang('L_HELP') ?></span></label></h3>
-  <fieldset id="B">
-    <legend><?php echo $plxPlugin->getLang('L_HELP') ?></legend>
-    <!--<input type="submit" name="submitB" value="Enregistrer" />-->
-    <p class="fullWidth"><b><?php echo $plxPlugin->getLang('L_PLUG_VERSION') ?></b></p>
-    <div>
-	<h2><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS') ?></h2>
-    <p><?php echo $plxPlugin->getLang('L_CHOICE_FRONT_DISPLAY') ?></p>
-	</div>
-	<div>
-    <h2><?php echo $plxPlugin->getLang('L_ID_CARD') ?></h2>
-    <p><?php echo $plxPlugin->getLang('L_ID_USE') ?></p>	
-	</div>
-	<div>
-    <h2><?php echo $plxPlugin->getLang('L_CREDITS') ?></h2>
-    <p><?php echo $plxPlugin->getLang('L_CREDITS_USE') ?></p>
-	</div>
-	<div>
-    <h2><?php echo $plxPlugin->getLang('L_THEMES') ?></h2>
-    <p><?php echo $plxPlugin->getLang('L_THEMES_USE') ?></p>
-    <ol style="list-style-position:inside">
-		<?php echo $plxPlugin->getLang('L_THEMES_DETAILS') ?>
-    </ol>
-	</div>
-	<div class="fullWidth">
-	<?php include(PLX_PLUGINS.$plugin.'/lang/fr-help.php'); ?>
-	</div>
+	<h3><label for="fB"><?php echo $plxPlugin->getLang('L_ADD_THEME') ?></label></h3>
+	<fieldset id="B">
+		<fieldset class="fullWidth addfonts" >
+			<legend><?php echo $plxPlugin->getLang('L_ADD_FONTS') ?></legend>
+			<div id="drop_file_area" ondrop="upload_file(event)" ondragover="return false">
+				<div id="drag_upload_file">
+				<p><label for="fontfile"><?php echo $plxPlugin->getLang('L_DRAG_|_DROP_FONTS') ?></label>
+				<input type="file" id="fontfile" name="fontfile[]" accept=".ttf,.otf, .woff, .woff2" multiple /></p>
+			</div>
+			</div>
+			<div id="done"></div>
+			<p> !  <b><?php echo $plxPlugin->getLang('L_ONLINE_TOOL') ?> <a href="https://convertio.co/font-converter/" target="_blank" title="<?php echo $plxPlugin->getLang('L_FONT_CONVERTER') ?>"><?php echo $plxPlugin->getLang('L_FONT_CONVERTER') ?></a></b></p>
+<script> 
+
+let fileobj;
+function upload_file(e) {
+    e.preventDefault();
+    fileobj = e.dataTransfer.files[0];
+    ajax_file_upload(fileobj);
+}
+  
+function file_explorer() {
+    document.getElementById('fontfile').click();
+    document.getElementById('fontfile').onchange = function() {
+        fileobj = document.getElementById('fontfile').files[0];
+        ajax_file_upload(fileobj);
+    };
+}
+  
+function ajax_file_upload(file_obj) {
+    if(file_obj != undefined) {
+		let fontPath= '<?php echo PLX_PLUGINS.$plugName.'/fonts/';?>';
+		fontPath.trim();
+        let form_data = new FormData();                  
+        form_data.append('file', file_obj);
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "<?php echo PLX_PLUGINS.$plugin.'/upfonts.php' ?>", true);
+        xhttp.onload = function(event) {
+            output = document.querySelector('#done');
+            if (xhttp.status == 200) {				
+				let fileExt  = this.responseText.substr(this.responseText.lastIndexOf('.') + 1);
+				//let filename = this.responseText.split('.').slice(0, -1).join('.');
+			if((fileExt == 'ttf')||( fileExt == 'otf' )) {
+					for (let selfont of document.querySelectorAll('#B select[name="titleFontcover"],#B select[name="subtitleFontcover"],#B select[name="authorFontcover"] ')) {
+						let newOpt = document.createElement("option");
+						let newfont = this.responseText.trim();
+						newOpt.textContent = newfont;
+						let newAttr = fontPath+newfont;
+						newOpt.setAttribute('value',newAttr);
+						selfont.appendChild(newOpt);				
+					  }
+			}
+			if((fileExt == 'otf')||( fileExt == 'woff' )||( fileExt == 'woff2' )) {				
+					for (let selfont of document.querySelectorAll('#B select[name="titleh1font"],#B select[name="titlesfont"],#B select[name="bodyfont"] ')) {
+						let newOpt = document.createElement("option");
+						let newfont = this.responseText.trim();
+						newOpt.textContent = newfont;
+						let newAttr = fontPath+newfont;
+						newOpt.setAttribute('value',newAttr);
+						selfont.appendChild(newOpt);						
+					  }
+			}					
+                output.innerHTML =  '<p class="fullWidth">File : '+this.responseText + '   <b class="green">&check;</b></p>';
+            } else {
+                output.innerHTML = "Error " + xhttp.status + " occurred when trying to upload your file.";
+            }
+        }
+ 
+        xhttp.send(form_data);
+    }
+}
+</script>			
+		</fieldset>
+	<input type="hidden" name="editTheme" value=""/>
+		<?php echo $ttfStyleSheet ?>
+		<p><label for="titleFontcover"		><?php echo $plxPlugin->getLang('L_TITLE_TTF_FONT_COVER'	) ?></label>
+		<select name="titleFontcover">
+			<?php echo $ttfTPL ?>
+		</select>		</p> 
+		<p><label for="titleFontcolor"		><?php echo $plxPlugin->getLang('L_TITLE_TTF_FONT_COLOR'	) ?></label> <input type="color" id="titleFontcolor" name="titleFontcolor" value="#000000"/> </p>
+		<p><label for="subtitleFontcover"	><?php echo $plxPlugin->getLang('L_SUBTITLE_TTF_FONT_COVER'	) ?></label>
+		<select name="subtitleFontcover">
+			<?php echo $ttfTPL ?>
+		</select>		</p>
+		<p><label for="subtitleFontcolor"	><?php echo $plxPlugin->getLang('L_SUBTITLE_TTF_FONT_COLOR'	) ?></label> <input type="color" id="subtitleFontcolor" name="subtitleFontcolor" value="#000000"/></p>
+		<p><label for="authorFontcover"		><?php echo $plxPlugin->getLang('L_AUTHOR_TTF_FONT_COVER'	) ?></label>
+		<select name="authorFontcover">
+			<?php echo $ttfTPL ?>
+		</select> </p>
+		<p><label for="authorFontcolor"		><?php echo $plxPlugin->getLang('L_AUTHOR_TTF_FONT_COLOR'	) ?></label> <input type="color" id="authorFontcolor" name="authorFontcolor" value="#000000"/></p>				
+		<p class="fullWidth"><label for="addCover"			><?php echo $plxPlugin->getLang('L_ADD_COVER'				) ?></label> <input type="file" name="addCover" accept=".jpg" /></p>
+		<p  id="preview" >
+			<b class="titlepos"    style=""><?php echo $var['title'] ?></b>
+			<b class="subtitlepos" style=""><?php echo $var['subtitle'] ?></b>
+			<b class="authorpos"   style=""><?php echo $var['author'] ?></b>
+			<img   alt="preview" >
+		</p>
+
+		<p><label for="titlePos"><?php echo $plxPlugin->getLang('L_TITLE_POS') ?></label><input type="number" id="titlePos" name="titlePos" value="4" step="0.05"  min="1.15" max="50"></p>
+		<p><label for="subtitlePos"><?php echo $plxPlugin->getLang('L_SUBTITLE_POS') ?></label><input type="number" id="subtitlePos" name="subtitlePos" value="2"  step="0.05"  min="1.1" max="50"></p>
+		<p><label for="authorPos"><?php echo $plxPlugin->getLang('L_AUTHOR_POS') ?></label><input type="number" id="authorPos" name="authorPos" value="1.1"  step="0.025"  min="1.05" max="50"></p>
+		
+		
+		
+		<!-- epub style -->
+
+		<div id="demoObj" >
+		<style>
+#demoObj,
+#demoObj * {
+  color: var(--bodycolor);
+  font-family: var(--bodyfont);
+}
+#demoObj h1,
+#demoObj section > h2:first-child,
+#demoObj th,
+#demoObj li.main,
+#demoObj li.mother {
+  color: var(--titleh1color);
+  font-family: var(--titleh1font);
+}
+#demoObj :is(h2, h3, h4, h5, h6, blockquote::before, td) {
+  color: var(--titlescolor);
+  font-family: var(--titlesfont);
+}
+#demoObj p {
+  display: block;
+}
+
+#demoObj blockquote {
+  border-left: solid 0.75rem var(--titleh1color);
+  background: #efefef;
+}
+#demoObj th,
+#demoObj td {
+  border: solid 1px silver;
+}
+#demoObj th {
+  background: #efefef;
+}
+#demoObj table {
+  width: auto;
+  margin: auto;
+}
+
+#drop_file_area {
+  background-color: #eee;
+  border: #999 3px dashed;
+  padding: 1em 0.5em 0.5em 0.5em;
+  margin: 0 0.5em;
+}
+#drag_upload_file {
+  text-align: center;
+  grid-column: 1/-1;
+}
+#drag_upload_area p {
+  text-align: center;
+  display: block;
+  margin: 0 1em;
+}
+#drag_upload_file input[type="file"] {
+  margin: auto;
+  flex-grow: 0;
+}
+b.green {
+  color: green;
+  display: inline-block;
+  aspect-ratio: 1/1;
+  padding: 0.25em 0.5em;
+  background: lightgreen;
+  border-radius: 50%;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 1px;
+}
+label[for="addCover"] {
+  border: solid;
+  border-radius: 5px;
+  background: lightgreen;
+}
+
+		</style>
+		<div>
+					<h1>Lorem Title</h1>
+					<h2>Sub Ipsum</h2>
+					<p><strong>Pellentesque habitant morbi tristique</strong> tortor quam, feugiat vitae. <em>Aenean ultricies mi vitae est.</em> Mauris. Quisque sit amet est et sapien, <code>commodo vitae</code>, ornare sit amet, wisi. <a href="#">Donec non enim</a> in turpis pulvinar facilisis.</p>
+					<h3>Title Level 3</h3>
+					<ol>
+					   <li>Lorem ipsum dolor sit amet.</li>
+					   <li>Aliquam tincidunt.</li>
+					</ol>
+					<blockquote><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. Cras in mi at felis aliquet congue. </p></blockquote>
+					<h4>Table level 4</h4>
+					<table>
+					<tbody>
+					<tr>
+					<th>Table Header 1</th>
+					<th>Table Header 2</th>
+					<th>Table Header 3</th>
+					</tr>
+					<tr>
+					<td>Division 1</td>
+					<td>Division 2</td>
+					<td>Division 3</td>
+					</tr>
+					<tr class="even">
+					<td>Division 1</td>
+					<td>Division 2</td>
+					<td>Division 3</td>
+					</tr>
+					<tr>
+					<td>Division 1</td>
+					<td>Division 2</td>
+					<td>Division 3</td>
+					</tr>
+					</tbody>
+					</table>
+				<p>Below is just about everything you&#8217;ll need to style in the theme. Check the source code to see the many embedded elements within paragraphs.</p>
+				<hr />
+				<h1>Heading 1</h1>
+				<h2>Heading 2</h2>
+				<h3>Heading 3</h3>
+				<h4>Heading 4</h4>
+				<h5>Heading 5</h5>
+				<h6>Heading 6</h6>
+				<hr />
+				<p>Lorem ipsum dolor sit amet, <a title="test link" href="#">test link</a> adipiscing elit. <strong>This is strong.</strong> Nullam dignissim convallis est. Quisque aliquam. <em>This is emphasized.</em> Donec faucibus. Nunc iaculis suscipit dui. 5<sup>3</sup> = 125. Water is H<sub>2</sub>O. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. <cite>The New York Times</cite> (That&#8217;s a citation). <span style="text-decoration:underline;">Underline.</span> Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
+				<p><abbr title="Hyper Text Markup Language">HTML</abbr> and <abbr title="Cascading Style Sheets">CSS</abbr> are our tools. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.  Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. To copy a file type <code>COPY <var>filename</var></code>. <del>Dinner&#8217;s at 5:00.</del> <ins>Let&#8217;s make that 7.</ins> This <span style="text-decoration:line-through;">text</span> has been struck.</p>
+				<hr />
+				<h2>List Types</h2>
+				<h3>Definition List</h3>
+				<dl>
+				<dt>Definition List Title</dt>
+				<dd>This is a definition list division.</dd>
+				<dt>Definition</dt>
+				<dd>An exact statement or description of the nature, scope, or meaning of something: <em>our definition of what constitutes poetry.</em></dd>
+				</dl>
+				<h3>Ordered List</h3>
+				<ol>
+				<li>List Item 1</li>
+				<li>List Item 2
+				<ol>
+				<li>Nested list item A</li>
+				<li>Nested list item B</li>
+				</ol>
+				</li>
+				<li>List Item 3</li>
+				</ol>
+				<h3>Unordered List</h3>
+				<ul>
+				<li>List Item 1</li>
+				<li>List Item 2
+				<ul>
+				<li>Nested list item A</li>
+				<li>Nested list item B</li>
+				</ul>
+				</li>
+				<li>List Item 3</li>
+				</ul>
+				<hr />
+				<h2>Table</h2>
+				<table>
+				<tbody>
+				<tr>
+				<th>Table Header 1</th>
+				<th>Table Header 2</th>
+				<th>Table Header 3</th>
+				</tr>
+				<tr>
+				<td>Division 1</td>
+				<td>Division 2</td>
+				<td>Division 3</td>
+				</tr>
+				<tr class="even">
+				<td>Division 1</td>
+				<td>Division 2</td>
+				<td>Division 3</td>
+				</tr>
+				<tr>
+				<td>Division 1</td>
+				<td>Division 2</td>
+				<td>Division 3</td>
+				</tr>
+				</tbody>
+				</table>
+				<h2>Preformatted Text</h2>
+				<p>Typographically, preformatted text is not the same thing as code. Sometimes, a faithful execution of the text requires preformatted text that may not have anything to do with code. Most browsers use Courier and that&#8217;s a good default &#8212; with one slight adjustment, Courier 10 Pitch over regular Courier for Linux users. For example:</p>
+				<pre>"Beware the Jabberwock, my son!
+	The jaws that bite, the claws that catch!
+Beware the Jubjub bird, and shun
+	The frumious Bandersnatch!"</pre>
+				<h3>Code</h3>
+				<p>Code can be presented inline, like <code>&lt;?php echo "This is my first static page"; ?&gt;</code>, or within a <code>&lt;pre&gt;</code> block. Because we have more specific typographic needs for code, we&#8217;ll specify Consolas and Monaco ahead of the browser-defined monospace font.</p>
+				<pre><code>
+#container {
+	float: left;
+	margin: 0 -240px 0 0;
+	width: 100%;
+}</code></pre>
+				<hr />
+				<h2>Blockquotes</h2>
+				<p>Let&#8217;s keep it simple. Italics are good to help set it off from the body text (and italic Georgia is lovely at this size). Be sure to style the citation.</p>
+				<blockquote><p>Good afternoon, gentlemen. I am a HAL 9000 computer. I became operational at the H.A.L. plant in Urbana, Illinois on the 12th of January 1992. My instructor was Mr. Langley, and he taught me to sing a song. If you&#8217;d like to hear it I can sing it for you.</p>
+				<p><cite>— <a href="http://en.wikipedia.org/wiki/HAL_9000">HAL 9000</a></cite></p></blockquote>
+				<p>And here&#8217;s a bit of trailing text.</p>		
+		</div>
+		
+		</div>
+		
+		<p><label for="titleh1font"><?php echo $plxPlugin->getLang('L_H1_FONT') ?></label>
+		<select id="titleh1font" name="titleh1font">
+			<?php echo $epubTPL ?>
+		</select> </p>
+		<p><label for="titleh1color"><?php echo $plxPlugin->getLang('L_H1_COLOR') ?></label> <input type="color" id="titleh1color" name="titleh1color"  value="#000000"/></p>
+		
+		<p><label for="titlesfont"><?php echo $plxPlugin->getLang('L_TITLES_FONT') ?></label>
+		<select id="titlesfont" name="titlesfont">
+			<?php echo $epubTPL ?>
+		</select> </p>
+		<?php echo $epubStyleSheet ?>
+		<p><label for="titlescolor"><?php echo $plxPlugin->getLang('L_TITLES_COLOR') ?></label> <input type="color" id="titlescolor" name="titlescolor"  value="#000000"  /></p>
+		
+		<p><label for="bodyfont"><?php echo $plxPlugin->getLang('L_BODY_FONT') ?></label>
+		<select id="bodyfont" name="bodyfont">
+			<?php echo $epubTPL ?>
+		</select> </p>
+		<p><label for="bodycolor"><?php echo $plxPlugin->getLang('L_BODY_COLOR') ?></label>  <input type="color" id="bodycolor" name="bodycolor"  value="#000000"  /> </p>
+		<input type="submit" name="submitB" />
+
+		
+		
+<script>(function () {
+})();
+</script>
+<pre>
+<?php 
+foreach($themesParameter as $th =>$param) {
+	//echo $th.PHP_EOL;
+}
+?>
+</pre>
+<style>
+
+</style>
   </fieldset>
 </form>
 <!-- script kept here. vars are updated from plugin parameters -->
 <script>(function () {
+  let classColorValue ='rgb(0,0,0)';//defaut
   // get references to select list and display text box
   let sel = document.getElementById("epubMode");  
   let sel2 = document.getElementById("triAuthors");  
   let calConfig = {magMY: <?php echo $var['magMY'] ?>, magTY: <?php echo $var['magTY'] ?>, magSY: <?php echo $var['magSY'] ?>, magAY:<?php echo $var['magAY'] ?>, magMM : <?php echo $var['magMM'] ?>, magTM: <?php echo $var['magTM'] ?>, magSM:<?php echo $var['magSM'] ?>, triAuthors: '<?php echo $var['triAuthors']  ?>'};
+const prevImg = document.querySelector('[name="addCover"]');	
+const imgPreview = document.querySelector('img[alt="preview"]');
+const previewArea = document.querySelector('#preview');
+const previewEpub = document.querySelector('#demoObj');  
 
+
+// editTheme click : updates view and values to customize theme
+{
+	 const dirCoverFile ='<?php echo PLX_ROOT.'plugins/'.$plugin.'/covers/';?>';
+
+// fire theme edit tab	 
+	for (let editThemeBtn of document.querySelectorAll('.editTheme button[data-theme]')) {
+	  editThemeBtn.addEventListener("click", function() {
+		  let themeId = editThemeBtn.getAttribute('data-theme');
+		  let configFile= themeId + '/drawcover.xml';
+		  let view =document.querySelector('#fB');
+		  view.checked = true;
+		let xmlFile = dirCoverFile + themeId + '/drawcover.xml';
+	    loadDoc(xmlFile, themeId);
+		});   
+	}
+
+// load theme config	
+	function loadDoc(docFile, themeId) {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.open("GET", docFile, true);
+	  xhttp.send();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState === 4 && this.status === 200) {
+		  xmlFunction(this.response, themeId);
+		}
+	  };
+	}
+
+	function myhexColor(val ){
+	let rgbC = val.split(",")
+	let hexC = rgbC.map(function(x){           
+		x = parseInt(x).toString(16);      //Convert to a base16 string
+		return (x.length==1) ? "0"+x : x;  //Add zero if we get only one character
+	})
+	hexC = "#"+hexC.join("");
+	return hexC;   
+	}
+// read theme config and set values found
+	function xmlFunction(xml,themeId) {
+	  var parser = new DOMParser();
+	  var xmlDoc = parser.parseFromString(xml, "text/xml");
+	  var container = xmlDoc.querySelectorAll("document > *");
+	  for (var elem of container) {
+		 if(elem.tagName == 'coverfile'			) {
+			 imgPreview.setAttribute('src',  			    dirCoverFile  + elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'dirTheme' 			) {
+			 document.querySelector('[name="editTheme"]').value=elem.childNodes[0].nodeValue;
+			 }
+		 if(elem.tagName == 'titleFont' 		) {
+			 updateSelect('titleFontcover',elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'titleFontColor' 	) {
+			 document.querySelector('[name="titleFontcolor"]').value=myhexColor(elem.childNodes[0].nodeValue); 
+			 previewArea.style.setProperty('--titleFontcolor' , myhexColor(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'subtitleFont' 		) {
+			 updateSelect('subtitleFontcover',elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'subtitleFontColor' ) {
+			 document.querySelector('[name="subtitleFontcolor"]').value=myhexColor(elem.childNodes[0].nodeValue);
+			 previewArea.style.setProperty('--subtitleFontcolor' , myhexColor(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'authorFont' 		) {
+			 updateSelect('authorFontcover',elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'authorFontColor' 	) {
+			 document.querySelector('[name="authorFontcolor"]').value=myhexColor(elem.childNodes[0].nodeValue);
+			 previewArea.style.setProperty('--authorFontcolor' , myhexColor(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'titlePos' 			) {
+			 document.querySelector('[name="titlePos"]'			).value=elem.childNodes[0].nodeValue;
+			 previewArea.style.setProperty('--'+ elem.tagName , elem.childNodes[0].nodeValue);	
+			 }
+		 if(elem.tagName == 'subtitlePos' 		) {
+			 document.querySelector('[name="subtitlePos"]'		).value=elem.childNodes[0].nodeValue;
+			 previewArea.style.setProperty('--'+ elem.tagName , elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'authorPos' 		) {
+			 document.querySelector('[name="authorPos"]'			).value=elem.childNodes[0].nodeValue;
+			 previewArea.style.setProperty('--'+ elem.tagName , elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'epubfont'			) {
+			 updateSelect('bodyfont',elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--bodyfont' , strip_extension(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'epubBodyColor' 	) {
+			 document.querySelector('[name="bodycolor"]'			).value=elem.childNodes[0].nodeValue;
+			 previewEpub.style.setProperty('--bodycolor' , elem.childNodes[0].nodeValue);
+			 
+			 }
+		 if(elem.tagName == 'epubTitleH1font' 	) {
+			 updateSelect('titleh1font',elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--titleh1font' , strip_extension(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'epubh1Color' 		) {
+			 document.querySelector('[name="titleh1color"]'		).value=elem.childNodes[0].nodeValue;
+			 previewEpub.style.setProperty('--titleh1color' , elem.childNodes[0].nodeValue);
+			 }
+		 if(elem.tagName == 'epubTitlesfont' 	) {
+			 updateSelect('titlesfont',elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--titlesfont' , strip_extension(elem.childNodes[0].nodeValue));
+			 }
+		 if(elem.tagName == 'epubhxColor' 		) {
+			 document.querySelector('[name="titlescolor"]'		).value=elem.childNodes[0].nodeValue;
+			 previewEpub.style.setProperty('--titlescolor' , elem.childNodes[0].nodeValue);
+			 }/* */
+		 
+	 
+	  }
+	  
+	}	
+	
+//updates select value with newvalue
+	function updateSelect(selectId, updateValue){
+		//Get the select element
+		let select = document.getElementsByName(selectId);
+		//Get the options.
+		let selectOptions = select[0].options;
+		//search through options values.
+		for (let opt, i = 0; opt = selectOptions[i]; i++) {
+			//check option value
+			if (opt.value == updateValue) {
+				//update and leave
+				select[0].selectedIndex = i;
+				break;
+			}
+		}
+	}
+	
+}
+
+//get and update position  & getVars()
+{
+
+		function getVars() {
+			let hH= previewArea.offsetHeight;
+			previewArea.style.setProperty('--h', hH +'px');		
+			let wW= previewArea.offsetWidth;	
+			previewArea.style.setProperty('--w', wW +'px');	
+		} 
+
+	for (let iptNb of document.querySelectorAll('input[type="number"]')) {
+	  iptNb.addEventListener("change", function() {
+		  let classText = iptNb.getAttribute('id');
+		  let classTextPos= iptNb.value;
+		  previewArea.style.setProperty('--'+ classText , classTextPos);	
+	    
+		});   
+	}
+}
+// update preview colors
+{
+	 function hexToRGBA(hex, opacity) {
+    	return 'rgba(' + (hex = hex.replace('#', '')).match(new RegExp('(.{' + hex.length/3 + '})', 'g')).map(function(l) { return parseInt(hex.length%2 ? l+l : l, 16) }).concat(isFinite(opacity) ? opacity : 1).join(',') + ')';
+	}
+	for (let iptclr of document.querySelectorAll('input[type="color"]')) {
+	  iptclr.addEventListener("change", function() {
+		  let classColor = iptclr.getAttribute('id');
+		  let classColorValue= hexToRGBA(iptclr.value);
+		  previewArea.style.setProperty('--'+ classColor , classColorValue);
+		  previewEpub.style.setProperty('--'+ classColor , classColorValue);		  
+		});   
+	}
+}
+// update font preview	
+{
+	for (let selfont of document.querySelectorAll('#B select')) {
+	  selfont.addEventListener("change", function() {
+		  let classFont = selfont.getAttribute('name');
+		  let classFontValue= selfont.value;
+		  
+		//  previewArea.style.setProperty('--'+ classFont+'Face' , 'url('+classFontValue+')');
+		//  console.log('--'+ classFont+'Face');
+		  let newFont = strip_extension(classFontValue);	  
+		  let reset = getComputedStyle(previewArea);
+		  previewArea.style.setProperty('--'+ classFont  , newFont);
+		  previewEpub.style.setProperty('--'+ classFont  , newFont);
+   	      console.log(newFont +' : --'+ classFont ); 
+		  console.log(reset.getPropertyValue('--'+ classFont))	;	  
+		});   
+	}
+function basename (path) {
+  return path.substring(path.lastIndexOf('/') + 1)
+}	
+function strip_extension(str) {
+	str=basename (str) ;
+    return str.substr(0,str.lastIndexOf('.'));
+}
+}
 
   function loopOption(sel) {
     var opt;
@@ -3824,12 +4769,22 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
       }
     }
   }
+  
   sel.onchange = function(){loopOption(sel); }
   sel2.onchange = function(){loopOption(sel2); }
+  
+// update  mode selected onload and update position
+{
   window.onload =  function(){
 	  loopOption(sel2);
 	  loopOption(sel);
+	  getVars();
   }
+
+}
+  window.onresize =  function(){
+	  getVars();
+  } 
 
 	for (let e of document.querySelectorAll('#magMY, #magMM,#magTY, #magTM,#magSY, #magSM,#magAY,#triAuthors')) {
 		let setVl=  e.getAttribute('name');
@@ -3844,6 +4799,30 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 		 labelValid.style.color="red";    
 		});   
 	}
+
+
+//////////////////////////////////////////////////////////////////////
+
+
+// preview image to download
+{
+
+
+prevImg.addEventListener("change", function () {
+  getImgData();
+});
+function getImgData() {
+  const files = prevImg.files[0];
+  if (files) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files);
+    fileReader.addEventListener("load", function () {
+      imgPreview.setAttribute('src',  this.result);
+    });    
+  }
+}
+}	
+
 
 })();
 </script>

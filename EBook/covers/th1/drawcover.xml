@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <dirTheme>th1</dirTheme>
+  <coverfile>cover1.jpg</coverfile>
+  <titleFont>../../plugins/EBook/fonts/roboto/Roboto-Bold.ttf</titleFont>
+  <titleFontColor>90,90,90</titleFontColor>
+  <subtitleFont>../../plugins/EBook/fonts/lato/Lato-Regular.ttf</subtitleFont>
+  <subtitleFontColor>125,125,125</subtitleFontColor>
+  <authorFont>../../plugins/EBook/fonts/freeserif/FreeSerif.otf</authorFont>
+  <authorFontColor>92,126,229</authorFontColor>
+  <titlePos>4</titlePos>
+  <subtitlePos>2</subtitlePos>
+  <authorPos>1.05</authorPos>
+</document>

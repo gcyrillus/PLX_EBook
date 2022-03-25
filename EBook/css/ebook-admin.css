@@ -367,13 +367,17 @@ fieldset#A  p:nth-child(11) {
   overflow: auto;
 }
 
-label[for^=f] {
+h3 label[for^=f] {
   border:solid #efefef 1px;
   border-bottom:solid 1px currentcolor;
   font-size:1.2rem;
   text-align: center;
   padding:0.25rem 0;
   border-radius:0.5em 0.5em 0 0;
+}
+#B label {
+  flex-basis:auto;
+  min-width:50%;
 }
 #fA:checked ~ h3 [for="fA"],
 #formEpub #fB:checked ~ h3 [for="fB"],
@@ -418,16 +422,29 @@ p.sep {
   display:grid;
   grid-template-columns:4em minmax(200px,330px) minmax(200px,500px)4em;
   justify-content:center;
+  height:min-content;
+  position:relative;
 }
 
 #coverslider figure {
   grid-column:2;
+  grid-row:1;
   max-width:100%;
   display:block;
   border:solid;
   order:0
 }
-
+.editTheme {
+    grid-column: 2;
+    grid-row: 1;
+    position: absolute;
+    top:0;
+    right:15%;
+}
+.editTheme button {
+    background: yellowgreen;
+    box-shadow: 0 0 3px black;
+}
 #coverslider object {
   order:0
 }
@@ -599,6 +616,32 @@ a.next {
   display:block;
   padding:0;
 }
+fieldset label + input[type="color"] {
+  margin: auto 1em;
+  min-width: auto;
+  resize: none;
+  max-width: 5em;
+}
+#formEpub fieldset.fullWidth.addfonts {
+  grid-column: 1/-1;
+  grid-row: 1;
+  visibility: visible;
+}
+p.grid.addfonts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min-content,300px));
+  text-align: center;
+}
+#B .grid.addfonts label {
+  width: 100%;
+  min-width: auto;
+  white-space: nowrap;
+  text-align: inherit;
+}
+#B .grid.addfonts [type="file"],
+#B .grid.addfonts + [type="button"] {
+  margin: auto;
+}
 a.fullWidth{
   margin:auto;
   width: max-content;
@@ -653,8 +696,125 @@ input[name="doComics"] {
   width: 12ch;
   white-space: pre-wrap;
 }
+.helpLicence {
+  position:relative;
+  pointer:cursor;
+}
+
+.helpLicence span {
+  border-radius:50%;
+  display:inline-block;
+  aspect-ratio: 1/1 ;
+  background:lightgray;
+  padding:0.2em;
+  width:2em;
+  text-align:center;
+  box-shadow:1px 1px 2px ;
+  margin-inline-start:-1em;
+  position:relative;
+  z-index:1
+}
+
+.helpLicence  a {
+  position:absolute;
+	display:none;
+	bottom:10%;
+	right:1.5em;
+  background:lightgreen;
+	box-shadow:1px 1px 3px;
+	white-space:nowrap;
+	padding:0.2em 0.5em;
+	color:darkblue;
+	border-radius:5px
+}
+.helpLicence:hover  a {
+	display:block;  
+}
+.helpLicence a:first-letter {
+  color: red;
+  font-size: 1.25em;
+}
+
 @media (max-width:900px) {
 	#parametres_plugin #formEpub h3 + fieldset[id]{
 	max-height:calc(55vh);	
 	}
+}
+
+/* edition theme*/
+
+
+#preview,
+#demoObj {
+  grid-row: auto / span 3;
+  height: clamp(200px, 50vw, 50vh);
+  margin: auto;
+  border: solid;
+  position: relative;
+  display: grid;
+  align-items: start;
+  aspect-ratio: 1 / 1.5454;
+  padding: 0;
+  --h: 100px;
+  --w: 155px;
+  --titlePos: 4;
+  --subtitlePos: 2;
+  --authorPos: 1.1;
+  --titleFontcover: Roboto-Bold;
+  --subtitleFontcover: Roboto-Bold;
+  --authorFontcover: Roboto-Bold;
+}
+#preview > * {
+  grid-row: 1;
+  grid-column: 1;
+  margin: 0 9%;
+  position: relative;
+  z-index: 2;
+}
+#preview .titlepos {
+  margin-top: calc(var(--h) / var(--titlePos));
+  font-size: calc(var(--w) * 0.095);
+  color: var(--titleFontcolor, "#fe3022");
+  font-family: var(--titleFontcover);
+  text-align: center;
+  transform: translatey(calc(var(--w) * 0.095 * -0.3));
+}
+#preview .subtitlepos {
+  margin-top: calc(var(--h) / var(--subtitlePos));
+  font-size: calc(var(--w) * 0.0549);
+  color: var(--subtitleFontcolor, "#50bb1d");
+  font-family: var(--subtitleFontcover);
+  line-height: 1.2;
+  transform: translatey(calc(var(--w) * 0.0549 * 0.95));
+  font-weight: normal;
+  margin-inline:auto;
+}
+#preview .authorpos {
+  margin-top: calc(var(--h) / var(--authorPos));
+  font-size: calc(var(--w) * 0.03);
+  color: var(--authorFontcolor, "#0348bd");
+  font-family: var(--authorFontcover);
+  text-align: center;
+  transform: translatey(calc(var(--w) * -0.03));
+  font-weight: normal;
+}
+#preview img[alt="preview"] {
+  margin: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: scale-down;
+  object-position:0 0;
+  z-index: 0;
+  max-height: var(--h);
+}
+input[type="number"] {
+  margin-inline-end: auto;
+  flex-grow: 0;
+  min-width: auto;
+}
+#demoObj {
+  grid-row: auto / span 7;
+  overflow: auto;
+  aspect-ratio: 1 / 0.9;
 }
