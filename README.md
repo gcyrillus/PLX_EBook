@@ -2,6 +2,12 @@
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
 ____
   ### Modifs en cours:
+[+] 25/03/2022
+-  Ajout et edition de thème(config.php)
+-  Upload image et polices pour les thèmes(config.php)
+-  upfonts.php Ajout polices en glisser/déposer dans l'edition pour en faire usage avant d'enregistrer le thème en edition ou en création.
+-  ajout scripts javascript.
+  
 [+] 10/03/2022
 - ajout bouton 'delete' sur la page ebook si connecté comme administrateur. (epub.ebook.php)
 - ajout CSS pour ce bouton.(site.css)
