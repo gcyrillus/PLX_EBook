@@ -29,7 +29,7 @@ class EBook extends plxPlugin {
 		
 		# limite l'accès à l'écran d'administration du plugin
         $this->setAdminProfil(PROFIL_ADMIN);        
-		$this->setAdminMenu( ' '. $this->getLang("L_MENU_CATEGORIES").''  , 20,  ''.$this->getLang("L_PLUGINS_HELP_TITLE").'');
+		$this->setAdminMenu( ' '. $this->getLang("L_MENU_CATEGORIES").''  , 20,  ''.$this->getLang("L_MENU_CATEGORIES").'');
 
 		# déclaration des hooks
 		$this->addHook('AdminTopBottom', 'AdminTopBottom');

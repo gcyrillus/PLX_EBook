@@ -154,6 +154,7 @@ $LANG = array(
 	'L_COVER_&_DESIGN'				=>' Cover & design ',
 	'L_UPDATE_COVERS'				=>' Update covers ',
 	'L_EDIT_THEMES'					=>' Edit this theme ',
+	'L_UPDATE_THEME'				=>' Update theme ',
 	
 	'L_ADD_THEME'					=>' Add a theme.',
 	'L_ADD_FONTS'					=>' Add fonts ',

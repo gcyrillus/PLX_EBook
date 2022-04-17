@@ -4,6 +4,7 @@
 # Control du token du formulaire
 plxToken::validateFormToken($_POST);
 require('varEbook.php');
+$plugName = get_class($plxPlugin);
 
     if(!empty($_POST)) {//  création et sauvegarbe Epub(s)
 		$backToTab='';
@@ -280,21 +281,21 @@ require('varEbook.php');
  		$root->appendChild($epubTitlesFont);
 	} 
 
-$bodyColor=		'color:'.$_POST['bodycolor'		].';'.PHP_EOL;
-$epubbodyColor = $drawCover->createElement('epubBodyColor',trim($_POST['bodycolor']));
-$root->appendChild($epubbodyColor);
+	$bodyColor=		'color:'.$_POST['bodycolor'		].';'.PHP_EOL;
+	$epubbodyColor = $drawCover->createElement('epubBodyColor',implode(',',$plxPlugin->hexTorgb($_POST['bodycolor'])));
+	$root->appendChild($epubbodyColor);
 
-$titleH1Color=	'color:'.$_POST['titleh1color'	].';'.PHP_EOL;
-$epubh1Color = $drawCover->createElement('epubh1Color',trim($_POST['titleh1color']));
-$root->appendChild($epubh1Color);
+	$titleH1Color=	'color:'.$_POST['titleh1color'	].';'.PHP_EOL;
+	$epubh1Color = $drawCover->createElement('epubh1Color', implode(',',$plxPlugin->hexTorgb($_POST['titleh1color'])));
+	$root->appendChild($epubh1Color);
 
-$titlesColor=	'color:'.$_POST['titlescolor'	].';'.PHP_EOL;
-$epubhxColor = $drawCover->createElement('epubhxColor',trim($_POST['titlescolor']));
-$root->appendChild($epubhxColor);
+	$titlesColor=	'color:'.$_POST['titlescolor'	].';'.PHP_EOL;
+	$epubhxColor = $drawCover->createElement('epubhxColor', implode(',',$plxPlugin->hexTorgb($_POST['titlescolor'])));
+	$root->appendChild($epubhxColor);
 
-$borderColor=	$_POST['titleh1color'];
-$epubborderColor = $drawCover->createElement('epubborderColor',trim($_POST['titleh1color']));
-$root->appendChild($epubborderColor);
+	$borderColor=	$_POST['titleh1color'];
+	$epubborderColor = $drawCover->createElement('epubborderColor',implode(',',$plxPlugin->hexTorgb($_POST['titleh1color'])));
+	$root->appendChild($epubborderColor);
 
 	$fontForEpub=array_unique($fontForEpub);
 	
@@ -374,9 +375,7 @@ th {
   <meta name="author" content="MyPc">
   <link rel="stylesheet" href="../epub.css">
   <link rel="stylesheet" href="../commun.css">
-  <style>
-     '.$fontFace.'
-  </style>
+  <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="theme.css">
 </head>
 <body>
@@ -1301,6 +1300,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 				/*
 				* function makeThemeImg();
 				* $themeC repertoire theme choisi
+				* extraction du fichier drawcover.xml du theme
 				* array(x,x,x) text color
 				* $fontfamily font
 				* $titreTh titre book
@@ -1308,16 +1308,9 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 				* 'x.x' coordonnées placement texte sur image
 				* $plugin nom du repertoire du plugin 
 				*/
-				if ($themeC=='th1')  { $plxPlugin->makeThemeImg('th1/' ,'cover1.jpg',array(90,90,90)     , array(125,125,125) , array(92,126,229) ,$RobotoBold,$LatoRegular,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part); }
-				if ($themeC=='th2')  { $plxPlugin->makeThemeImg('th2/' ,'cover2.jpg',array(140,0,0)      , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.8' ,'1.6','1.05',$plugin,$part); }
-				if ($themeC=='th3')  { $plxPlugin->makeThemeImg('th3/' ,'cover3.jpg',array(255,100,200)  , array(125,125,125) , array(92,126,229) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part); }
-				if ($themeC=='th4')  { $plxPlugin->makeThemeImg('th4/' ,'cover4.jpg',array(255,255,255)  , array(255,230,100) , array(250,126,29) ,$RobotoBold,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part); }
-				if ($themeC=='th5')  { $plxPlugin->makeThemeImg('th5/' ,'cover5.jpg',array(255,255,255)  , array(0,0,140)     , array(92,126,229) ,$ubuntuMono,$freeSerif  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'7'   ,'1.8','1.05',$plugin,$part); }
-				if ($themeC=='th6')  { $plxPlugin->makeThemeImg('th6/' ,'cover6.jpg',array(192,226,229)  , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part); }
-				if ($themeC=='th7')  { $plxPlugin->makeThemeImg('th7/' ,'cover7.jpg',array(150,200,60)   , array(255,255,255) , array(255,255,255),$dislexia  ,$dislexia   ,$freeSerif ,$titreTh,$descTh,$AuthTh,'3.5' ,'1.8','1.05',$plugin,$part); }
-				if ($themeC=='th8')  { $plxPlugin->makeThemeImg('th8/' ,'cover8.jpg',array(192,226,229)  , array(255,255,255) , array(192,226,229),$freeSansB ,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'2'  ,'1.05',$plugin,$part); }
-				if ($themeC=='th9')  { $plxPlugin->makeThemeImg('th9/' ,'cover9.jpg',array(234, 205, 159), array(255,255,255) , array(92,126,229) ,$ubuntuMono,$freeSansB  ,$freeSerif ,$titreTh,$descTh,$AuthTh,'4'   ,'1.5','1.05',$plugin,$part); }
-				if ($themeC=='th10') { $plxPlugin->makeThemeImg('th10/','cover10.jpg',array(230, 82, 1)   , array(77, 165, 232), array(200,200,200),$freeSansB ,$ubuntuMono ,$ubuntuMono,$titreTh,$descTh,$AuthTh,'2.5','1.25','19',$plugin,$part); }
+
+				$xml = simplexml_load_file(PLX_PLUGINS.$plugName.'/covers/'.$themeC.'/drawcover.xml');
+				$plxPlugin->makeThemeImg($xml->dirTheme ,$xml->coverfile, explode(',', $xml->titleFontColor),explode(',', $xml->subtitleFontColor),explode(',', $xml->authorFontColor),realpath($xml->titleFont),realpath($xml->subtitleFont),realpath($xml->authorFont),$titreTh,$descTh,$AuthTh,$xml->titlePos,$xml->subtitlePos,$xml->authorPos,$plugin,$part);
 
  				
 				//destination
@@ -3743,7 +3736,8 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 
 		if (isset($_POST['updatecovers'])){
 			 foreach($themesList as $theme => $thId) {
-				// echo $thId .'<br>';
+				 echo $thId .'<br>';
+				
 				 $xml = simplexml_load_file($thId.'/drawcover.xml');
 				 $plxPlugin->makeThemeImg($xml->dirTheme ,$xml->coverfile, explode(',', $xml->titleFontColor),explode(',', $xml->subtitleFontColor),explode(',', $xml->authorFontColor),realpath($xml->titleFont),realpath($xml->subtitleFont),realpath($xml->authorFont),$var['title'],$var['subtitle'],$var['author'],$xml->titlePos,$xml->subtitlePos,$xml->authorPos,$plugin,$part);
 			 }
@@ -3756,9 +3750,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 	header('Location: plugin.php?p='.$plugin.$backToTab);
 	}
 	
-	$plugName = get_class($plxPlugin);
-echo $plugName.' - ';
-echo $plugin;
+
 
 ?>
 
@@ -3996,10 +3988,10 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 						  
 						  $i="0";
 							foreach($themesList as $themes => $sel) {
-								$i++;
-								$thi = 'th'.$i;
-								 if($var['all-th'] == $thi) {$state='selected="selected" ';} else {$state="" ;} 
-								echo '<option value="th'.$i.'" '.$state.'> Theme '.$i.'</option>';
+								$thI = basename($sel);
+								
+								 if($var['all-th'] == $thI) {$state='selected="selected" ';} else {$state="" ;} 
+								echo '<option value="'.$thI.'" '.$state.'> Theme '.$thI.'</option>';
 							}
 						  echo '</select >';			
 						echo'</td>'.PHP_EOL; ?>
@@ -4023,10 +4015,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 					  
 					  $i="0";
 						foreach($themesList as $themes => $sel) {
-							$i++;
-							$thi = 'th'.$i;
+							$thI = basename($sel);
 							 if($plxPlugin->getParam($catNumb.'-th') == $thi) {$state='selected="selected" ';} else {$state="" ;} 
-							echo '<option value="th'.$i.'" '.$state.'> Theme '.$i.'</option>';
+							echo '<option value="'.$thI.'" '.$state.'> Theme '.$thI.'</option>';
 						}
 					  echo '</select >';			
 					echo'</td>'.PHP_EOL;
@@ -4181,19 +4172,20 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 	<?php
 				$i="0";
 				foreach($themesList as $themes => $theme) {
+					$thName = basename($theme);
 					$i++;
 					$thi = 'th'.$i;
 					$p= $i - 1;
 					$n = $i + 1;
 					echo  '<div id="coverth'.$i.'">';
-					echo'<h3 style="grid-column:1/-1;"> theme '.$i.'</h3>';
+					echo'<h3 style="grid-column:1/-1;"> theme '.$thName.'</h3>';
 					if($i>1) {echo '<a class="previous" href="#coverth'.$p .'">&#11013;</a>'.PHP_EOL;}
 					echo '	<figure>
-					<!--<figcaption><label>cover theme '.$i.' <input type="radio" name="coverImage"></label></figcaption>-->
-					<img src="'.$imgPath.$thi.'/cover.jpg?t='.time().'" style="max-width:800px;width:100%;">';
+					<!--<figcaption><label>cover theme '.$thName.' <input type="radio" name="coverImage"></label></figcaption>-->
+					<img src="'.$imgPath.$thName.'/cover.jpg?t='.time().'" style="max-width:800px;width:100%;">';
 					echo '	</figure>
-					<div class="editTheme"><button type="button" data-theme="th'.$i.'" name="coverth'.$i.'">'.$plxPlugin->getLang('L_EDIT_THEMES').'</button></div>
-					<object data="'.$imgPath.$thi.'/test.html"></object>';
+					<div class="editTheme"><button type="button" data-theme="'.$thName.'" name="cover'.$thName.'">'.$plxPlugin->getLang('L_EDIT_THEMES').'</button></div>
+					<object data="'.$imgPath.$thName.'/test.html"></object>';
 					if($i < sizeof($themesList)) {echo '<a class="next" href="#coverth'.$n .'">&#10145;</a>';} else {echo '<a class="next" href="#coverth1">&#10145;</a>';}
 					echo '</div>';
 					//echo 'img src="'.$imgPath.$thi.'cover.jpg" - themes' .$themes .' theme - '.$theme.'<br>';
@@ -4313,7 +4305,7 @@ function ajax_file_upload(file_obj) {
 		<!-- epub style -->
 
 		<div id="demoObj" >
-		<style>
+		<style>/* preview edition theme */
 #demoObj,
 #demoObj * {
   color: var(--bodycolor);
@@ -4534,21 +4526,6 @@ Beware the Jubjub bird, and shun
 		<p><label for="bodycolor"><?php echo $plxPlugin->getLang('L_BODY_COLOR') ?></label>  <input type="color" id="bodycolor" name="bodycolor"  value="#000000"  /> </p>
 		<input type="submit" name="submitB" />
 
-		
-		
-<script>(function () {
-})();
-</script>
-<pre>
-<?php 
-foreach($themesParameter as $th =>$param) {
-	//echo $th.PHP_EOL;
-}
-?>
-</pre>
-<style>
-
-</style>
   </fieldset>
 </form>
 <!-- script kept here. vars are updated from plugin parameters -->
@@ -4572,26 +4549,28 @@ const previewEpub = document.querySelector('#demoObj');
 	for (let editThemeBtn of document.querySelectorAll('.editTheme button[data-theme]')) {
 	  editThemeBtn.addEventListener("click", function() {
 		  let themeId = editThemeBtn.getAttribute('data-theme');
+		  let saveButton = document.querySelector('input[name="submitB"]');
 		  let configFile= themeId + '/drawcover.xml';
 		  let view =document.querySelector('#fB');
 		  view.checked = true;
-		let xmlFile = dirCoverFile + themeId + '/drawcover.xml';
+		let xmlFile = dirCoverFile + configFile;
 	    loadDoc(xmlFile, themeId);
+		saveButton.value='<?php $plxPlugin->lang('L_UPDATE_THEME') ?> '+ themeId;
 		});   
 	}
 
 // load theme config	
 	function loadDoc(docFile, themeId) {
-	  var xhttp = new XMLHttpRequest();
+	  let xhttp = new XMLHttpRequest();
 	  xhttp.open("GET", docFile, true);
 	  xhttp.send();
 	  xhttp.onreadystatechange = function() {
 		if (this.readyState === 4 && this.status === 200) {
-		  xmlFunction(this.response, themeId);
+		  xmlFunction(this.response);
 		}
 	  };
 	}
-
+// convert color 
 	function myhexColor(val ){
 	let rgbC = val.split(",")
 	let hexC = rgbC.map(function(x){           
@@ -4602,9 +4581,9 @@ const previewEpub = document.querySelector('#demoObj');
 	return hexC;   
 	}
 // read theme config and set values found
-	function xmlFunction(xml,themeId) {
-	  var parser = new DOMParser();
-	  var xmlDoc = parser.parseFromString(xml, "text/xml");
+	function xmlFunction(xml) {
+	  let parser = new DOMParser();
+	  let xmlDoc = parser.parseFromString(xml, "text/xml");
 	  var container = xmlDoc.querySelectorAll("document > *");
 	  for (var elem of container) {
 		 if(elem.tagName == 'coverfile'			) {
@@ -4651,30 +4630,41 @@ const previewEpub = document.querySelector('#demoObj');
 			 previewEpub.style.setProperty('--bodyfont' , strip_extension(elem.childNodes[0].nodeValue));
 			 }
 		 if(elem.tagName == 'epubBodyColor' 	) {
-			 document.querySelector('[name="bodycolor"]'			).value=elem.childNodes[0].nodeValue;
-			 previewEpub.style.setProperty('--bodycolor' , elem.childNodes[0].nodeValue);
-			 
+			 document.querySelector('[name="bodycolor"]'			).value=myhexColor(elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--bodycolor' , myhexColor(elem.childNodes[0].nodeValue));
+			 console.log(elem.childNodes[0].nodeValue);
+			 console.log( myhexColor(elem.childNodes[0].nodeValue));
 			 }
 		 if(elem.tagName == 'epubTitleH1font' 	) {
 			 updateSelect('titleh1font',elem.childNodes[0].nodeValue);
 			 previewEpub.style.setProperty('--titleh1font' , strip_extension(elem.childNodes[0].nodeValue));
 			 }
 		 if(elem.tagName == 'epubh1Color' 		) {
-			 document.querySelector('[name="titleh1color"]'		).value=elem.childNodes[0].nodeValue;
-			 previewEpub.style.setProperty('--titleh1color' , elem.childNodes[0].nodeValue);
+			 document.querySelector('[name="titleh1color"]'		).value=myhexColor(elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--titleh1color' , myhexColor(elem.childNodes[0].nodeValue));
+			 console.log(elem.childNodes[0].nodeValue);
+			 console.log( myhexColor(elem.childNodes[0].nodeValue));
 			 }
 		 if(elem.tagName == 'epubTitlesfont' 	) {
 			 updateSelect('titlesfont',elem.childNodes[0].nodeValue);
 			 previewEpub.style.setProperty('--titlesfont' , strip_extension(elem.childNodes[0].nodeValue));
 			 }
 		 if(elem.tagName == 'epubhxColor' 		) {
-			 document.querySelector('[name="titlescolor"]'		).value=elem.childNodes[0].nodeValue;
-			 previewEpub.style.setProperty('--titlescolor' , elem.childNodes[0].nodeValue);
-			 }/* */
-		 
-	 
+			 document.querySelector('[name="titlescolor"]'		).value=myhexColor(elem.childNodes[0].nodeValue);
+			 previewEpub.style.setProperty('--titlescolor' , myhexColor(elem.childNodes[0].nodeValue));
+			 console.log(elem.childNodes[0].nodeValue);
+			 console.log( myhexColor(elem.childNodes[0].nodeValue));
+			 }	 
 	  }
-	  
+		// maj font preview
+		for (let selfont of document.querySelectorAll('#B select')) {
+		  let classFont = selfont.getAttribute('name');
+		  let classFontValue= selfont.value;
+		  let newFont = strip_extension(classFontValue);	  
+		  let reset = getComputedStyle(previewArea);
+		  previewArea.style.setProperty('--'+ classFont  , newFont);
+		  previewEpub.style.setProperty('--'+ classFont  , newFont);  		 
+		}
 	}	
 	
 //updates select value with newvalue
@@ -4693,7 +4683,6 @@ const previewEpub = document.querySelector('#demoObj');
 			}
 		}
 	}
-	
 }
 
 //get and update position  & getVars()
@@ -4735,15 +4724,10 @@ const previewEpub = document.querySelector('#demoObj');
 	  selfont.addEventListener("change", function() {
 		  let classFont = selfont.getAttribute('name');
 		  let classFontValue= selfont.value;
-		  
-		//  previewArea.style.setProperty('--'+ classFont+'Face' , 'url('+classFontValue+')');
-		//  console.log('--'+ classFont+'Face');
 		  let newFont = strip_extension(classFontValue);	  
 		  let reset = getComputedStyle(previewArea);
 		  previewArea.style.setProperty('--'+ classFont  , newFont);
-		  previewEpub.style.setProperty('--'+ classFont  , newFont);
-   	      console.log(newFont +' : --'+ classFont ); 
-		  console.log(reset.getPropertyValue('--'+ classFont))	;	  
+		  previewEpub.style.setProperty('--'+ classFont  , newFont);  
 		});   
 	}
 function basename (path) {
@@ -4754,7 +4738,7 @@ function strip_extension(str) {
     return str.substr(0,str.lastIndexOf('.'));
 }
 }
-
+// show tips
   function loopOption(sel) {
     var opt;
     var formAdd;
@@ -4800,27 +4784,21 @@ function strip_extension(str) {
 		});   
 	}
 
-
-//////////////////////////////////////////////////////////////////////
-
-
 // preview image to download
 {
-
-
-prevImg.addEventListener("change", function () {
-  getImgData();
-});
-function getImgData() {
-  const files = prevImg.files[0];
-  if (files) {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(files);
-    fileReader.addEventListener("load", function () {
-      imgPreview.setAttribute('src',  this.result);
-    });    
-  }
-}
+	prevImg.addEventListener("change", function () {
+	  getImgData();
+	});
+	function getImgData() {
+	  const files = prevImg.files[0];
+	  if (files) {
+		const fileReader = new FileReader();
+		fileReader.readAsDataURL(files);
+		fileReader.addEventListener("load", function () {
+		  imgPreview.setAttribute('src',  this.result);
+		});    
+	  }
+	}
 }	
 
 

@@ -788,6 +788,7 @@ input[name="doComics"] {
   transform: translatey(calc(var(--w) * 0.0549 * 0.95));
   font-weight: normal;
   margin-inline:auto;
+  max-width: 80%
 }
 #preview .authorpos {
   margin-top: calc(var(--h) / var(--authorPos));
@@ -802,11 +803,12 @@ input[name="doComics"] {
   margin: 0;
   display: block;
   height: 100%;
-  width: 100%;
+  min-width: 101%;
   object-fit: scale-down;
   object-position:0 0;
   z-index: 0;
   max-height: var(--h);
+  mix-blend-mode: multiply;
 }
 input[type="number"] {
   margin-inline-end: auto;
