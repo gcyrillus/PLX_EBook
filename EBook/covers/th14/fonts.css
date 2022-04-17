@@ -1,0 +1,12 @@
+@font-face {
+	font-family:OpenSans-Regular-webfont;
+	src:url(fonts/OpenSans-Regular-webfont.woff);
+}
+@font-face {
+	font-family:FreeSansBold;
+	src:url(fonts/FreeSansBold.otf);
+}
+@font-face {
+	font-family:UbuntuMono-B;
+	src:url(fonts/UbuntuMono-B.woff);
+}

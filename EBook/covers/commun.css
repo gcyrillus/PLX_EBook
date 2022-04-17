@@ -14,7 +14,7 @@ body>section {
   line-height: 1.6;
   display: grid;
   grid-auto-rows: min-content;
-  padding: 1rem 3rem;
+  padding: 1rem  ;
 }
 body>section.cover {
   margin:0;

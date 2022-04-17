@@ -1,17 +1,17 @@
 
 body {
-  color:#000000;
-font-family:FreeSerif;
+  color:#808080;
+font-family:OpenSans-Regular-webfont;
 }
 
 th, td {
   border:solid 1px silver; 
-  color:#000000;
+  color:#808080;
  
 }
 
  h1, section> h2:first-child, th, li.main , li.mother{ 
-  color:#ff69b4;
+  color:#ff0080;
 font-family:FreeSansBold;
   font-weight:bold;
 }
@@ -20,16 +20,16 @@ h4,
 h3,
 h5,
 h6 {
-  color:#6aa6ce;
-font-family:FreeSansBold;
+  color:#0080c0;
+font-family:UbuntuMono-B;
   font-weight:normal
 }
 blockquote:before {
-  color:#000000;
+  color:#808080;
  
 }
 blockquote {
-  border-left:solid 0.75rem #ff69b4;
+  border-left:solid 0.75rem #ff0080;
   background:#efefef;
 }
 th {

@@ -11,4 +11,11 @@
   <titlePos>4</titlePos>
   <subtitlePos>2</subtitlePos>
   <authorPos>1.05</authorPos>
+  <epubfont>../../plugins/EBook/fonts/freeserif/FreeSerif.otf</epubfont>
+  <epubTitleH1font>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</epubTitleH1font>
+  <epubTitlesfont>../../plugins/EBook/fonts/freeserif/FreeSansBold.otf</epubTitlesfont>
+  <epubBodyColor>0,0,0</epubBodyColor>
+  <epubh1Color>255,105,180</epubh1Color>
+  <epubhxColor>106,166,206</epubhxColor>
+  <epubborderColor>255,105,180</epubborderColor>
 </document>
