@@ -2,7 +2,7 @@
 $plugName= basename(dirname(__FILE__));
 //recuperation nom epub à effacer
 $FileToDelete='';
-if($_SESSION['profil']=='0') {
+if(isset($_SESSION['profil']) && $_SESSION['profil']=='0') {
 	if ( parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) !="") { 
 		$FileToDelete = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY));
 	}
