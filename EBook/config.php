@@ -4016,7 +4016,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 					  $i="0";
 						foreach($themesList as $themes => $sel) {
 							$thI = basename($sel);
-							 if($plxPlugin->getParam($catNumb.'-th') == $thi) {$state='selected="selected" ';} else {$state="" ;} 
+							 if($plxPlugin->getParam($catNumb.'-th') == $thI) {$state='selected="selected" ';} else {$state="" ;} 
 							echo '<option value="'.$thI.'" '.$state.'> Theme '.$thI.'</option>';
 						}
 					  echo '</select >';			
