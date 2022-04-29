@@ -985,7 +985,8 @@ $zip->close();
 	global $plxAdmin;
 	$period='';
 	$width='1200';
-	$height = $width * '1.5454' ;
+	$height = round($width * '1.5454') ;
+	echo $height.'<br/>';
 	$imgPath = PLX_ROOT.'plugins/'.$plugin.'/covers/';
 	$logos= $imgPath.'logosPlux/LogoViolet.png';
 	$sub = 'Cat: '.$part;
@@ -1075,15 +1076,15 @@ $zip->close();
 	//positionement des textes
 	// Nos coordonnées en X et en Y
 	// title
-	$x  = $bbox[0] 	+ (imagesx($im) / 2			) - ($bbox[4] / 2) - 5	;
-	$y  = $bbox[1] 	+ (imagesy($im) / floatval($top) 		) - ($bbox[5] ) 		;
+	$x  = ceil($bbox[0] 	+ (imagesx($im) / 2			) - ($bbox[4] / 2) - 5)	;
+	$y  = ceil($bbox[1] 	+ (imagesy($im) / floatval($top) 		) - ($bbox[5] )) 		;
 	// description/ sous-titre
-	$x2 = $bbox2[0]	+ (imagesx($im) / 2			) - ($bbox2[4] / 2) - 5	;
-	$y2 = $bbox2[1]	+ (imagesy($im) / floatval($middle)	) - ($bbox2[5]  )		;
+	$x2 = ceil($bbox2[0]	+ (imagesx($im) / 2			) - ($bbox2[4] / 2) - 5)	;
+	$y2 = ceil($bbox2[1]	+ (imagesy($im) / floatval($middle)	) - ($bbox2[5]  ))		;
 
 	// auteur
-	$x3 = $bbox3[0]	+ (imagesx($im) / 2			) - ($bbox3[4] / 2) - 5	;
-	$y3 =  (imagesy($im) / floatval($bottom)	) - ($bbox3[5]  )		;
+	$x3 = ceil($bbox3[0]	+ (imagesx($im) / 2			) - ($bbox3[4] / 2) - 5	);
+	$y3 = ceil((imagesy($im) / floatval($bottom)	) - ($bbox3[5]  ))		;
 
 	if ($jpg =='cover10.jpg') {imagefttext($im, 90, 0, $x + 4, $y + 4, $black, $fontA, $title);}// shadow text
 	
