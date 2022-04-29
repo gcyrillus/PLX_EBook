@@ -1,5 +1,6 @@
 <?php  if(!defined('PLX_ROOT')) exit; 
 $plugName= basename(dirname(__FILE__));
+error_reporting(E_ALL ^ E_DEPRECATED);// avoids warnings for php 8 untill scripts is rewritten.
 //recuperation nom epub à effacer
 $FileToDelete='';
 if(isset($_SESSION['profil']) && $_SESSION['profil']=='0') {
