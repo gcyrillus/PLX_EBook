@@ -1,75 +1,78 @@
-	section {
-		min-width:96%;
-	}
-	.bold{
-	  font-weight:bold;
-	  font-size:1.15em;
-	}
-	span.bold {
-	  color:orange
-	}
-	.size3 {
-		font-size: 1.5em;
-		color: #DCB89C;
-		text-indent: 1em;
-	}
-	#epubs, #epubs ol  {
-	  margin-inline-start:1em;
-	}
-	#epubs {
-	  display:grid;
-	  grid-template-columns:repeat(auto-fit,minmax(22.5em,22.5em));
-	  margin:auto;
-	  justify-content:center;
-	  gap:2rem;
-	  margin-bottom:40px;
-	  }
-	#epubs li{
-	  display:grid;
-	}
-	#epubs li p small{
-	  display:block;
-	  color:hotpink;
-	  text-indent:0.5em;
-	  text-decoration:underline;
-	  font-size:0.75em;
-	}
-	#epubs li p {
-	  margin: 0;
-	  font-size: 0.8em;
-	}
-	#epubs li p:last-of-type small {
-	  display: inline-block;
-	}
-	#epubs li:not(:last-of-type)  {
-	  grid-template-columns:repeat(2,1fr);
-	  align-items:center;
-	  margin-bottom:auto;
-	  background:white;
-	  box-shadow:0 0 3px gray;
-	  padding:0.5rem;
-	}
-	 #epubs li:last-of-type div {
-	  margin:auto;
-	  max-width:20em;
-	 }
-	#epubs a { 
-	  justify-self:center;
-	}
-	.imgcover {
-	  max-width:10.35em;
-	  border:solid 1px;
-	  grid-column:2;
-	}
-	li a.delete[title='DELETE'] {
-	  font-weight: bold;
-	  background: tomato;
-	  color: ivory;
-	  float: right;
-	  margin-inline-end: 0.5em;
-	  padding: 0rem 0.8rem;
-	  border-radius: 50%;
-	  box-shadow: 2px 2px 3px gray;
-	  position: sticky;
-	  bottom: 100%;
-	}
+section {
+  min-width: 96%;
+}
+.bold {
+  font-weight: bold;
+  font-size: 1.15em;
+}
+span.bold {
+  color: orange;
+}
+.size3 {
+  font-size: 1.5em;
+  color: #dcb89c;
+  text-indent: 1em;
+}
+#epubs,
+#epubs ol {
+  margin-inline-start: 1em;
+}
+#epubs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22.5em, 22.5em));
+  margin: auto;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 40px;
+}
+#epubs li {
+  display: grid;
+}
+#epubs li p small {
+  display: block;
+  color: hotpink;
+  text-indent: 0.5em;
+  text-decoration: underline;
+  font-size: 0.75em;
+}
+#epubs li p {
+  margin: 0;
+  font-size: 0.8em;
+}
+#epubs li p:last-of-type small {
+  display: inline-block;
+}
+#epubs li:not(:last-of-type) {
+  position: relative;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  margin-bottom: auto;
+  background: white;
+  box-shadow: 0 0 3px gray;
+  padding: 1.5rem 0.5rem;
+}
+#epubs li:last-of-type div {
+  margin: auto;
+  max-width: 20em;
+}
+#epubs a {
+  justify-self: center;
+}
+.imgcover {
+  max-width: 10.35em;
+  border: solid 1px;
+  grid-column: 2;
+}
+li a.delete[title="DELETE"] {
+  font-weight: bold;
+  background: tomato;
+  color: ivory;
+  float: right;
+  margin-inline-end: 0.5em;
+  padding: 0rem 0.8rem;
+  border-radius: 50%;
+  box-shadow: 2px 2px 3px gray;
+  position: absolute;
+  top: 0.5rem;
+  right: 0;
+}
