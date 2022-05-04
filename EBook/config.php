@@ -4550,7 +4550,7 @@ const previewEpub = document.querySelector('#demoObj');
 	  editThemeBtn.addEventListener("click", function() {
 		  let themeId = editThemeBtn.getAttribute('data-theme');
 		  let saveButton = document.querySelector('input[name="submitB"]');
-		  let configFile= themeId + '/drawcover.xml';
+		  let configFile= themeId + '/drawcover.xml?t=<?php echo time() ?>';
 		  let view =document.querySelector('#fB');
 		  view.checked = true;
 		let xmlFile = dirCoverFile + configFile;
