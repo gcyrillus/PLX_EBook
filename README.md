@@ -2,6 +2,9 @@
 Turns PluXml into an epub editor , allows you to save entirely or partially your site into epubs and make them avalaible for download.
 ____
   ### Modifs en cours:
+[+] 04/05/2022
+- fix wrong mimetype for woff & woff2  
+  
 [+] 28/04/2022
 - cache temporairement les warnings pour les fonction ZIP (PHP 8) dans epub.ebook.php
 - arrondis du calcul des dimensions et positions pour la creations des couvertures (PHP8) dans EBook.php
