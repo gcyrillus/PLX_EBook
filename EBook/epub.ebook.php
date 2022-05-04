@@ -54,7 +54,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 			 }
 			
 			$i++;
-			echo '	<li><div><a href="'.$book.'">'.basename($book).'</a>';
+			echo '	<li><div><p><a href="'.$book.'">'.basename($book).'</a></p>';
 			 if (isset($_SESSION['profil']) && $_SESSION['profil']=='0')  {
 				 echo ' <a href="'.$_SERVER['REQUEST_URI'].'?del='.$book.'" class="delete" title="DELETE">X</a>';
 				 } 
@@ -80,17 +80,17 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.$plugName.'/css
 						}
 					$package = simplexml_load_string("$buf");
 					if(count($package->metadata->children('dc', true)->creator) > 1) {
-						echo '<p><small><small>';echo $plxPlugin->lang('L_AUTHORS'); echo ':</small></small> - ';
+						echo '<p><small><small>'.$plxPlugin->getLang('L_AUTHORS'). ':</small></small>  ';
 						foreach($package->metadata->children('dc', true)->creator as $auts) {
-							echo  $auts.' - ';
+							echo  $auts.' . ';
 							} 
-							echo '</p>';
+							echo '</p>'.PHP_EOL;
 							} else {
-							echo '<p ><small>';echo $plxPlugin->lang('L_AUTHORS'); echo ':</small> '. $package->metadata->children('dc', true)->creator.'</p>';                
+							echo '<p><small>'.$plxPlugin->getLang('L_AUTHORS'). ':</small> '. $package->metadata->children('dc', true)->creator.'</p>'.PHP_EOL;                
 							}
-					echo '<p><small>';echo $plxPlugin->lang('L_TITLE'); echo ': </small> '. $package->metadata->children('dc', true)->title.'</p>';
-					echo '<p><small>';echo $plxPlugin->lang('L_DESC' ); echo ': </small> '.$package->metadata->children('dc', true)->description.'</p>';
-					echo '<p><small>';echo $plxPlugin->lang('L_DATE' ); echo ': </small> '.date("d-M-Y", strtotime($package->metadata->children('dc', true)->date )).'</p></div>';
+					echo '<p><small>'. $plxPlugin->getLang('L_TITLE'). ': </small> '. $package->metadata->children('dc', true)->title.'</p>'.PHP_EOL;
+					echo '<p><small>'. $plxPlugin->getLang('L_DESC' ). ': </small> '.$package->metadata->children('dc', true)->description.'</p>'.PHP_EOL;
+					echo '<p><small>'. $plxPlugin->getLang('L_DATE' ). ': </small> '.date("d-M-Y", strtotime($package->metadata->children('dc', true)->date )).'</p></div>'.PHP_EOL;
 
 					zip_close($opfzip);
 					}  
