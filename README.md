@@ -3,7 +3,8 @@ Turns PluXml into an epub editor , allows you to save entirely or partially your
 ____
   ### Modifs en cours:
 [+] 04/05/2022
-- fix wrong mimetype for woff & woff2  
+- fix wrong mimetype for woff & woff2  (EBook.php)
+- timestamp on loading drawcover.xml (config.php)
   
 [+] 28/04/2022
 - cache temporairement les warnings pour les fonction ZIP (PHP 8) dans epub.ebook.php
