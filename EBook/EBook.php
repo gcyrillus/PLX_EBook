@@ -792,16 +792,28 @@ return $trA;  // renvoie la chaine traitée
 				// check if we need this file/image	
 				if(strpos($fontCSS, basename($filePath)) !== false) {
 			$relativePath = substr($filePath, strlen($rootPath) + 1);
+					
+			$fileFont=pathinfo($filePath);
+			$ext= $fileFont['extension'];
+					
+			// on recupere le mimetype
+			$mtype=  mime_content_type($filePath);
+			
+			//bug php ?  on s'assure que pour un woff/woff2 on a le bon mimetype
+			if($ext == 'woff') {
+				$mtype ='font/woff';
+			}
+			if ($ext == 'woff2') {
+				$mtype ='font/woff2';
+			}	
+					
 			// ajout du fichier au manifest 
 			
 			//recupe path du fichier dans l'archive		
 			$bookpath = str_replace('/.t','/t',$relativePath);		
 			$bookpath = str_replace('\\','/',$bookpath);
 			
-			$count++;
-			
-			// on recupere le mimetype
-			$mtype=  mime_content_type($filePath);
+			$count++;			
 			
 			$books =$opf->createElement('item');
 			$book_attr_1= $opf->createAttribute('id'); 
