@@ -792,29 +792,27 @@ return $trA;  // renvoie la chaine traitée
 				// check if we need this file/image	
 				if(strpos($fontCSS, basename($filePath)) !== false) {
 			$relativePath = substr($filePath, strlen($rootPath) + 1);
-					
 			$fileFont=pathinfo($filePath);
 			$ext= $fileFont['extension'];
-					
+			
+			
 			// on recupere le mimetype
 			$mtype=  mime_content_type($filePath);
 			
-			//bug php ?  on s'assure que pour un woff/woff2 on a le bon mimetype
+			// on s'assure que pour un woff/woff2 on a le bon
 			if($ext == 'woff') {
 				$mtype ='font/woff';
 			}
 			if ($ext == 'woff2') {
 				$mtype ='font/woff2';
-			}	
-					
-			// ajout du fichier au manifest 
-			
+			}			
 			//recupe path du fichier dans l'archive		
 			$bookpath = str_replace('/.t','/t',$relativePath);		
 			$bookpath = str_replace('\\','/',$bookpath);
 			
-			$count++;			
+			$count++;
 			
+			// ajout du fichier au manifest 
 			$books =$opf->createElement('item');
 			$book_attr_1= $opf->createAttribute('id'); 
 			$book_attr_1->value=$id.'-'.$count;;	
@@ -997,8 +995,7 @@ $zip->close();
 	global $plxAdmin;
 	$period='';
 	$width='1200';
-	$height = round($width * '1.5454') ;
-	echo $height.'<br/>';
+	$height = $width * '1.5454' ;
 	$imgPath = PLX_ROOT.'plugins/'.$plugin.'/covers/';
 	$logos= $imgPath.'logosPlux/LogoViolet.png';
 	$sub = 'Cat: '.$part;
@@ -1088,15 +1085,15 @@ $zip->close();
 	//positionement des textes
 	// Nos coordonnées en X et en Y
 	// title
-	$x  = ceil($bbox[0] 	+ (imagesx($im) / 2			) - ($bbox[4] / 2) - 5)	;
-	$y  = ceil($bbox[1] 	+ (imagesy($im) / floatval($top) 		) - ($bbox[5] )) 		;
+	$x  = $bbox[0] 	+ (imagesx($im) / 2			) - ($bbox[4] / 2) - 5	;
+	$y  = $bbox[1] 	+ (imagesy($im) / floatval($top) 		) - ($bbox[5] ) 		;
 	// description/ sous-titre
-	$x2 = ceil($bbox2[0]	+ (imagesx($im) / 2			) - ($bbox2[4] / 2) - 5)	;
-	$y2 = ceil($bbox2[1]	+ (imagesy($im) / floatval($middle)	) - ($bbox2[5]  ))		;
+	$x2 = $bbox2[0]	+ (imagesx($im) / 2			) - ($bbox2[4] / 2) - 5	;
+	$y2 = $bbox2[1]	+ (imagesy($im) / floatval($middle)	) - ($bbox2[5]  )		;
 
 	// auteur
-	$x3 = ceil($bbox3[0]	+ (imagesx($im) / 2			) - ($bbox3[4] / 2) - 5	);
-	$y3 = ceil((imagesy($im) / floatval($bottom)	) - ($bbox3[5]  ))		;
+	$x3 = $bbox3[0]	+ (imagesx($im) / 2			) - ($bbox3[4] / 2) - 5	;
+	$y3 =  (imagesy($im) / floatval($bottom)	) - ($bbox3[5]  )		;
 
 	if ($jpg =='cover10.jpg') {imagefttext($im, 90, 0, $x + 4, $y + 4, $black, $fontA, $title);}// shadow text
 	

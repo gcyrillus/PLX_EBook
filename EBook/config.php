@@ -3753,104 +3753,23 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 
 
 ?>
-
+<input type="checkbox" id="helper"><label for="helper" title="<?php echo $plxPlugin->getLang('L_TOGGLE_HELP_STEPS') ?>"></label>
 <form action="?p=EBook" method="post" id="formEpub"  enctype="multipart/form-data">				
 <?php echo plxToken::getTokenPostMethod() ;
 echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebook-admin.css?t='.time().'" media="screen">';
 ?>
-  <input type="radio" name="nav" id="fA"    <?php if(!isset($_GET['tab']) || ( isset($_GET['tab']) && $_GET['tab']=='fA')) {echo ' checked="checked"' ;}?>>
+  <input type="radio" name="nav" id="fmode" <?php if(!isset($_GET['tab']) || ( isset($_GET['tab']) && $_GET['tab']=='fmode')) {echo ' checked="checked"';}?>>
+  <input type="radio" name="nav" id="fA"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fA') 	{echo ' checked="checked"' ;}?>>
   <input type="radio" name="nav" id="fB"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fB') 	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fC"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fC') 	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fD"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fD')	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fE"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fE') 	{echo ' checked="checked"';}?>>
   <input type="radio" name="nav" id="fF"    <?php if( isset($_GET['tab']) && $_GET['tab']=='fF') 	{echo ' checked="checked"';}?>>
-  <input type="radio" name="nav" id="fmode" <?php if( isset($_GET['tab']) && $_GET['tab']=='fmode') {echo ' checked="checked"';}?>>
-  <h3><label for="fA"><span><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS') ?></span></label></h3>
-  <fieldset id="A">
-    <legend><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS_PAGE') ?></legend>				
-    <p class="field"><label for="id_mnuName"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName',$var['mnuName'],'text','20-20') ?></p> 
-	  <p><label for="description"><?php $plxPlugin->lang('L_DESCRIPTION') ?></label> <textarea name="description"><?php echo $var['description'] ?></textarea></p>
-    <p><label for="id_mnuDisplay"><?php echo $plxPlugin->lang('L_MENU_DISPLAY') ?></label><?php plxUtils::printSelect('mnuDisplay',array('1'=>L_YES,'0'=>L_NO),$var['mnuDisplay']); ?></p>
-	<p class="field"><label for="id_url"><?php $plxPlugin->lang('L_URL') ?></label><?php plxUtils::printInput('url',$var['url'],'text','20-255') ?></p>
-    <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
-    <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><span><input name="epubRepertory" value="<?php echo trim($var['epubRepertory'],' '); ?>"></span></p>
-	<?php echo $existEpubDirTpl; ?>	
-	<script>(function () {
-		// variables 
-		const dirNames = [<?php $plxPlugin->forbiddenUriList(PLX_ROOT) ?>]; 			
-		const dirValue = '<?php echo preg_replace("/^(\\.\\.\\/)+/", "", trim($var['epubRepertory'],' ')); ?>' ;
-		const dirHisto =[<?php echo "'". preg_replace("/(\\.\\.\\/)+/", "",implode("' , '",$loopHisto ))."'";?>];
-		// const dirInvalid = ' dirNames - dirHisto ' ;				
-		const dirInvalid = dirNames.filter(function(val) {
-		  return dirHisto.indexOf(val) == -1;
-		});
-
-		let iptUrl = document.querySelector('[name="url"]');
-		let iptDir = document.querySelector('[name="epubRepertory"]');
-		let histo  = document.querySelector('[name="epubDirHisto"]');	
-			
-		// dir
-		iptDir.addEventListener("keyup", function () {
-			checkVal(iptDir.value, dirInvalid);
-		});
-		// use histo dir
-		histo.addEventListener('change', function () {
-		  iptDir.value = this.value;
-		});
-		
-		// url
-		iptUrl.addEventListener("keyup", function () {
-			checkDir(iptUrl.value, dirNames);
-		});
-		
-		// comparaisons entre : valeur nettoyée et (valeurs interdites - valeurs déjà utilisées);
-		function checkVal(val, dirInvalid ) {
-			val=val.replace( '../../', '' );
-			strippedVal= iptDir.value;
-			strippedVal= strippedVal.replace( '../../', '' );
-			dirInvalid.push(iptUrl.value);
-			for (let i = 0; i < dirInvalid.length; i++) {
-				let name = dirInvalid[i];
-				if (name == val) {
-					iptDir.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + strippedVal +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>', iptDir.defaultValue);
-					if (iptDir.value === '') {
-							iptDir.value = iptDir.defaultValue;
-							return;
-					}
-					checkVal(iptDir.value, dirInvalid);// juste au cas où pas de chance
-					break;
-				}
-			}
-		}
-		
-		//verifie si le nom de repertoire existe
-		function checkDir(value, arr) {
-			for (let i = 0; i < arr.length; i++) {
-				let name = arr[i];
-				if (name == value) {
-					iptUrl.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + iptUrl.value +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>');
-					if (iptUrl.value === '') {
-					iptUrl.value = iptUrl.defaultValue;
-					return;
-					}
-					checkDir(iptUrl.value, arr);// juste au cas où c'est pas clair
-					break;
-				}
-			}
-		}
-})();</script>
-    <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
-	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
-    <div>  
-	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
-      <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
-	 </div>
-    <input type="submit" name="submitA" value="<?php $plxPlugin->lang('L_SAVE') ?>" />
-  </fieldset>
   
 <h3><label for="fmode"><span><?php echo $plxPlugin->getLang('L_PUBLISH_MODE') ?></span></label></h3>
   <fieldset id="mode">
     <legend><?php echo $plxPlugin->getLang('L_PUBLISH_TYPE') ?></legend>
+	<div class="help"><?php echo $plxPlugin->getLang('L_HELP_PUBLISH_MODE') ?></div>
 	<?php if(!isset($plxAdmin->aUsers[$plxPlugin->getParam('triAuthors')]['name']) && $plxPlugin->getParam('triAuthors') !='000') { echo  '<p class="warning fullWidth">'. $plxPlugin->getLang('L_PUBLISH_TYPE').' '. $plxPlugin->getLang('L_USER_DO_NOT_EXIST').'</p>';} ?>
     <div>
 		<label for="triAuthors"><?php echo $plxPlugin->getLang('L_AUTHOR_SELECTION') ?></label>
@@ -3932,10 +3851,57 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
     </div>
     <input type="submit" name="submitmode" value="Enregistrer" />
   </fieldset>
+
+  <h3><label for="fD"><span><?php echo $plxPlugin->getLang('L_ID_CARD') ?></span></label></h3>
+  <fieldset id="D">
+    <legend><?php echo $plxPlugin->getLang('L_BOOK_ID_CARD') ?></legend>
+	<div class="help"><?php echo $plxPlugin->getLang('L_HELP_BOOK_ID_CARD') ?></div>
+    <div>
+      <p><label for="uid"><?php echo $plxPlugin->getLang('L_UID') ?><small class="fs08"><?php echo $plxPlugin->getLang('L_IF_NO_ISSN_ISBN') ?></small></label><input name="uid" value="<?php echo plxUtils::strCheck($var['uid']) ?>"></p>
+      <p><label for="title"><?php echo $plxPlugin->getLang('L_BOOK_TITLE') ?></label><input name="title" value="<?php echo plxUtils::strCheck($var['title']) ?>"></p>
+      <p><label for="subtitle"><?php echo $plxPlugin->getLang('L_BOOK_DESC') ?></label> <input name="subtitle" value="<?php echo plxUtils::strCheck($var['subtitle']) ?>"></p>
+      <p><label for="dateC"><?php echo $plxPlugin->getLang('L_FIRST_DATE_EDITION') ?></label> <input name="dateC" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('dateC')) ?>"></p>
+      <p><label for="author"><?php echo $plxPlugin->getLang('L_AUTHOR_S') ?></label> <input name="author" value="<?php echo plxUtils::strCheck($var['author']) ?>"></p>
+	  <p><?php echo $plxPlugin->getLang('L_IF_ISSN_ISBN_IS_UID') ?></p>
+      <p><label for="issn">N° ISSN </label> <input name="issn" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('issn')) ?>"></p>
+      <p><label for="isbn">N° ISBN </label> <input name="isbn" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('isbn')) ?>"></p>
+    </div>
+    <div>
+      <p><label for="publisher"><?php echo $plxPlugin->getLang('L_PUBLISHER') ?></label> <input name="publisher" value="<?php echo plxUtils::strCheck($plxAdmin->aUsers[$_SESSION['user']]['name']) ?>"></p>
+      <p><label for="editor"><?php echo $plxPlugin->getLang('L_EDITOR') ?></label> <input name="editor" value="<?php echo plxUtils::strCheck($plugin) ; ?>"></p>
+      <p><label for="dateM"><?php echo $plxPlugin->getLang('L_UPDATE_DATE') ?></label> <input name="dateM" value="<?php echo date('Y-m-d\Th:i:s\Z'); ?>"></p>
+      <p><label for="copyrights"><?php echo $plxPlugin->getLang('L_COPYRIGHTS') ?></label> <input name="copyrights" value="<?php echo plxUtils::strCheck($var['copyrights']) ?>"></p>
+      <p><label for="licence"><?php echo $plxPlugin->getLang('L_LICENCE_TYPE') ?></label> <input name="licence" value="<?php echo $var['licence'] ?>"><b class="helpLicence"><span title="<?php echo $plxPlugin->getLang('L_HELP_LICENCE_OPTION') ?>">?</span><a href="https://creativecommons.org/licenses/" target="_blank">[➚] https://creativecommons.org/licenses/</a></b></p>
+      <p><label for="urlLicence"><?php echo $plxPlugin->getLang('L_LICENCE_URL') ?></label> <input name="urlLicence" value="<?php echo $var['urlLicence'] ?>"></p>
+      <p><label for="descLicence"><?php echo $plxPlugin->getLang('L_LICENCE_TERMS') ?></label> <textarea name="descLicence"><?php echo $var['descLicence'] ?></textarea></p>
+      <!--<p><label for="coverimg">Image de couverture   </label> <input type="file" name="coverimg"></p>-->
+    </div>
+  <input type="submit" name="submitD" value="Enregistrer" />
+  </fieldset>
+
+<h3><label for="fE"><span><?php echo $plxPlugin->getLang('L_CREDITS') ?></span></label></h3>
+  <fieldset id="E">
+    <legend><?php echo $plxPlugin->getLang('L_CREDITS') ?></legend>
+	<div class="help"><?php echo $plxPlugin->getLang('L_HELP_CREDITS') ?></div>
+    <div>
+      <p><label for="ctxt"><?php echo $plxPlugin->getLang('L_PREFACE_AUTHOR') ?></label> <input name="ctxt" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctxt')) ?>"> </p>
+      <p><label for="cread"><?php echo $plxPlugin->getLang('L_PROOFREADER_S') ?></label> <input name="cread" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('cread')) ?>"> </p>
+      <p><label for="cimg"><?php echo $plxPlugin->getLang('L_SRC_&_ILLUSTRATION') ?></label> <textarea name="cimg"><?php echo plxUtils::strCheck($plxPlugin->getParam('cimg')) ?></textarea></p>
+      <p><label for="ctrslt"><?php echo $plxPlugin->getLang('L_TRANSLATION') ?></label> <input name="ctrslt" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctrslt')) ?>"> </p>
+    </div>
+    <div>
+      <p><label for="cbiblio"><?php echo $plxPlugin->getLang('L_BIBLIOGRAPHY') ?></label> <textarea name="cbiblio"><?php echo plxUtils::strCheck($plxPlugin->getParam('cbiblio')) ?></textarea> </p>
+      <p><label for="clayout"><?php echo $plxPlugin->getLang('L_DESIGN_&_LAYOUT') ?></label> <input name="clayout" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('clayout')) ?>"> </p>
+      <p><label for="ctool"><?php echo $plxPlugin->getLang('L_CREATED_WITHT') ?></label> <input name="ctool" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctool')) ?>"> </p>
+      <p><label for="ccover"><?php echo $plxPlugin->getLang('L_COVER_IMG') ?></label> <input name="ccover"> </p>
+    </div>
+  <input type="submit" name="submitE" value="Enregistrer" />
+  </fieldset>
   
   <h3><label for="fC"><span><?php echo $plxPlugin->getLang('L_INIT_&_MAKE') ?></span></label></h3>
   <fieldset class="fullWidth" id="C">
   <legend><?php echo $plxPlugin->getLang('L_SELECTIONS') ?></legend>
+	<div class="help"><?php echo $plxPlugin->getLang('L_HELP_INIT_&_MAKE') ?></div>
 		<p class="sticky-top"><?php if(count($plxAdmin->plxGlob_arts->aFiles) >=1)  {?><label for="submitC"><?php echo $plxPlugin->getLang('L_SAVE') . $plxPlugin->getLang('L_CONFIG') ?></label><input type="submit" name="submitC" value="<?php echo $plxPlugin->getLang('L_SAVE') ?>" />
 		<label for="doMake"><?php echo $plxPlugin->getLang('L_SAVE_SELECTED_EPUBS') ?></label><input type="submit" name="doMake" style="position:static; margin-inline-end:auto;" value="<?php echo $plxPlugin->getLang('L_SAVE_EPUBS') ?>"><?php } ?>
 		<?php  if ($plxPlugin->getParam('epubMode')=='magM' || $plxPlugin->getParam('epubMode')=='magT'|| $plxPlugin->getParam('epubMode')=='magS'|| $plxPlugin->getParam('epubMode')=='magA') {	
@@ -4121,53 +4087,10 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 	<?php } ?> 
  </fieldset>
 
-  <h3><label for="fD"><span><?php echo $plxPlugin->getLang('L_ID_CARD') ?></span></label></h3>
-  <fieldset id="D">
-    <legend><?php echo $plxPlugin->getLang('L_BOOK_ID_CARD') ?></legend>
-    <div>
-      <p><label for="uid"><?php echo $plxPlugin->getLang('L_UID') ?><small class="fs08"><?php echo $plxPlugin->getLang('L_IF_NO_ISSN_ISBN') ?></small></label><input name="uid" value="<?php echo plxUtils::strCheck($var['uid']) ?>"></p>
-      <p><label for="title"><?php echo $plxPlugin->getLang('L_BOOK_TITLE') ?></label><input name="title" value="<?php echo plxUtils::strCheck($var['title']) ?>"></p>
-      <p><label for="subtitle"><?php echo $plxPlugin->getLang('L_BOOK_DESC') ?></label> <input name="subtitle" value="<?php echo plxUtils::strCheck($var['subtitle']) ?>"></p>
-      <p><label for="dateC"><?php echo $plxPlugin->getLang('L_FIRST_DATE_EDITION') ?></label> <input name="dateC" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('dateC')) ?>"></p>
-      <p><label for="author"><?php echo $plxPlugin->getLang('L_AUTHOR_S') ?></label> <input name="author" value="<?php echo plxUtils::strCheck($var['author']) ?>"></p>
-	  <p><?php echo $plxPlugin->getLang('L_IF_ISSN_ISBN_IS_UID') ?></p>
-      <p><label for="issn">N° ISSN </label> <input name="issn" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('issn')) ?>"></p>
-      <p><label for="isbn">N° ISBN </label> <input name="isbn" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('isbn')) ?>"></p>
-    </div>
-    <div>
-      <p><label for="publisher"><?php echo $plxPlugin->getLang('L_PUBLISHER') ?></label> <input name="publisher" value="<?php echo plxUtils::strCheck($plxAdmin->aUsers[$_SESSION['user']]['name']) ?>"></p>
-      <p><label for="editor"><?php echo $plxPlugin->getLang('L_EDITOR') ?></label> <input name="editor" value="<?php echo plxUtils::strCheck($plugin) ; ?>"></p>
-      <p><label for="dateM"><?php echo $plxPlugin->getLang('L_UPDATE_DATE') ?></label> <input name="dateM" value="<?php echo date('Y-m-d\Th:i:s\Z'); ?>"></p>
-      <p><label for="copyrights"><?php echo $plxPlugin->getLang('L_COPYRIGHTS') ?></label> <input name="copyrights" value="<?php echo plxUtils::strCheck($var['copyrights']) ?>"></p>
-      <p><label for="licence"><?php echo $plxPlugin->getLang('L_LICENCE_TYPE') ?></label> <input name="licence" value="<?php echo $var['licence'] ?>"><b class="helpLicence"><span title="<?php echo $plxPlugin->getLang('L_HELP_LICENCE_OPTION') ?>">?</span><a href="https://creativecommons.org/licenses/" target="_blank">[➚] https://creativecommons.org/licenses/</a></b></p>
-      <p><label for="urlLicence"><?php echo $plxPlugin->getLang('L_LICENCE_URL') ?></label> <input name="urlLicence" value="<?php echo $var['urlLicence'] ?>"></p>
-      <p><label for="descLicence"><?php echo $plxPlugin->getLang('L_LICENCE_TERMS') ?></label> <textarea name="descLicence"><?php echo $var['descLicence'] ?></textarea></p>
-      <!--<p><label for="coverimg">Image de couverture   </label> <input type="file" name="coverimg"></p>-->
-    </div>
-  <input type="submit" name="submitD" value="Enregistrer" />
-  </fieldset>
-
-  <h3><label for="fE"><span><?php echo $plxPlugin->getLang('L_CREDITS') ?></span></label></h3>
-  <fieldset id="E">
-    <legend><?php echo $plxPlugin->getLang('L_CREDITS') ?></legend>
-    <div>
-      <p><label for="ctxt"><?php echo $plxPlugin->getLang('L_PREFACE_AUTHOR') ?></label> <input name="ctxt" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctxt')) ?>"> </p>
-      <p><label for="cread"><?php echo $plxPlugin->getLang('L_PROOFREADER_S') ?></label> <input name="cread" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('cread')) ?>"> </p>
-      <p><label for="cimg"><?php echo $plxPlugin->getLang('L_SRC_&_ILLUSTRATION') ?></label> <textarea name="cimg"><?php echo plxUtils::strCheck($plxPlugin->getParam('cimg')) ?></textarea></p>
-      <p><label for="ctrslt"><?php echo $plxPlugin->getLang('L_TRANSLATION') ?></label> <input name="ctrslt" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctrslt')) ?>"> </p>
-    </div>
-    <div>
-      <p><label for="cbiblio"><?php echo $plxPlugin->getLang('L_BIBLIOGRAPHY') ?></label> <textarea name="cbiblio"><?php echo plxUtils::strCheck($plxPlugin->getParam('cbiblio')) ?></textarea> </p>
-      <p><label for="clayout"><?php echo $plxPlugin->getLang('L_DESIGN_&_LAYOUT') ?></label> <input name="clayout" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('clayout')) ?>"> </p>
-      <p><label for="ctool"><?php echo $plxPlugin->getLang('L_CREATED_WITHT') ?></label> <input name="ctool" value="<?php echo plxUtils::strCheck($plxPlugin->getParam('ctool')) ?>"> </p>
-      <p><label for="ccover"><?php echo $plxPlugin->getLang('L_COVER_IMG') ?></label> <input name="ccover"> </p>
-    </div>
-  <input type="submit" name="submitE" value="Enregistrer" />
-  </fieldset>
-
-  <h3><label for="fF"><span><?php echo $plxPlugin->getLang('L_AVALAIBLE_THEMES') ?></span></label></h3>
+<h3><label for="fF"><span><?php echo $plxPlugin->getLang('L_AVALAIBLE_THEMES') ?></span></label></h3>
   <fieldset id="F">
     <legend><?php echo $plxPlugin->getLang('L_COVER_&_DESIGN') ?></legend>
+	<div class="help"><?php echo $plxPlugin->getLang('L_HELP_AVALAIBLE_THEMES') ?></div>
 	  <div id="coverslider">	
 	<?php
 				$i="0";
@@ -4198,8 +4121,9 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
   </fieldset>
   <?php echo plxToken::getTokenPostMethod() ?>
 
-	<h3><label for="fB"><?php echo $plxPlugin->getLang('L_ADD_THEME') ?></label></h3>
+	<h3><label for="fB"><span><?php echo $plxPlugin->getLang('L_ADD_THEME') ?></span></label></h3>
 	<fieldset id="B">
+			<div class="help"><?php echo $plxPlugin->getLang('L_HELP_ADD_THEME') ?></div>
 		<fieldset class="fullWidth addfonts" >
 			<legend><?php echo $plxPlugin->getLang('L_ADD_FONTS') ?></legend>
 			<div id="drop_file_area" ondrop="upload_file(event)" ondragover="return false">
@@ -4527,6 +4451,91 @@ Beware the Jubjub bird, and shun
 		<input type="submit" name="submitB" />
 
   </fieldset>
+
+<h3><label for="fA"><span><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS') ?></span></label></h3>
+  <fieldset id="A">
+    <legend><?php echo $plxPlugin->getLang('L_DISPLAY_OPTIONS_PAGE') ?></legend>
+			<div class="help"><?php echo $plxPlugin->getLang('L_HELP_DISPLAY_OPTIONS_PAGE') ?></div>				
+    <p class="field"><label for="id_mnuName"><?php $plxPlugin->lang('L_MENU_TITLE') ?></label><?php plxUtils::printInput('mnuName',$var['mnuName'],'text','20-20') ?></p> 
+	  <p><label for="description"><?php $plxPlugin->lang('L_DESCRIPTION') ?></label> <textarea name="description"><?php echo $var['description'] ?></textarea></p>
+    <p><label for="id_mnuDisplay"><?php echo $plxPlugin->lang('L_MENU_DISPLAY') ?></label><?php plxUtils::printSelect('mnuDisplay',array('1'=>L_YES,'0'=>L_NO),$var['mnuDisplay']); ?></p>
+	<p class="field"><label for="id_url"><?php $plxPlugin->lang('L_URL') ?></label><?php plxUtils::printInput('url',$var['url'],'text','20-255') ?></p>
+    <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
+    <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><span><input name="epubRepertory" value="<?php echo trim($var['epubRepertory'],' '); ?>"></span></p>
+	<?php echo $existEpubDirTpl; ?>	
+	<script>(function () {
+		// variables 
+		const dirNames = [<?php $plxPlugin->forbiddenUriList(PLX_ROOT) ?>]; 			
+		const dirValue = '<?php echo preg_replace("/^(\\.\\.\\/)+/", "", trim($var['epubRepertory'],' ')); ?>' ;
+		const dirHisto =[<?php echo "'". preg_replace("/(\\.\\.\\/)+/", "",implode("' , '",$loopHisto ))."'";?>];
+		// const dirInvalid = ' dirNames - dirHisto ' ;				
+		const dirInvalid = dirNames.filter(function(val) {
+		  return dirHisto.indexOf(val) == -1;
+		});
+
+		let iptUrl = document.querySelector('[name="url"]');
+		let iptDir = document.querySelector('[name="epubRepertory"]');
+		let histo  = document.querySelector('[name="epubDirHisto"]');	
+			
+		// dir
+		iptDir.addEventListener("keyup", function () {
+			checkVal(iptDir.value, dirInvalid);
+		});
+		// use histo dir
+		histo.addEventListener('change', function () {
+		  iptDir.value = this.value;
+		});
+		
+		// url
+		iptUrl.addEventListener("keyup", function () {
+			checkDir(iptUrl.value, dirNames);
+		});
+		
+		// comparaisons entre : valeur nettoyée et (valeurs interdites - valeurs déjà utilisées);
+		function checkVal(val, dirInvalid ) {
+			val=val.replace( '../../', '' );
+			strippedVal= iptDir.value;
+			strippedVal= strippedVal.replace( '../../', '' );
+			dirInvalid.push(iptUrl.value);
+			for (let i = 0; i < dirInvalid.length; i++) {
+				let name = dirInvalid[i];
+				if (name == val) {
+					iptDir.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + strippedVal +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>', iptDir.defaultValue);
+					if (iptDir.value === '') {
+							iptDir.value = iptDir.defaultValue;
+							return;
+					}
+					checkVal(iptDir.value, dirInvalid);// juste au cas où pas de chance
+					break;
+				}
+			}
+		}
+		
+		//verifie si le nom de repertoire existe
+		function checkDir(value, arr) {
+			for (let i = 0; i < arr.length; i++) {
+				let name = arr[i];
+				if (name == value) {
+					iptUrl.value= prompt('<?php $plxPlugin->lang('L_ERR_FORBIDDEN_NAME') ; ?> : ' + iptUrl.value +' \n\n<?php $plxPlugin->lang('L_NEW_DIR_NAME') .':' ;  ?>');
+					if (iptUrl.value === '') {
+					iptUrl.value = iptUrl.defaultValue;
+					return;
+					}
+					checkDir(iptUrl.value, arr);// juste au cas où c'est pas clair
+					break;
+				}
+			}
+		}
+})();</script>
+    <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
+	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
+    <div>  
+	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
+      <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
+	 </div>
+    <input type="submit" name="submitA" value="<?php $plxPlugin->lang('L_SAVE') ?>" />
+  </fieldset>
+
 </form>
 <!-- script kept here. vars are updated from plugin parameters -->
 <script>(function () {

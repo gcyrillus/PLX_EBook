@@ -27,6 +27,7 @@ $LANG = array(
 	# display options
 	'L_DISPLAY_OPTIONS'				=>'Options d\'affichage',
 	'L_DISPLAY_OPTIONS_PAGE'		=>'Options d\'affichage sur le site.',
+	'L_HELP_DISPLAY_OPTIONS_PAGE'	=>' Options d\'affichages Optionnelles:  - Configure la page de présentation des Ebook, leur repertoire de stockage et la position et nom du lien au menu. - Active le mode debogage(utile au dépannage)',
 	'L_DESCRIPTION'					=> 'Description de la page',
 	'L_MENU_DISPLAY'				=> 'Afficher la page E-Book dans le menu',
 	'L_MENU_TITLE'		    		=> 'Titre du menu',
@@ -38,13 +39,14 @@ $LANG = array(
 	'L_NEW_DIR_NAME'				=>' Choisissez un autre nom ',
 	'L_BACK_TO_OLD_STORAGE_REPERTORY'	=>' Ou choisir un des repertoire existant',
 	'L_HISTORY'						=>' historique ',
-	'L_CUSTOM_CONTENT_TOP'			=> 'Contenu personnalisé sous le titre',
-	'L_CUSTOM_CONTENT_END'			=> 'Contenu personnalisé fin de liste.',
-	'L_DEBUGME'						=> 'Options débogage, montre les messages ',
-	'L_NOT_CONFIGURED'				=> 'non configuré, enregistrez pour continuer.',
+	'L_CUSTOM_CONTENT_TOP'			=> 'Contenu personnalisé avant la liste des ebooks.',
+	'L_CUSTOM_CONTENT_END'			=> 'Contenu personnalisé en fin de liste des eBooks.',
+	'L_DEBUGME'						=> 'Options débogage, montrer les messages ',
+	'L_NOT_CONFIGURED'				=> 'non configuré, enregistrer pour continuer.',
 	
 	# Publish mode
 	'L_PUBLISH_MODE'				=> 'Mode de publication',
+	'L_HELP_PUBLISH_MODE'			=> 'Choisissez la façon de trier vos contenus. <br>Un mode bande dessinée existe aussi ',
 	'L_PUBLISH_TYPE'				=> 'Type de publications et tri Auteur(s)',
 	'L_AUTHOR_SELECTION'			=> 'Selection Auteur/Rédacteur',
 	'L_NO_FILTER'					=>' pas de filtre ',
@@ -65,9 +67,9 @@ $LANG = array(
 	'L_FROM_MONTH'					=>' à partir du mois',
 	
 	#comics options
-	'L_COMIC_IMG_REPERTORY'			=>' Selectionne ou créer le repertoire "images Bande dessinée" ',
+	'L_COMIC_IMG_REPERTORY'			=>' Selectionne ou crée le repertoire "images Bande dessinée" ',
 	'L_GO_TO_MEDIA_FOLDER'			=>' Ouvrir le dossier Médias: ',
-	'L_SIMPLIFIED_MODE' 			=>' Mode simplifié à part ',
+	'L_SIMPLIFIED_MODE' 			=>' Mode simplifié complet ',
 	'L_LIST_REPERTORY_IMG_COVER'	=>' Integre le repertoire d\'image designé en triant les images par nom de fichier. L\'image de couverture sera celle nommée: ',
 	# Magazine options
 	'L_OLDEST_TO_RECENT'  			=>' Publie du plus ancien au plus récent. ',
@@ -84,6 +86,7 @@ $LANG = array(
 	'L_MANUALLY_MADE'				=>' Les epubs doivent être generé manuellement (fonction non automatisée) ',
 	#epub configuration
 	'L_INIT_&_MAKE'					=>' Configuration et Creation ',
+	'L_HELP_INIT_&_MAKE'			=>' Choisir les contenus et leurs visuels:<br>&nbsp;&nbsp;Catégories, Pages statiques, Pages annexes, thèmes visuels,...<br>Fabriquez les!',
 	'L_CONFIG'						=>' la configuration.',
 	'L_SAVE_SELECTED_EPUBS' 		=>' Générer les epubs selectionnés ',
 	'L_SELECTIONS'					=>' Sélections ',
@@ -101,7 +104,7 @@ $LANG = array(
 	'L_ALL_CATEGORIES'				=>'Toutes les catégories',
 	'L_FULL_SITE'					=>' 1 epub avec toutes les catégories actives du site. ',
 	'L_SINGLE_CATEGORIE'			=>' 1 epub pour cette Catégorie ',
-	'L_ALL_CATEGORIE_LINKED'		=>' 1 Epub avec toutes catégories annexées.',
+	'L_ALL_CATEGORIE_LINKED'		=>' 1 Epub avec cette catégorie mère et ses catégories filles.',
 	'L_AUTHOR_PAGE'					=>' Page "Auteur(s)" ',
 	'L_EXTRACT_AUTHOR_INFO'			=>' extrait les informations de l\'auteur si indiquées dans la configuration. ',
 	'L_POSTFACE_PAGE' 				=>' Page "Postface" ',
@@ -122,6 +125,7 @@ $LANG = array(
 	#ID CARD
 	'L_ID_CARD'						=>' fiche d\'identité ',
 	'L_BOOK_ID_CARD'				=>' Fiche d\'identité du livre électronique (EPUB)',
+	'L_HELP_BOOK_ID_CARD'			=>' Ce qui identifie votre publication:<br>UUID, Titres, auteur, ISSN/ISBN, droits d\'auteurs, licence, etc. Ces information sont utilisées principalement pour le referencement machines, catalogues.',
 	'L_UID'							=>' Identifiant Unique ',
 	'L_IF_NO_ISSN_ISBN'				=>' (si ISSN ou ISBN inexistant) ',
 	'L_BOOK_TITLE'					=>' Titre du livre ',
@@ -138,6 +142,7 @@ $LANG = array(
 	'L_LICENCE_URL'					=>' URL de la licence ',
 	'L_LICENCE_TERMS'				=>' Termes de la licence ',
 	'L_CREDITS'						=>' Credits ',
+	'L_HELP_CREDITS'				=>' Remercier les ressources utilisées: <br>images, textes, citations, etc., bibliographie.',
 	'L_INCLUDE_CREDITS'				=>' Inclure les Crédits',
 	'L_ADD_BEHIND'					=>' s\'ajoute à la ',
 	'L_PREFACE_AUTHOR'				=>' texte préface de ',
@@ -151,12 +156,14 @@ $LANG = array(
 	
 	#Themes
 	'L_AVALAIBLE_THEMES'			=>' themes disponibles ',
+	'L_HELP_AVALAIBLE_THEMES'		=>' Galerie des thèmes disponibles',
 	'L_COVER_&_DESIGN'				=>' Cover et design ',
 	'L_UPDATE_COVERS'				=>' Mettre à jour les couvertures',
 	'L_EDIT_THEMES'					=>' Editer ce thème ',
 	'L_UPDATE_THEME'				=>' Mettre à jour le theme ',
 	
 	'L_ADD_THEME'					=>' Ajouter un thème.',
+	'L_HELP_ADD_THEME'				=>' Créer vos thèmes:<br> Envoyer vos fichiers images de couverture, vos polices. choissiser vos couleurs.',
 	'L_ADD_FONTS'					=>' Ajouter des polices ',
 	'L_DRAG_|_DROP_FONTS'			=>' glisser, déposer vos fichiers aux formats ttf,otf,woff ou woff2 ou',
 	'L_ADD_COVER'					=>' Ajout image de couverture<b>(jpg)</b>. ',
@@ -183,6 +190,7 @@ $LANG = array(
 	
 	
 	#Help
+	'L_TOGGLE_HELP_STEPS'			=>'Afficher la description de l\'étape en cours. ',
 	'L_CHOICE_FRONT_DISPLAY'		=>' Vous pouvez choisir d\'afficher une page de téléchargement de vos epubs disponibles ou non sur votre site.',
 	'L_ID_USE'						=>' Ces informations sont necessaires aux liseuses et gestionnaire de bibliothéque, elles sont aussi importantes lorsque vous voulez diffuser votre Epub au public de façon à preserver vos droits. ',
 	'L_CREDITS_USE'					=>' Autant vous souhaitez que vos pages ne soient pas copiées et attribuées à quelqu\'un d\'autre, autant il est respectueux d\'indiquer les ressources utilisées ainsi que leurs auteurs qui contribuent à la créations et diffusion du code dans lequel vos contenus sont triés et rangés et publiés. ',
