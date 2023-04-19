@@ -287,6 +287,19 @@ public function plxShowStaticListEnd() {
     return $string;
 }
 
+/**
+	* Retire les " (double apsostrophe) dans chaines à inserer dans un attribut
+	*
+	* traite la chaine passer en argument et la renvoie modifiée si besoin.
+	*
+	* @author Cyrille G.
+	*/
+    public function cleanAttributes($trA) { 
+	# replace double quotes
+	$trA = str_replace('"', '`', $trA);	
+	
+	return $trA;  // renvoie la chaine traitée
+	}
 	/**
 	* nettoie les chaines avant insertion dans les pages epub
 	*
@@ -340,7 +353,7 @@ public function plxShowStaticListEnd() {
 //	$trA = str_replace('&amp;', '&', $trA);             // (ampersand) This one should be kept
 	$trA = str_replace('&apos;', '\'', $trA);           // (apostrophe  = apostrophe-quote)
 	$trA = str_replace('&lt;', '&lsaquo;',$trA);        // (less-than sign TURNED into single left angle quotation for epub compatibility )
-	$trA = str_replace('&gt;', '>',$trA);               // (greater-than sign)
+	$trA = str_replace('&gt;', '&rsaquo;',$trA);        // (greater-than sign)
 	$trA = str_replace('&nbsp;', ' ',$trA);             // (non-breaking space)
 	$trA = str_replace('&iexcl;', '¡',$trA);            // (inverted exclamation mark)
 	$trA = str_replace('&cent;', '¢',$trA);             // (cent)

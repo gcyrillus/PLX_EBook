@@ -2020,7 +2020,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 							$body=$results->item(0); 
 							$section= $pageXHTML->createElement('section');
 							$section_attr=$pageXHTML->createAttribute('epub:type');
-							$section_attr->value=$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'];
+							$section_attr->value=$plxPlugin->cleanAttributes($plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name']);
 							$section->appendChild($section_attr);
 							
 							$section_attr_1=$pageXHTML->createAttribute('title');
@@ -2405,7 +2405,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 																$section->appendChild($section_attr);
 																
 																$section_attr_1=$pageXHTML->createAttribute('title');
-																$section_attr_1->value=$art["title"];
+																$section_attr_1->value=$plxPlugin->cleanAttributes($art["title"]);
 																$section->appendChild($section_attr_1);
 																
 																$tdm=$pageXHTML->createElement('a','Table des matieres');
@@ -2431,11 +2431,11 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 																			$imgthumb->appendChild($imgthumb_attr);
 																			
 																			$imgthumb_attr_2=$pageXHTML->createAttribute('title');
-																			$imgthumb_attr_2->value=$art['thumbnail_title'];
+																			$imgthumb_attr_2->value=$plxPlugin->cleanAttributes($art['thumbnail_title']);
 																			$imgthumb->appendChild($imgthumb_attr_2);
 																			
 																			$imgthumb_attr_3=$pageXHTML->createAttribute('alt');
-																			$imgthumb_attr_3->value=$art['thumbnail_alt'];
+																			$imgthumb_attr_3->value=$plxPlugin->cleanAttributes($art['thumbnail_alt']);
 																			$imgthumb->appendChild($imgthumb_attr_3);
 																
 																
@@ -2447,13 +2447,17 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 																// on retire les script embarqués // voir à mettre en option
 																$chapo   = preg_replace('#<script(.*?)>(.*?)</script>#is','', $art['chapo'] );// remove <script>
 																$content = preg_replace('#<script(.*?)>(.*?)</script>#is','', $art['content']);// remove <script>
+																$chapo   = str_replace('<![CDATA['	,'&lt;![CDATA['	, $chapo 	); // rewrite opening cdata
+																$content = str_replace('<![CDATA['	,'&lt;![CDATA[' , $content	); // rewrite opening cdata
+																$chapo   = str_replace(']]>'		,']]&gt;'		, $chapo 	); // rewrite closing cdata
+																$content = str_replace(']]>'		,']]&gt;'		, $content	); // rewrite closing cdata
 																// CDATA pour conserver les balises HTML telle quelle.
 																$divContent=$pageXHTML->createCDATASection('<div class="content">'.$chapo.'</div><div class="content">'.$content.'</div>');
 																// on insere dans la page
 																$div->appendChild($divContent);
 																
 																$div_attr_1=$pageXHTML->createAttribute('title');
-																$div_attr_1->value='dc: '.$art["title"];
+																$div_attr_1->value='dc: '.$plxPlugin->cleanAttributes($art["title"]);
 																$div->appendChild($div_attr_1);
 																
 																$section->appendChild($div);
@@ -2478,7 +2482,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 																if($art['tags'] !="") {
 																	$extract=  explode( ',', $art['tags']);
 																		foreach($extract as $k => $v) {
-																			$taglink[ strtolower(trim($v))][]= '<small><a href="'.$book_attr_2->value.'" title="'.$art["title"].'" rel="dc:subject:'.$v.'">'.$art["title"].'</a></small>';
+																			$taglink[ strtolower(trim($v))][]= '<small><a href="'.$book_attr_2->value.'" title="'.$plxPlugin->cleanAttributes($art["title"]).'" rel="dc:subject:'.$v.'">'.$art["title"].'</a></small>';
 																		}
 																}
 															}
@@ -2855,7 +2859,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 											$section->appendChild($section_attr);
 											
 											$section_attr_1=$pageXHTML->createAttribute('title');
-											$section_attr_1->value= $plxPlugin->getLang('L_AUTHOR').' '.$author;
+											$section_attr_1->value= $plxPlugin->cleanAttributes($plxPlugin->getLang('L_AUTHOR').' '.$author);
 											$section->appendChild($section_attr_1);
 											
 											$section_attr_2=$pageXHTML->createAttribute('class');
@@ -2873,7 +2877,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 											$div->appendChild($divContent);		
 													
 											$div_attr_1=$pageXHTML->createAttribute('title');
-											$div_attr_1->value='dc: contributor '. $author;
+											$div_attr_1->value='dc: contributor '. $plxPlugin->cleanAttributes($author);
 											$div->appendChild($div_attr_1);
 											
 											$section->appendChild($div);
@@ -3039,7 +3043,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 									$section->appendChild($section_attr);
 									
 									$section_attr_1=$pageXHTML->createAttribute('title');
-									$section_attr_1->value=$v['name'];
+									$section_attr_1->value=$plxPlugin->cleanAttributes($v['name']);
 									$section->appendChild($section_attr_1);
 									
 									$section_attr_2=$pageXHTML->createAttribute('class');
@@ -3060,7 +3064,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 									$div->appendChild($divContent);		
 											
 									$div_attr_1=$pageXHTML->createAttribute('title');
-									$div_attr_1->value='dc: '.$v['name'];
+									$div_attr_1->value='dc: '.$plxPlugin->cleanAttributes($v['name']);
 									$div->appendChild($div_attr_1);
 									
 									$section->appendChild($div);
@@ -3132,7 +3136,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 									$ref_attr->value=$PageAx_attr_2->value;
 									$ref->appendChild($ref_attr);
 									$ref_attr_1 = $opf->createAttribute('title');
-									$ref_attr_1->value=$v['name'];
+									$ref_attr_1->value=$plxPlugin->cleanAttributes($v['name']);
 									$ref->appendChild($ref_attr_1);
 									$ref_attr_2 = $opf->createAttribute('type');
 									$ref_attr_2->value="text";
@@ -3228,7 +3232,7 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 									$body=$results->item(0); 
 									$section= $pageXHTML->createElement('section');
 									$section_attr=$pageXHTML->createAttribute('epub:type');
-									$section_attr->value=$plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name'] ;
+									$section_attr->value=$plxPlugin->cleanAttributes($plxAdmin->aStats[str_pad($plxPlugin->getParam($pageA_Id), 3, "0", STR_PAD_LEFT)]['name']) ;
 									$section->appendChild($section_attr);
 									
 									$section_attr_1=$pageXHTML->createAttribute('title');
@@ -3608,7 +3612,8 @@ e.setAttribute(\'href\', att + \'?d=\' + n );
 							}// end block Aknowledgement
 
 							{// add data/medias folders & Files then register into manifest 
-					$plxPlugin->addDirectories(PLX_ROOT.'data/medias',$ebook,$opf,'data-medias',$manifest,$imgToFind);///
+					$plxPlugin->addDirectories(PLX_ROOT.'data/medias',$ebook,$opf,'data-medias',$manifest,$imgToFind);
+					$plxPlugin->addDirectories(PLX_ROOT.'data/images',$ebook,$opf,'data-images',$manifest,$imgToFind);///
 					$images = PLX_ROOT.'images';
 						if (file_exists($images)) {
 					$plxPlugin->addDirectories($images,$ebook,$opf,'images',$manifest,$imgToFind);			
@@ -4134,66 +4139,7 @@ echo '<link rel="stylesheet" type="text/css" href="'.PLX_PLUGINS.'/EBook/css/ebo
 			</div>
 			<div id="done"></div>
 			<p> !  <b><?php echo $plxPlugin->getLang('L_ONLINE_TOOL') ?> <a href="https://convertio.co/font-converter/" target="_blank" title="<?php echo $plxPlugin->getLang('L_FONT_CONVERTER') ?>"><?php echo $plxPlugin->getLang('L_FONT_CONVERTER') ?></a></b></p>
-<script> 
-
-let fileobj;
-function upload_file(e) {
-    e.preventDefault();
-    fileobj = e.dataTransfer.files[0];
-    ajax_file_upload(fileobj);
-}
-  
-function file_explorer() {
-    document.getElementById('fontfile').click();
-    document.getElementById('fontfile').onchange = function() {
-        fileobj = document.getElementById('fontfile').files[0];
-        ajax_file_upload(fileobj);
-    };
-}
-  
-function ajax_file_upload(file_obj) {
-    if(file_obj != undefined) {
-		let fontPath= '<?php echo PLX_PLUGINS.$plugName.'/fonts/';?>';
-		fontPath.trim();
-        let form_data = new FormData();                  
-        form_data.append('file', file_obj);
-        let xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "<?php echo PLX_PLUGINS.$plugin.'/upfonts.php' ?>", true);
-        xhttp.onload = function(event) {
-            output = document.querySelector('#done');
-            if (xhttp.status == 200) {				
-				let fileExt  = this.responseText.substr(this.responseText.lastIndexOf('.') + 1);
-				//let filename = this.responseText.split('.').slice(0, -1).join('.');
-			if((fileExt == 'ttf')||( fileExt == 'otf' )) {
-					for (let selfont of document.querySelectorAll('#B select[name="titleFontcover"],#B select[name="subtitleFontcover"],#B select[name="authorFontcover"] ')) {
-						let newOpt = document.createElement("option");
-						let newfont = this.responseText.trim();
-						newOpt.textContent = newfont;
-						let newAttr = fontPath+newfont;
-						newOpt.setAttribute('value',newAttr);
-						selfont.appendChild(newOpt);				
-					  }
-			}
-			if((fileExt == 'otf')||( fileExt == 'woff' )||( fileExt == 'woff2' )) {				
-					for (let selfont of document.querySelectorAll('#B select[name="titleh1font"],#B select[name="titlesfont"],#B select[name="bodyfont"] ')) {
-						let newOpt = document.createElement("option");
-						let newfont = this.responseText.trim();
-						newOpt.textContent = newfont;
-						let newAttr = fontPath+newfont;
-						newOpt.setAttribute('value',newAttr);
-						selfont.appendChild(newOpt);						
-					  }
-			}					
-                output.innerHTML =  '<p class="fullWidth">File : '+this.responseText + '   <b class="green">&check;</b></p>';
-            } else {
-                output.innerHTML = "Error " + xhttp.status + " occurred when trying to upload your file.";
-            }
-        }
- 
-        xhttp.send(form_data);
-    }
-}
-</script>			
+		
 		</fieldset>
 	<input type="hidden" name="editTheme" value=""/>
 		<?php echo $ttfStyleSheet ?>
@@ -4463,6 +4409,16 @@ Beware the Jubjub bird, and shun
     <p><label for="id_mnuPos"><?php $plxPlugin->lang('L_MENU_POS') ?></label><?php plxUtils::printInput('mnuPos',$var['mnuPos'],'text','2-5') ?></p>
     <p><label for="epubRepertory"><?php $plxPlugin->lang('L_EPUBS_STORAGE_REPERTORY') ?></label><span><input name="epubRepertory" value="<?php echo trim($var['epubRepertory'],' '); ?>"></span></p>
 	<?php echo $existEpubDirTpl; ?>	
+    <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
+	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
+    <div>  
+	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
+      <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
+	 </div>
+    <input type="submit" name="submitA" value="<?php $plxPlugin->lang('L_SAVE') ?>" />
+  </fieldset>
+
+</form>
 	<script>(function () {
 		// variables 
 		const dirNames = [<?php $plxPlugin->forbiddenUriList(PLX_ROOT) ?>]; 			
@@ -4527,16 +4483,68 @@ Beware the Jubjub bird, and shun
 			}
 		}
 })();</script>
-    <p><label for="id_template"><?php $plxPlugin->lang('L_TEMPLATE') ?>&nbsp;</label><?php plxUtils::printSelect('template', $aTemplates, $var['template']) ?></p>
-	<p><label for="id_debugme"><?php $plxPlugin->lang('L_DEBUGME') ?></label><?php plxUtils::printSelect('debugme',array('1'=>L_YES,'0'=>L_NO),$var['debugme']); ?></p>
-    <div>  
-	  <p><label for="custom-start"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_TOP') ?></label> <textarea name="custom-start"><?php echo $var['custom-start'] ?></textarea></p>
-      <p><label for="custom-end"><?php $plxPlugin->lang('L_CUSTOM_CONTENT_END') ?></label> <textarea name="custom-end"><?php echo $var['custom-end'] ?></textarea></p>
-	 </div>
-    <input type="submit" name="submitA" value="<?php $plxPlugin->lang('L_SAVE') ?>" />
-  </fieldset>
 
-</form>
+
+<script> 
+
+let fileobj;
+function upload_file(e) {
+    e.preventDefault();
+    fileobj = e.dataTransfer.files[0];
+    ajax_file_upload(fileobj);
+}
+  
+function file_explorer() {
+    document.getElementById('fontfile').click();
+    document.getElementById('fontfile').onchange = function() {
+        fileobj = document.getElementById('fontfile').files[0];
+        ajax_file_upload(fileobj);
+    };
+}
+  
+function ajax_file_upload(file_obj) {
+    if(file_obj != undefined) {
+		let fontPath= '<?php echo PLX_PLUGINS.$plugName.'/fonts/';?>';
+		fontPath.trim();
+        let form_data = new FormData();                  
+        form_data.append('file', file_obj);
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "<?php echo PLX_PLUGINS.$plugin.'/upfonts.php' ?>", true);
+        xhttp.onload = function(event) {
+            output = document.querySelector('#done');
+            if (xhttp.status == 200) {				
+				let fileExt  = this.responseText.substr(this.responseText.lastIndexOf('.') + 1);
+				//let filename = this.responseText.split('.').slice(0, -1).join('.');
+			if((fileExt == 'ttf')||( fileExt == 'otf' )) {
+					for (let selfont of document.querySelectorAll('#B select[name="titleFontcover"],#B select[name="subtitleFontcover"],#B select[name="authorFontcover"] ')) {
+						let newOpt = document.createElement("option");
+						let newfont = this.responseText.trim();
+						newOpt.textContent = newfont;
+						let newAttr = fontPath+newfont;
+						newOpt.setAttribute('value',newAttr);
+						selfont.appendChild(newOpt);				
+					  }
+			}
+			if((fileExt == 'otf')||( fileExt == 'woff' )||( fileExt == 'woff2' )) {				
+					for (let selfont of document.querySelectorAll('#B select[name="titleh1font"],#B select[name="titlesfont"],#B select[name="bodyfont"] ')) {
+						let newOpt = document.createElement("option");
+						let newfont = this.responseText.trim();
+						newOpt.textContent = newfont;
+						let newAttr = fontPath+newfont;
+						newOpt.setAttribute('value',newAttr);
+						selfont.appendChild(newOpt);						
+					  }
+			}					
+                output.innerHTML =  '<p class="fullWidth">File : '+this.responseText + '   <b class="green">&check;</b></p>';
+            } else {
+                output.innerHTML = "Error " + xhttp.status + " occurred when trying to upload your file.";
+            }
+        }
+ 
+        xhttp.send(form_data);
+    }
+}
+</script>	
 <!-- script kept here. vars are updated from plugin parameters -->
 <script>(function () {
   let classColorValue ='rgb(0,0,0)';//defaut
