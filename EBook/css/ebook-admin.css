@@ -606,8 +606,6 @@ a.next {
 }
 
 #parametres_plugin #formEpub h3 + fieldset[id] {
-    
-    overflow: auto;
     padding-bottom:1em;
 }
 
