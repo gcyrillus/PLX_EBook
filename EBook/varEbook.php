@@ -222,7 +222,7 @@ if($plxPlugin->getParam('triAuthors') !=='000') {
 			$categories=array();
 	foreach ($plxAdmin->plxGlob_arts->aFiles as $key=>$v) { # On parcourt tous les fichiers
 	 $art =  $plxAdmin->parseArticle(PLX_ROOT . $plxAdmin->aConf['racine_articles'] . $v);
-	 if($plxPlugin->getParam('triAuthors')!= $art['author']) {		 
+	 if($plxPlugin->getParam('triAuthors')!= $art['author'] && $plxPlugin->getParam('triAuthors') !='000') {		 
 		unset($plxAdmin->plxGlob_arts->aFiles[$key]); 		
 		}
 		else {			 
